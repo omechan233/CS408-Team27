@@ -3,17 +3,25 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Obsidian Ark</title>
+
+        <!-- Load game dependencies -->
 		<script type="text/javascript" src="phaser/phaser.js"></script>
+        <script type="text/javascript" src="server/handler.js"></script>
 		<script type="text/javascript" src="js/Login.js"></script>
 		<script type="text/javascript" src="js/Menu.js"></script>
-		<script type="text/javascript" src="js/Game.js"></script>
 
-        <script type="text/javascript" src="server/handler.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 
 	<body>
 		<!-- App Container -->
-		<p>Test</p>
-		<div id="app"></div>
+        <div class="container">
+    		<h1>Obsidian Ark</h1>
+    		<div id="app"></div>
+        </div>
 	</body>
+
+    <!-- IMPORTANT: Load game driver last -->
+    <script type="text/javascript" src="js/Main.js"></script>
+
 </html>
