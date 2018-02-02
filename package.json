@@ -26,6 +26,7 @@
   "homepage": "https://github.com/omechan233/CS408-Team27#readme",
   "dependencies": {
     "express": "^4.16.2",
+    "mongodb": "^3.0.2",
     "phaser": "^2.6.2",
     "socket.io": "^2.0.4"
   }
