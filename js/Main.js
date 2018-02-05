@@ -1,13 +1,11 @@
-var game = new Phaser.Game(
-    window.innerWidth, window.innerHeight, 
+var game = new Phaser.Game(window.innerWidth - 20, window.innerHeight - 20, 
     Phaser.AUTO, 
     document.getElementById('app'), 
     this, false, false);
 
 function preload() {
 	game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
-	game.scale.setUserScale(1, 1, 50, 50);
-	
+	game.scale.setUserScale(1, 1);
 	game.state.add('Title', Title);
 	game.state.add('Login', Login);
 	game.state.add('Menu', Menu);
@@ -15,5 +13,5 @@ function preload() {
 	game.state.add('HighScores', HighScores);
 	game.state.add('Gameplay', Gameplay);
 
-	game.state.start('Title');
+	game.state.start('Menu');
 }
