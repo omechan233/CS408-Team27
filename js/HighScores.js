@@ -1,6 +1,6 @@
 var HighScores = {};
 
-HighScores = function() {
+HighScores.create = function() {
 
 }
 

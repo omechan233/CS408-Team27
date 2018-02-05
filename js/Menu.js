@@ -8,13 +8,16 @@ Menu.create = function() {
 }
 
 function startGame() {
-	game.stage.backgroundColor = '#52b5d2';
+	game.stage.backgroundColor = '#ff0000';
+	game.state.start('Gameplay');
 }
 
 function viewScore() {
-	game.stage.backgroundColor = '#32d598';
+	game.stage.backgroundColor = '#00ff00';
+	game.state.start('HighScores');
 }
 
 function viewProfile() {
-	game.stage.backgroundColor = '#d57233';
+	game.stage.backgroundColor = '#0000ff';
+	game.state.start('Account');
 }
