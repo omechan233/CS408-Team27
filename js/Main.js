@@ -13,5 +13,6 @@ function preload() {
 	game.state.add('HighScores', HighScores);
 	game.state.add('Gameplay', Gameplay);
 
-	game.state.start('Menu');
+//	game.state.start('Menu');
+    game.state.start('Login');
 }
