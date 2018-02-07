@@ -17,11 +17,14 @@ server.listen(process.env.PORT || 3000, function() {
     console.log("Server started on port " + server.address().port);
 });
 
-var mongoose = require('mongoose');
+/* LOCAL DATABASE */
 
-mongoose.connect('mongodb://localhost/main', function(err) {
-    if (err)
-        throw err;
+// var mongoose = require('mongoose');
 
-    console.log("CONNECTED");
-})
+// mongoose.connect('mongodb://localhost/main', function(err) {
+//     if (err)
+//         throw err;
+
+//     console.log("CONNECTED");
+// });
+
