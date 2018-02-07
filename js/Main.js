@@ -14,12 +14,7 @@ function preload() {
 	game.state.add('HighScores', HighScores);
 	game.state.add('Gameplay', Gameplay);
 
-<<<<<<< HEAD
-//	game.state.start('Menu');
-    game.state.start('Login');
-=======
 	game.state.start('Menu');
 	
 	game.smoothed = false;
->>>>>>> Menu
 }
