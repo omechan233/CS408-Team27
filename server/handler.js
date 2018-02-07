@@ -12,8 +12,24 @@
 // TEMPORARY HELPER FUNCTIONS
 
 /* Save user object to local storage as JSON */
+
+var user = {
+    username: "",
+    password: "",
+    highscore: "",
+    scores,
+    rewards
+}
+
+var jsonUser = JSON.stringify(user);
+
 function saveUserData(user) {
-    localStorage.setItem('user', JSON.stringify(user));
+   var fs = require('fs');
+   fs.writeFile("user.txt", jsonUser, function(err) {
+       if (err) {
+           return console.log(err);
+       }
+   });
 }
 
 /* Retrieve user object */
