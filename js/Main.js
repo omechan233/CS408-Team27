@@ -9,6 +9,7 @@ function preload() {
 
 	game.state.add('Title', Title);
 	game.state.add('Login', Login);
+    game.state.add('SignUp', SignUp);
 	game.state.add('Menu', Menu);
 	game.state.add('Account', Account);
 	game.state.add('HighScores', HighScores);
