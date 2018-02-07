@@ -6,6 +6,7 @@ var game = new Phaser.Game(window.innerWidth - 20, window.innerHeight - 20,
 function preload() {
 	game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
 	game.scale.setUserScale(1, 1);
+
 	game.state.add('Title', Title);
 	game.state.add('Login', Login);
 	game.state.add('Menu', Menu);
@@ -13,5 +14,12 @@ function preload() {
 	game.state.add('HighScores', HighScores);
 	game.state.add('Gameplay', Gameplay);
 
+<<<<<<< HEAD
+//	game.state.start('Menu');
+    game.state.start('Login');
+=======
 	game.state.start('Menu');
+	
+	game.smoothed = false;
+>>>>>>> Menu
 }
