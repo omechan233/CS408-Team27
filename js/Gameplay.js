@@ -19,6 +19,13 @@ Gameplay.create = function() {
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+
+	// M to spawn a mob
+	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+	spawnMobKey.onDown.add(() => {
+		new MobBadGuy(this);
+	});
+
 	playerSprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
 	game.debug.body(playerSprite);
 	playerSprite.scale.setTo(2, 2);
