@@ -49,6 +49,8 @@ function viewProfile() {
 	game.state.start('Account');
 }
 
+// Potential Bug; breaks signup page when uncommented, breaks menu when commented.
+
 function startOver() {
 	startBtn.loadTexture('startActive');
 }
@@ -56,6 +58,8 @@ function startOver() {
 function startOut() {
 	startBtn.loadTexture('start');
 }
+
+// End potential bug
 
 function scoreOver() {
 	scoreBtn.loadTexture('loginActive');
