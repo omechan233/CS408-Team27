@@ -1,4 +1,7 @@
 var SignUp = {};
+var newEmailInput;
+var newUserInput;
+var newPassInput;
 
 SignUp.preload = function() {
     game.load.spritesheet('startInactive', 'assets/start.png');
@@ -13,7 +16,7 @@ SignUp.create = function() {
     startButton.onInputOut.add(startOut, this);
     
     game.stage.backgroundColor = '#292c30';
-        var newEmailInput = game.add.inputField(game.world.centerX - 75, game.world.centerY, {
+    var newEmailInput = game.add.inputField(game.world.centerX - 75, game.world.centerY, {
         font: '18px Skia',
         fill: '#212121',
         fontWeight: 'bold',
@@ -54,6 +57,9 @@ SignUp.create = function() {
 }
 
 function start() {
+    var newEmail = newEmailInput.value;
+    var newUser = newUserInput.value;
+    var newPassword = newPassInput.value;
 	game.state.start('Menu');
 }
 
