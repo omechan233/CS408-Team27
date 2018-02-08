@@ -10,6 +10,9 @@ Menu.preload = function() {
 }
 
 Menu.create = function() {
+	game.world.width = game.camera.width;
+	game.world.height = game.camera.height;
+
 	game.stage.backgroundColor = '#2a93c7';
 	startBtn = game.add.button(0, 0, 'start', startGame, this);
 	startBtn.scale.setTo(1.2, 1.2);
@@ -24,7 +27,6 @@ Menu.create = function() {
 	scoreBtn.y = game.world.centerY - (scoreBtn.height / 2) + 120;
 	scoreBtn.onInputOver.add(scoreOver, this);
 	scoreBtn.onInputOut.add(scoreOut, this);
-
 
 	accountBtn = game.add.button(0, 0, 'account', viewProfile, this);
 	accountBtn.scale.setTo(1.2, 1.2);
