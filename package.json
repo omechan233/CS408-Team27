@@ -29,5 +29,8 @@
     "mongodb": "^3.0.2",
     "phaser": "^2.6.2",
     "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "@orange-games/phaser-input": "^2.0.5"
   }
 }

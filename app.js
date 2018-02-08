@@ -8,6 +8,7 @@ app.use('/js',      express.static(__dirname + '/js'));
 app.use('/assets',  express.static(__dirname + '/assets'));
 app.use('/server',  express.static(__dirname + '/server'));
 app.use('/phaser',  express.static(__dirname + '/node_modules/phaser/build'))
+app.use('/node_modules',  express.static(__dirname + '/node_modules'))
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
