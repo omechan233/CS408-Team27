@@ -26,6 +26,11 @@ Mob.prototype.followPlayer = function() {
 	game.physics.arcade.collide(this.sprite, playerSprite, this.collide, null, this);
 }
 
+Mob.prototype.stop = function() {
+	this.sprite.body.velocity.x = 0;
+	this.sprite.body.velocity.y = 0;
+}
+
 Mob.prototype.collide = function() {
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;

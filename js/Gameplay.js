@@ -4,12 +4,14 @@ Gameplay.preload = function() {
 	game.load.image('player', 'assets/Player.png');
 	game.load.tilemap('test', 'assets/Test.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('testtiles', 'assets/testtiles.png');
+	game.load.image('paused', 'assets/pause.png');
 }
 
 var map;
 var layer;
 var playerSprite;
 var mobs = [];
+var paused = false;
 
 Gameplay.create = function() {
 	map = game.add.tilemap('test');
@@ -28,6 +30,9 @@ Gameplay.create = function() {
 		mobs.push(new Mob(this));	
 	});
 
+	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+	pauseKey.onDown.add(this.pauseUnpause);
+
 	playerSprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
 	playerSprite.anchor.setTo(0.5, 0.5);
 	game.physics.arcade.enable(playerSprite);
@@ -36,36 +41,53 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
-	for (var i = 0; i < mobs.length; i++) {
-		mobs[i].update();
-	}
-	if (upKey.isDown) {
-		if (playerSprite.y <= game.camera.y + game.camera.height / 2) {
-			game.camera.y-=5;
+	if (!paused) {
+		for (var i = 0; i < mobs.length; i++) {
+			mobs[i].update();
 		}
-		playerSprite.y-=5;
-	}
-	else if (downKey.isDown) {
-		if (playerSprite.y >= game.camera.y + game.camera.height / 2) {
-			game.camera.y+=5;
+		if (upKey.isDown) {
+			if (playerSprite.y <= game.camera.y + game.camera.height / 2) {
+				game.camera.y-=5;
+			}
+			playerSprite.y-=5;
 		}
-		playerSprite.y+=5;
-	}
+		else if (downKey.isDown) {
+			if (playerSprite.y >= game.camera.y + game.camera.height / 2) {
+				game.camera.y+=5;
+			}
+			playerSprite.y+=5;
+		}
 
-	if (leftKey.isDown) {
-		if (playerSprite.x <= game.camera.x + game.camera.width / 2) {
-			game.camera.x-=5;
+		if (leftKey.isDown) {
+			if (playerSprite.x <= game.camera.x + game.camera.width / 2) {
+				game.camera.x-=5;
+			}
+			playerSprite.x-=5;
 		}
-		playerSprite.x-=5;
-	}
-	else if (rightKey.isDown) {
-		if (playerSprite.x >= game.camera.x + game.camera.width / 2) {
-			game.camera.x+=5;
+		else if (rightKey.isDown) {
+			if (playerSprite.x >= game.camera.x + game.camera.width / 2) {
+				game.camera.x+=5;
+			}
+			playerSprite.x+=5;
 		}
-		playerSprite.x+=5;
 	}
 }
 
 Gameplay.getPlayer = function() {
 	return playerSprite;
+}
+
+Gameplay.pauseUnpause = function() {
+	paused = !paused;
+	if (paused) {
+		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
+		pauseLayer.width = game.camera.width;
+		pauseLayer.height = game.camera.height;
+		for (var i = 0; i < mobs.length; i++) {
+			mobs[i].stop();
+		}
+	}
+	else {
+		pauseLayer.destroy();
+	}
 }
