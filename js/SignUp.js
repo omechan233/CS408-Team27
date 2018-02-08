@@ -57,7 +57,6 @@ function start() {
 	game.state.start('Menu');
 }
 
-
 function startOver() {
     startButton.loadTexture('startActive');
 }
