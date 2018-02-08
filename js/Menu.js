@@ -28,7 +28,7 @@ Menu.create = function() {
 	scoreBtn.onInputOver.add(scoreOver, this);
 	scoreBtn.onInputOut.add(scoreOut, this);
 
-	accountBtn = game.add.button(0, 0, 'account', viewProfile, this);
+	accountBtn = game.add.button(10, 10, 'account', viewProfile, this);
 	accountBtn.scale.setTo(1.2, 1.2);
 	accountBtn.onInputOver.add(accountOver, this);
 	accountBtn.onInputOut.add(accountOut, this);
