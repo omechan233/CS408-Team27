@@ -7,7 +7,17 @@ var topScoreY;
 var bottomScoreY;
 var topPos;
 
+HighScores.preload = function() {
+	game.load.image('menu', 'assets/login.png');
+	game.load.image('menuActive', 'assets/login_select.png');
+}
+
 HighScores.create = function() {
+	menuBtn = game.add.button(10, 10, 'menu', goToMenu, this);
+	menuBtn.scale.setTo(1.2, 1.2);
+	menuBtn.onInputOver.add(menuOver, this);
+	menuBtn.onInputOut.add(menuOut, this);
+
 	scores = generateRandomScores(100);
 	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -41,6 +51,18 @@ function getGlobalScores() {
 
 function getPlayerScores() {
 
+}
+
+function goToMenu() {
+	game.state.start('Menu');
+}
+
+function menuOver() {
+	menuBtn.loadTexture('menuActive');
+}
+
+function menuOut() {
+	menuBtn.loadTexture('menu');
 }
 
 function scrollDown() {
