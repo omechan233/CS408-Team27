@@ -5,8 +5,8 @@ Menu.preload = function() {
 	game.load.image('startActive', 'assets/start_select.png');
 	game.load.image('account', 'assets/account.png');
 	game.load.image('accountActive', 'assets/account_select.png');
-	game.load.image('login', 'assets/login.png');
-	game.load.image('loginActive', 'assets/login_select.png');
+	game.load.image('score', 'assets/scores.png');
+	game.load.image('scoreActive', 'assets/scores_select.png');
 }
 
 Menu.create = function() {
@@ -21,7 +21,7 @@ Menu.create = function() {
 	startBtn.onInputOver.add(startOver, this);
 	startBtn.onInputOut.add(startOut, this);
 
-	scoreBtn = game.add.button(0, 0, 'login', viewScore, this);
+	scoreBtn = game.add.button(0, 0, 'score', viewScore, this);
 	scoreBtn.scale.setTo(1.2, 1.2);
 	scoreBtn.x = game.world.centerX - (scoreBtn.width / 2);
 	scoreBtn.y = game.world.centerY - (scoreBtn.height / 2) + 120;
@@ -57,11 +57,11 @@ function startOut() {
 }
 
 function scoreOver() {
-	scoreBtn.loadTexture('loginActive');
+	scoreBtn.loadTexture('scoreActive');
 }
 
 function scoreOut() {
-	scoreBtn.loadTexture('login');
+	scoreBtn.loadTexture('score');
 }
 
 function accountOver() {
