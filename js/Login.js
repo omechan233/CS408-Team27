@@ -62,6 +62,11 @@ Login.create = function() {
 function logIn() {
     var username = loginUserInput.value;
     var password = loginPassInput.value;
+    var user = {
+        username: username,
+        password: password,
+        highscore: 0
+    }
 	game.state.start('Menu');
 }
 
