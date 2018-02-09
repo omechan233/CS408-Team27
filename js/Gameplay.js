@@ -92,6 +92,7 @@ Gameplay.pauseUnpause = function() {
 		text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, "PAUSED", style); 
 		text.anchor.setTo(0.5, 0.5);
 		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', quitGame, this)
+		quitBtn.scale.setTo(1.2, 1.2);
 		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2
 		quitBtn.onInputOver.add(quitOver, this);
 		quitBtn.onInputOut.add(quitOut, this);
