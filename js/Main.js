@@ -16,5 +16,5 @@ function preload() {
 	game.state.add('Gameplay', Gameplay);
 
 	game.smoothed = false;
-	game.state.start('Menu');
+	game.state.start('Login');
 }

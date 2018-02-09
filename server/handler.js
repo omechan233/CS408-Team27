@@ -11,31 +11,6 @@
 
 // TEMPORARY HELPER FUNCTIONS
 
-/* Save user object to local storage as JSON */
-
-var user = {
-    username: "",
-    password: "",
-    highscore: "",
-    scores,
-    rewards
-}
-
-var jsonUser = JSON.stringify(user);
-
-function saveUserData(user) {
-   var fs = require('fs');
-   fs.writeFile("user.txt", jsonUser, function(err) {
-       if (err) {
-           return console.log(err);
-       }
-   });
-}
-
-/* Retrieve user object */
-function getUserData() {
-    return JSON.parse(localStorage.getItem('user'));
-}
 
 /* Retrieve data from local JSON file */
 function getJSONFromFile(filename) {

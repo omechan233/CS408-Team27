@@ -14,24 +14,24 @@ Menu.create = function() {
 	game.world.height = game.camera.height;
 
 	game.stage.backgroundColor = '#2a93c7';
-	startBtn = game.add.button(0, 0, 'start', startGame, this);
-	startBtn.scale.setTo(1.2, 1.2);
-	startBtn.x = game.world.centerX - (startBtn.width / 2);
-	startBtn.y = game.world.centerY - (startBtn.height / 2) + 40;
-	startBtn.onInputOver.add(startOver, this);
-	startBtn.onInputOut.add(startOut, this);
+	this.state.startBtn = game.add.button(0, 0, 'start', startGame, this);
+	this.state.startBtn.scale.setTo(1.2, 1.2);
+	this.state.startBtn.x = game.world.centerX - (startBtn.width / 2);
+	this.state.startBtn.y = game.world.centerY - (startBtn.height / 2) + 40;
+	this.state.startBtn.onInputOver.add(startOver, this);
+	this.state.startBtn.onInputOut.add(startOut, this);
 
-	scoreBtn = game.add.button(0, 0, 'login', viewScore, this);
-	scoreBtn.scale.setTo(1.2, 1.2);
-	scoreBtn.x = game.world.centerX - (scoreBtn.width / 2);
-	scoreBtn.y = game.world.centerY - (scoreBtn.height / 2) + 120;
-	scoreBtn.onInputOver.add(scoreOver, this);
-	scoreBtn.onInputOut.add(scoreOut, this);
+	this.state.scoreBtn = game.add.button(0, 0, 'login', viewScore, this);
+	this.state.scoreBtn.scale.setTo(1.2, 1.2);
+	this.state.scoreBtn.x = game.world.centerX - (scoreBtn.width / 2);
+	this.state.scoreBtn.y = game.world.centerY - (scoreBtn.height / 2) + 120;
+	this.state.scoreBtn.onInputOver.add(scoreOver, this);
+	this.state.scoreBtn.onInputOut.add(scoreOut, this);
 
-	accountBtn = game.add.button(10, 10, 'account', viewProfile, this);
-	accountBtn.scale.setTo(1.2, 1.2);
-	accountBtn.onInputOver.add(accountOver, this);
-	accountBtn.onInputOut.add(accountOut, this);
+	this.state.accountBtn = game.add.button(10, 10, 'account', viewProfile, this);
+	this.state.accountBtn.scale.setTo(1.2, 1.2);
+	this.state.accountBtn.onInputOver.add(accountOver, this);
+	this.state.accountBtn.onInputOut.add(accountOut, this);
 }
 
 function startGame() {
@@ -51,27 +51,29 @@ function viewProfile() {
 // Potential Bug; breaks signup page when uncommented, breaks menu when commented.
 
 function startOver() {
-	startBtn.loadTexture('startActive');
+	this.state.startBtn.loadTexture('startActive');
 }
 
 function startOut() {
-	startBtn.loadTexture('start');
+    console.log(this.state);
+    console.log(this.state.startBtn);
+	this.state.startBtn.loadTexture('start');
 }
 
 // End potential bug
 
 function scoreOver() {
-	scoreBtn.loadTexture('loginActive');
+	this.state.scoreBtn.loadTexture('loginActive');
 }
 
 function scoreOut() {
-	scoreBtn.loadTexture('login');
+	this.state.scoreBtn.loadTexture('login');
 }
 
 function accountOver() {
-	accountBtn.loadTexture('accountActive');
+	this.state.accountBtn.loadTexture('accountActive');
 }
 
 function accountOut() {
-	accountBtn.loadTexture('account');
+	this.state.accountBtn.loadTexture('account');
 }
