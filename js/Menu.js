@@ -10,32 +10,31 @@ Menu.preload = function() {
 }
 
 Menu.create = function() {
+	game.world.width = game.camera.width;
+	game.world.height = game.camera.height;
+
 	game.stage.backgroundColor = '#2a93c7';
 	startBtn = game.add.button(0, 0, 'start', startGame, this);
 	startBtn.scale.setTo(1.2, 1.2);
 	startBtn.x = game.world.centerX - (startBtn.width / 2);
-	startBtn.y = game.world.centerY - (startBtn.height / 2);
+	startBtn.y = game.world.centerY - (startBtn.height / 2) + 40;
 	startBtn.onInputOver.add(startOver, this);
 	startBtn.onInputOut.add(startOut, this);
 
 	scoreBtn = game.add.button(0, 0, 'login', viewScore, this);
 	scoreBtn.scale.setTo(1.2, 1.2);
 	scoreBtn.x = game.world.centerX - (scoreBtn.width / 2);
-	scoreBtn.y = game.world.centerY - (scoreBtn.height / 2) - 40;
+	scoreBtn.y = game.world.centerY - (scoreBtn.height / 2) + 120;
 	scoreBtn.onInputOver.add(scoreOver, this);
 	scoreBtn.onInputOut.add(scoreOut, this);
 
-
 	accountBtn = game.add.button(0, 0, 'account', viewProfile, this);
 	accountBtn.scale.setTo(1.2, 1.2);
-	accountBtn.x = game.world.centerX - (accountBtn.width / 2);
-	accountBtn.y = game.world.centerY - (accountBtn.height / 2) + 40;
 	accountBtn.onInputOver.add(accountOver, this);
 	accountBtn.onInputOut.add(accountOut, this);
 }
 
 function startGame() {
-	game.stage.backgroundColor = '#ff0000';
 	game.state.start('Gameplay');
 }
 
