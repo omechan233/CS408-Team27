@@ -11,6 +11,7 @@
 
 // TEMPORARY HELPER FUNCTIONS
 
+
 /* Retrieve data from local JSON file */
 function getJSONFromFile(filename) {
     getJSON(filename, function(response) {

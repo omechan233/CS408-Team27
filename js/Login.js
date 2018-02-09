@@ -1,4 +1,6 @@
 var Login = {};
+var loginUserInput;
+var loginPassInput;
 
 Login.preload = function() {
     game.load.spritesheet('login', 'assets/login.png');
@@ -31,7 +33,7 @@ Login.create = function() {
     signupButton.onInputOver.add(signupOver, this);
     signupButton.onInputOut.add(signupOut, this);
     
-    var loginUserInput = game.add.inputField(game.world.centerX - 75, game.world.centerY, {
+    loginUserInput = game.add.inputField(game.world.centerX - 75, game.world.centerY, {
         font: '18px Skia',
         fill: '#212121',
         fontWeight: 'bold',
@@ -43,7 +45,7 @@ Login.create = function() {
         placeHolder: 'Username',
         type: PhaserInput.InputType.text
     });
-    var loginPassInput = game.add.inputField(game.world.centerX - 75, game.world.centerY + 70, {
+    loginPassInput = game.add.inputField(game.world.centerX - 75, game.world.centerY + 70, {
         font: '18px Skia',
         fill: '#212121',
         fontWeight: 'bold',
@@ -58,6 +60,13 @@ Login.create = function() {
 }
 
 function logIn() {
+    var username = loginUserInput.value;
+    var password = loginPassInput.value;
+    var user = {
+        username: username,
+        password: password,
+        highscore: 0
+    }
 	game.state.start('Menu');
 }
 
