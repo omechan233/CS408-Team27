@@ -28,6 +28,7 @@
     "express": "^4.16.2",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.3",
+    "password-hash": "^1.2.2",
     "phaser": "^2.6.2",
     "require": "^2.4.20",
     "socket.io": "^2.0.4"
