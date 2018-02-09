@@ -31,5 +31,8 @@
     "phaser": "^2.6.2",
     "require": "^2.4.20",
     "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "@orange-games/phaser-input": "^2.0.5"
   }
 }
