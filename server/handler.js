@@ -11,13 +11,11 @@
 
 // TEMPORARY HELPER FUNCTIONS
 
-
 /* Retrieve data from local JSON file */
 function getJSONFromFile(filename) {
     getJSON(filename, function(response) {
-        console.log("JSON Data from %s", filename);
-        console.log(JSON.parse(response));
-    })
+        return JSON.parse(response);
+    });
 }
 
 /* Helper function for getJSONFromFile() */
@@ -31,9 +29,10 @@ function getJSON(filename, callback) {
     xml.send(null);
 }
 
+
 // TEST DRIVERS
 
-getJSONFromFile("/server/users.json");
+// getJSONFromFile("/server/users.json");
 
 
 

@@ -11,6 +11,7 @@ Login.preload = function() {
 }
 
 Login.create = function() {
+    socket = io.connect();
     // Create Background
     game.stage.backgroundColor = '#292c30';
     
@@ -65,9 +66,16 @@ function logIn() {
     var user = {
         username: username,
         password: password,
-        highscore: 0
     }
-	game.state.start('Menu');
+    // send user data to server for verification
+    socket.emit('onLogin', user);
+
+    socket.on('loginTrue', () => {
+        game.state.start('Menu');
+    });
+    socket.on('loginFalse', () => {
+        console.log("invalid login");
+    });
 }
 
 function signUp() {
