@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
+var fs = require('file-system');
+var handler = require('./server/handler.js');
 
 app.use('/css',     express.static(__dirname + '/css'));
 app.use('/js',      express.static(__dirname + '/js'));
@@ -28,4 +30,52 @@ server.listen(process.env.PORT || 3000, function() {
 
 //     console.log("CONNECTED");
 // });
+
+/* WRITE */
+
+io.sockets.on('connection', onSocketConnection);
+
+function onSocketConnection(client) {
+    console.log("New connection %s", client.id);
+
+    client.on('saveData', onSaveData);
+    client.on('onLogin', onLogin);
+}
+
+function onSaveData(userData) {
+    fs.writeFile("user.txt", userData, function(err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+}
+
+function onLogin(user) {
+    let match = readUserData();
+    console.log(user);
+    console.log(match);
+
+    if (!user.username || !user.password) {
+        console.log("empty credentials");
+        this.emit('loginFalse');
+    }
+    else if (user.username == match.username && 
+        user.password == match.password) {
+        console.log("successful login");
+        this.emit('loginTrue');
+    }
+    else {
+        console.log("invalid login");
+        this.emit('loginFalse');
+    }
+}
+
+function readUserData() {
+    return JSON.parse(fs.readFileSync("user.txt", 'utf8'));
+}
+
+
+
+
+
 

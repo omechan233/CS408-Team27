@@ -10,6 +10,7 @@ SignUp.preload = function() {
 }
 
 SignUp.create = function() {
+    socket = io.connect();
     
     startButton = game.add.button(game.world.centerX - 75, game.world.centerY + 225, 'startInactive', start, this);
     startButton.onInputOver.add(startOver, this);
@@ -29,7 +30,7 @@ SignUp.create = function() {
 //        type: PhaserInput.InputType.text
 //    });
     
-    var newUserInput = game.add.inputField(game.world.centerX - 75, game.world.centerY + 70, {
+    newUserInput = game.add.inputField(game.world.centerX - 75, game.world.centerY + 70, {
         font: '18px Skia',
         fill: '#212121',
         fontWeight: 'bold',
@@ -42,7 +43,7 @@ SignUp.create = function() {
         type: PhaserInput.InputType.text
     });
     
-    var newPassInput = game.add.inputField(game.world.centerX - 75, game.world.centerY + 140, {
+    newPassInput = game.add.inputField(game.world.centerX - 75, game.world.centerY + 140, {
         font: '18px Skia',
         fill: '#212121',
         fontWeight: 'bold',
@@ -57,15 +58,9 @@ SignUp.create = function() {
 }
 
 function saveUserData(user) {
-    var fs = require('fs');
-    var json = JSON.stringify(user);
-    fs.writeFile("user.txt", jsonUser, function(err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    var userData = JSON.stringify(user);
+    socket.emit('saveData', userData);
 }
-
 
 function start() {
     var newUser = newUserInput.value;
@@ -75,7 +70,7 @@ function start() {
         password: newPassword,
         highscore: 0
     }
-    saveUserData(json);
+    saveUserData(user);
     
 	game.state.start('Menu');
 }
@@ -87,3 +82,6 @@ function startOver() {
 function startOut() {
     startButton.loadTexture('startInactive');
 }
+
+
+

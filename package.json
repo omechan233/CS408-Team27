@@ -26,6 +26,7 @@
   "homepage": "https://github.com/omechan233/CS408-Team27#readme",
   "dependencies": {
     "express": "^4.16.2",
+    "file-system": "^2.2.2",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.3",
     "password-hash": "^1.2.2",
