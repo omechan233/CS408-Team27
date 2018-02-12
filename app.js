@@ -40,6 +40,7 @@ function onSocketConnection(client) {
 
     client.on('saveData', onSaveData);
     client.on('onLogin', onLogin);
+    client.on('changePass', changePass);
 }
 
 function onSaveData(userData) {
@@ -51,7 +52,7 @@ function onSaveData(userData) {
 }
 
 function onLogin(user) {
-    let match = readUserData();
+    var match = readUserData();
     console.log(user);
     console.log(match);
 
@@ -74,7 +75,12 @@ function readUserData() {
     return JSON.parse(fs.readFileSync("user.txt", 'utf8'));
 }
 
-
+function changePass(newPassword) {
+    var match = readUserData();
+    match.password = newPassword;
+    console.log("successful password change");
+    onSaveData(JSON.stringify(match));
+}
 
 
 
