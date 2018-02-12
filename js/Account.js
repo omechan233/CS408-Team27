@@ -13,9 +13,9 @@ Account.preload = function() {
 }
 
 Account.create = function() {
-    changePassword = game.add.button(game.world.centerX - 75, game.world.centerY + 225, 'cpInactive', changePassword, this);
-    changePassword.onInputOver.add(cpOver, this);
-    changePassword.onInputOut.add(cpOut, this);
+    input = game.add.button(game.world.centerX - 75, game.world.centerY + 225, 'cpInactive', changePassword, this);
+    input.onInputOver.add(cpOver, this);
+    input.onInputOut.add(cpOut, this);
     
     menuBtn = game.add.button(10, 10, 'menu', goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
