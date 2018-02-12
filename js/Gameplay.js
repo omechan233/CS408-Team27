@@ -48,6 +48,7 @@ Gameplay.create = function() {
 	game.physics.arcade.enable(playerSprite);
 	playerSprite.scale.setTo(2, 2);
 	playerSprite.body.immovable = true;
+	playerSprite.body.collideWorldBounds = true;
 
 	var scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
