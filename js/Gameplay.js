@@ -7,13 +7,13 @@ Gameplay.preload = function() {
 	game.load.image('paused', 'assets/pause.png');
 	game.load.image('quit', 'assets/login.png');
 	game.load.image('quitActive', 'assets/login_select.png');
+	this.state.paused = false;
 }
 
 var map;
 var layer;
 var playerSprite;
 var mobs = [];
-var paused = false;
 var text;
 var style;
 var score = 0;
@@ -57,7 +57,7 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
-	if (!paused) {
+	if (!this.state.paused) {
 		this.updateScore();
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].update();
@@ -103,8 +103,8 @@ Gameplay.getPlayer = function() {
 }
 
 Gameplay.pauseUnpause = function() {
-	paused = !paused;
-	if (paused) {
+	this.state.paused = !this.state.paused;
+	if (this.state.paused) {
 		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
 		pauseLayer.width = game.camera.width;
 		pauseLayer.height = game.camera.height;
