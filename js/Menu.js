@@ -40,6 +40,11 @@ Menu.create = function() {
 	difficultyBtn.scale.setTo(.8, .8);
 	var style = { font: "Lucida Console", fontSize: "18px", wordWrap: false, align: "center", fontWeight: "bold" };
 	difficultyText = game.add.text(difficultyBtn.x + 150, difficultyBtn.y + 8, "Difficulty: easy", style);
+
+	logoutBtn = game.add.button(0, 0, 'login', this.logOut, this);
+	logoutBtn.scale.setTo(1.2, 1.2);
+	logoutBtn.x = game.world.centerX - (logoutBtn.width / 2);
+	logoutBtn.y = game.world.centerY - (logoutBtn.height / 2) + 240;
 }
 
 Menu.showDifficulty = function() {
@@ -70,6 +75,10 @@ Menu.startGame = function() {
 Menu.viewScore = function() {
 	game.stage.backgroundColor = '#00ff00';
 	game.state.start('HighScores');
+}
+
+Menu.logOut = function() {
+	game.state.start('Login');
 }
 
 Menu.viewProfile = function() {
