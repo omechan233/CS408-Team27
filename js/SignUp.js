@@ -58,8 +58,7 @@ SignUp.create = function() {
 }
 
 function saveUserData(user) {
-    var userData = JSON.stringify(user);
-    socket.emit('saveData', userData);
+    socket.emit('saveData', user);
 }
 
 function start() {
