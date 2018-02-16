@@ -69,7 +69,7 @@ function onLogin(user) {
         this.emit('loginFalse');
     }
     else if (user.username == match.username && 
-        user.password == match.password) {
+        passwordHash.verify(user.password, match.password)) {
         console.log("successful login");
         this.emit('loginTrue');
     }
