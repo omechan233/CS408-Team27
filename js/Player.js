@@ -25,11 +25,45 @@ Player.prototype.attack = function() {
 
     this.isAttacking = true;
 
-    slashfx = this.game.add.sprite(this.sprite.x + 30, this.sprite.y, 'slashfx');
-    slashfx.anchor.setTo(0.5, 0.5);
-    slashfx.scale.setTo(2, 2);
+    // get mouse quadrant position (based on player location)
+    mpx = this.game.input.mousePointer.x;
+    mpy = this.game.input.mousePointer.y;
+    // window center
+    wCenter = {x: window.innerWidth / 2, y: window.innerHeight / 2}
+    slope = window.innerHeight / window.innerWidth;
 
-    slashBox = this.swing.create(this.sprite.x + 30, this.sprite.y);
+    quadrant = calculateQuadrant(mpx, mpy, slope);
+
+    xOff = 0, yOff = 0, dirX = 1, dirY = 1, rot = 0;
+
+    switch (quadrant) {
+        case "north":
+            yOff = -30;
+            dirY = 1;
+            rot = 270;
+            break;
+        case "east":
+            xOff = 30;
+            dirX = 1;
+            break;
+        case "south":
+            yOff = 30;
+            dirY = -1;
+            rot = 90;
+            break;
+        case "west":
+            xOff = -30;
+            dirX = -1;
+            break;
+    }
+
+    slashfx = this.game.add.sprite(this.sprite.x + xOff, this.sprite.y + yOff, 'slashfx');
+    slashfx.angle = rot;
+    slashfx.anchor.setTo(0.5, 0.5);
+    slashfx.scale.setTo(2 * dirX, 2);
+
+    slashBox = this.swing.create(this.sprite.x + xOff, this.sprite.y + yOff);
+    slashBox.angle = rot;
     slashBox.anchor.setTo(0.5, 0.5);
     slashBox.scale.setTo(2, 2);
     slashBox.enableBody = true;
@@ -43,3 +77,23 @@ Player.prototype.stopAttack = function() {
     slashfx.kill();
     slashBox.kill();
 }
+
+function calculateQuadrant(mpx, mpy, slope) {
+
+    // calculate correct mouse location (y is flipped)
+    b = window.innerHeight;
+    mpy = b - mpy;
+
+    // north or west quadrant
+    if (mpy > slope * mpx) {
+        return mpy > (-slope * mpx + b) ? "north" : "west";
+    }
+    // south or east quadrant
+    else {
+        return mpy > (-slope * mpx + b) ? "east" : "south";
+    }
+
+}
+
+
+
