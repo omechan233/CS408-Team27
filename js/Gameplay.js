@@ -62,8 +62,15 @@ Gameplay.update = function() {
 	if (!paused) {
 		this.updateScore();
 		for (var i = 0; i < mobs.length; i++) {
+			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
+				player.swing.children[0].kill();
+				mobs[i].destroy();
+				score++;
+			}
 			mobs[i].update();
 		}
+
+		player.update();
 		if (upKey.isDown) {
 			if (playerSprite.y <= game.camera.y + game.camera.height / 2) {
 				game.camera.y-=5;

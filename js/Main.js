@@ -6,6 +6,8 @@ var game = new Phaser.Game(window.innerWidth - 20, window.innerHeight - 20,
 function preload() {
 	game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
 	game.scale.setUserScale(1, 1);
+    
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	game.state.add('Title', Title);
 	game.state.add('Login', Login);
