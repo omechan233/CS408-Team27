@@ -1,3 +1,10 @@
+/*
+ *
+ *  TODO:
+ *  Fix directional combat to use mouse positions relative to player, rather than window
+ *
+ */
+
 Player = function(game) {
 
     this.game = game;
@@ -38,7 +45,7 @@ Player.prototype.attack = function() {
 
     switch (quadrant) {
         case "north":
-            yOff = -30;
+            yOff = -40;
             dirY = 1;
             rot = 270;
             break;
@@ -47,7 +54,7 @@ Player.prototype.attack = function() {
             dirX = 1;
             break;
         case "south":
-            yOff = 30;
+            yOff = 40;
             dirY = -1;
             rot = 90;
             break;
@@ -65,7 +72,7 @@ Player.prototype.attack = function() {
     slashBox = this.swing.create(this.sprite.x + xOff, this.sprite.y + yOff);
     slashBox.angle = rot;
     slashBox.anchor.setTo(0.5, 0.5);
-    slashBox.scale.setTo(2, 2);
+    slashBox.scale.setTo(2 * dirX, 2);
     slashBox.enableBody = true;
 
     this.game.time.events.add(100, this.stopAttack, this);
