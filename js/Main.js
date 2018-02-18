@@ -14,6 +14,7 @@ function preload() {
 	game.state.add('Account', Account);
 	game.state.add('HighScores', HighScores);
 	game.state.add('Gameplay', Gameplay);
+    game.state.add('Select', Select);
 
 	game.smoothed = false;
 	game.state.start('Login');
