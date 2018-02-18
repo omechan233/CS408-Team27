@@ -69,7 +69,7 @@ Menu.changeDifficulty = function() {
 }
 
 Menu.startGame = function() {
-	game.state.start('Gameplay');
+	game.state.start('Select');
 }
 
 Menu.viewScore = function() {
