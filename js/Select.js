@@ -1,5 +1,4 @@
 var Select = {};
-var startBtn;
 var maps = [];
 
 Select.preload = function() {
@@ -9,28 +8,36 @@ Select.preload = function() {
     game.load.image('forest3', 'assets/forest3_preview.png');
     game.load.image('water', 'assets/water.png');
     game.load.image('base', 'assets/base_preview.png');
-    game.load.image('start', 'assets/start.png');
+    game.load.image('startInactive', 'assets/start.png');
+    game.load.image('menuInactive', 'assets/login.png');
+	game.load.image('menuActive', 'assets/login_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
 Select.create = function() {
     game.stage.backgroundColor = '#cc1634';
-    startBtn = game.add.button(game.world.centerX - 100, game.world.centerY + 225, 'start', startGame, this);
+    this.startBtn = game.add.button(game.world.centerX - 100, game.world.centerY + 225, 'startInactive', this.startGame, this);
 //    start.onInputOver.add(startOver, this);
 //    start.onInputOut.add(startOut, this);
+    
+    menuBtn = game.add.button(10, 10, 'menuInactive', this.goToMenu, this);
+	menuBtn.scale.setTo(1.2, 1.2);
+	menuBtn.onInputOver.add(this.menuOver, this);
+	menuBtn.onInputOut.add(this.menuOut, this);
+    
     maps.push(game.add.sprite(0, 0, 'ocean')); 
     maps.push(game.add.sprite(0, 0, 'forest'));
     maps.push(game.add.sprite(0, 0, 'forest2')); 
     maps.push(game.add.sprite(0, 0, 'forest3')); 
     maps.push(game.add.sprite(0, 0, 'water')); 
     maps.push(game.add.sprite(0, 0, 'base')); 
-    maps.forEach(function (item) {
-        item.anchor.setTo(0.5, 0.5);
-        item.x = game.width + 150;
-        item.y = game.height / 2;
-        item.inputEnabled = true;
-        item.events.onInputDown.add(clickListener, this);
-    });
+    for (var i = 0; i < maps.length; i++) {
+        maps[i].anchor.setTo(0.5, 0.5);
+        maps[i].x = game.width + 150;
+        maps[i].y = game.height / 2;
+//        maps[i].inputEnabled = true;
+        maps[i].events.onInputDown.add(clickListener, this);
+    }
     
     var totalMaps = maps.length;
     var prime = 0;
@@ -114,14 +121,26 @@ Select.create = function() {
     }
 }
 
-function startGame() {
+Select.startGame = function() {
     game.state.start('Gameplay');
 }
 
-function startOver() {
+Select.startOver = function(){
     
 }
 
-function startOut() {
+Select.startOut = function(){
 
+}
+
+Select.goToMenu = function(){
+	game.state.start('Menu');
+}
+
+Select.menuOver = function(){
+	menuBtn.loadTexture('menuActive');
+}
+
+Select.menuOut = function(){
+	menuBtn.loadTexture('menuInactive');
 }
