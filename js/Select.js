@@ -1,26 +1,127 @@
 var Select = {};
-var map;
+var startBtn;
+var maps = [];
 
 Select.preload = function() {
-    game.load.spritesheet('base', 'assets/base.png');
+    game.load.image('ocean', 'assets/ocean_preview.png');
+    game.load.image('forest', 'assets/forest_preview.png');
+    game.load.image('forest2', 'assets/forest2_preview.png');
+    game.load.image('forest3', 'assets/forest3_preview.png');
+    game.load.image('water', 'assets/water.png');
+    game.load.image('base', 'assets/base_preview.png');
+    game.load.image('start', 'assets/start.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
 Select.create = function() {
     game.stage.backgroundColor = '#cc1634';
-    map = game.add.button(game.world.centerX - 100, game.world.centerY - 225, 'base', startGame, this);
-    map.onInputOver.add(mapOver, this);
-    map.onInputOut.add(mapOut, this);
+    startBtn = game.add.button(game.world.centerX - 100, game.world.centerY + 225, 'start', startGame, this);
+//    start.onInputOver.add(startOver, this);
+//    start.onInputOut.add(startOut, this);
+    maps.push(game.add.sprite(0, 0, 'ocean')); 
+    maps.push(game.add.sprite(0, 0, 'forest'));
+    maps.push(game.add.sprite(0, 0, 'forest2')); 
+    maps.push(game.add.sprite(0, 0, 'forest3')); 
+    maps.push(game.add.sprite(0, 0, 'water')); 
+    maps.push(game.add.sprite(0, 0, 'base')); 
+    maps.forEach(function (item) {
+        item.anchor.setTo(0.5, 0.5);
+        item.x = game.width + 150;
+        item.y = game.height / 2;
+        item.inputEnabled = true;
+        item.events.onInputDown.add(clickListener, this);
+    });
+    
+    var totalMaps = maps.length;
+    var prime = 0;
+    var animationSpeed = 200;
+
+    function setToPosition(prime) {
+        maps[prime].x = game.width;
+        if (prime<(totalMaps-1)) {
+            maps[prime + 1].x = game.width / 2;
+            maps[prime + 1].scale.setTo(0.5,0.5);
+        }
+    
+        if (prime > 0) {
+            maps[prime - 1].x = game.width / 2;
+            maps[prime - 1].scale.setTo(0.5,0.5);
+        }
+    }
+    
+    setToPosition(prime);
+    var xleft = game.width / 2 - 67 - 75;
+    var xprime = game.width / 2;
+    var xright = game.width / 2 + 67 + 75;
+
+    function nextMap() {
+        game.add.tween(maps[prime]).to( { x: xleft}, animationSpeed, null, true);
+    
+        game.add.tween(maps[prime].scale).to( { x: 0.5 , y: 0.5}, animationSpeed, null, true);
+        
+        if (prime < 5) {
+            game.add.tween(maps[prime+1]).to( { x: xprime}, animationSpeed, null, true);
+            game.add.tween(maps[prime+1].scale).to( { x: 1 , y: 1}, animationSpeed, null, true);
+        }
+        
+        if (prime < 4) {
+            maps[prime+2].x = game.width + 150;
+            maps[prime+2].scale.setTo(0.5,0.5);
+            game.add.tween(maps[prime+2]).to( { x: xright}, animationSpeed, null, true);
+        }
+    
+        if (prime > 0) {
+        //themes[prime+1].x = -150;
+            maps[prime-1].scale.setTo(0.5,0.5);
+            game.add.tween(maps[prime-1]).to( { x: -150}, animationSpeed, null, true);
+        }
+        prime++;
+    }
+
+    function previousMap() {
+        game.add.tween(maps[prime]).to( { x: xright},       animationSpeed, null, true);
+    
+        game.add.tween(maps[prime].scale).to( { x: 0.5 , y: 0.5}, animationSpeed, null, true);
+    
+        if (prime > 0 ) {
+            game.add.tween(maps[prime-1]).to( { x: xprime}, animationSpeed, null, true);
+            game.add.tween(maps[prime-1].scale).to( { x: 1 , y: 1}, animationSpeed, null, true);
+        }
+    
+        if (prime > 1) {
+            maps[prime-2].x = - 150;
+            maps[prime-2].scale.setTo(0.5,0.5);
+            game.add.tween(maps[prime-2]).to( { x: xleft}, animationSpeed, null, true);
+        }
+    
+        if (prime < (totalMaps - 1)) {
+            //themes[prime+1].x = -150;
+            maps[prime+1].scale.setTo(0.5,0.5);
+            game.add.tween(maps[prime+1]).to( { x: game.width +    150}, animationSpeed, null, true);
+        }
+        prime--;
+    }
+
+    function clickListener (el) {
+        console.log(maps.indexOf(el));
+        var clickedPos = maps.indexOf(el);
+        if (clickedPos > prime) {
+            //move to left
+            nextMap();
+        } else if (clickedPos < prime) {
+            previousMap();
+        }
+    }
 }
 
 function startGame() {
     game.state.start('Gameplay');
 }
 
-function mapOver() {
-    map.alpha = "0.85";   
+function startOver() {
+    
 }
 
-function mapOut() {
-    map.alpha = "1.00";
+function startOut() {
+
 }
