@@ -4,6 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var fs = require('file-system');
 var handler = require('./server/handler.js');
+var passwordHash = require('password-hash');
 
 app.use('/css',     express.static(__dirname + '/css'));
 app.use('/js',      express.static(__dirname + '/js'));
@@ -40,9 +41,17 @@ function onSocketConnection(client) {
 
     client.on('saveData', onSaveData);
     client.on('onLogin', onLogin);
+    client.on('changePass', changePass);
 }
 
-function onSaveData(userData) {
+function hashPassword(user) {
+    var hashword = passwordHash.generate(user.password);
+    user.password = hashword;
+}
+
+function onSaveData(user) {
+    hashPassword(user);
+    var userData = JSON.stringify(user);
     fs.writeFile("user.txt", userData, function(err) {
         if (err) {
             return console.log(err);
@@ -51,7 +60,7 @@ function onSaveData(userData) {
 }
 
 function onLogin(user) {
-    let match = readUserData();
+    var match = readUserData();
     console.log(user);
     console.log(match);
 
@@ -60,7 +69,7 @@ function onLogin(user) {
         this.emit('loginFalse');
     }
     else if (user.username == match.username && 
-        user.password == match.password) {
+        passwordHash.verify(user.password, match.password)) {
         console.log("successful login");
         this.emit('loginTrue');
     }
@@ -74,7 +83,12 @@ function readUserData() {
     return JSON.parse(fs.readFileSync("user.txt", 'utf8'));
 }
 
-
+function changePass(newPassword) {
+    var match = readUserData();
+    match.password = passwordHash.generate(newPassword);
+    console.log("successful password change");
+    onSaveData(JSON.stringify(match));
+}
 
 
 

@@ -44,7 +44,7 @@ function changePassword() {
 }
 
 function submit() {
-    console.log(newPassword.value);
+    socket.emit('changePass', newPassword.value);
 }
 
 function changeOver() {
@@ -56,11 +56,11 @@ function changeOut() {
 }
 
 function cpOver() {
-    changePassword.loadTexture('cpActive');
+    input.loadTexture('cpActive');
 }
 
 function cpOut() {
-    changePassword.loadTexture('cpInactive');
+    input.loadTexture('cpInactive');
 }
 
 function goToMenu() {
