@@ -11,15 +11,6 @@ Gameplay.preload = function() {
 	this.state.paused = false;
 }
 
-var map;
-var layer;
-var playerSprite;
-var mobs = [];
-var text;
-var style;
-var score = 0;
-var scoreText;
-
 Gameplay.create = function() {
 	map = game.add.tilemap('test');
 	map.addTilesetImage('testworld', 'testtiles');
@@ -36,7 +27,7 @@ Gameplay.create = function() {
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
 	spawnMobKey.onDown.add(() => {
 	//	new MobBadGuy(this);
-		mobs.push(new Mob(this));	
+		mobs.push(new MobBadGuy(this));	
 	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -52,10 +43,13 @@ Gameplay.create = function() {
 
 	game.input.onDown.add(player.attack, player);
 
-	var scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
+	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
 	scoreText.fixedToCamera = true;
 	scoreText.anchor.setTo(1, 0);
+
+	mobs = [];
+	score = 0;
 }
 
 Gameplay.update = function() {
@@ -115,11 +109,11 @@ Gameplay.pauseUnpause = function() {
 		pauseLayer.height = game.camera.height;
 		text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, "PAUSED", style); 
 		text.anchor.setTo(0.5, 0.5);
-		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', quitGame, this)
+		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this)
 		quitBtn.scale.setTo(1.2, 1.2);
 		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2
-		quitBtn.onInputOver.add(quitOver, this);
-		quitBtn.onInputOut.add(quitOut, this);
+		quitBtn.onInputOver.add(this.quitOver, this);
+		quitBtn.onInputOut.add(this.quitOut, this);
 
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].stop();
@@ -132,14 +126,14 @@ Gameplay.pauseUnpause = function() {
 	}
 }
 
-function quitGame() {
+Gameplay.quitGame = function() {
 	game.state.start('Menu', true, false);
 }
 
-function quitOver() {
+Gameplay.quitOver = function() {
 	quitBtn.loadTexture('quitActive');
 }
 
-function quitOut() {
+Gameplay.quitOut = function() {
 	quitBtn.loadTexture('quit');
 }

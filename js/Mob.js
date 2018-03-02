@@ -1,12 +1,14 @@
 Mob = function(game) {
 
-    this.game = game;
+	this.game = game;
 
-    this.health = 10;
+	this.health = 10;
 
-    //this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 
-	this.sprite = game.add.sprite(0, 0, 'player');
+	var x = game.rnd.integerInRange(0, game.world._width);
+	var y = game.rnd.integerInRange(0, game.world._height);
+
+	this.sprite = game.add.sprite(x, y, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
 	
 	this.game.physics.arcade.enable(this.sprite);
