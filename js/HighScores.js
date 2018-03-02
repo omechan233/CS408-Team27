@@ -39,6 +39,7 @@ HighScores.update = function() {
 
 function showScores(scores) {
 	console.log(scores);
+	scores.sort(this.compareDescending);
 	for (var i = 0; i < scores.length; i++) {
 		var temp = game.add.text(game.world.centerX, i * 50 + 100, scores[i], style);
 		temp.anchor.setTo(0.5, 0.5);
