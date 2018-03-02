@@ -43,6 +43,9 @@ Gameplay.create = function() {
 
 	game.input.onDown.add(player.attack, player);
 
+	cursors = game.input.keyboard.createCursorKeys();
+	
+
 	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
 	scoreText.fixedToCamera = true;
@@ -50,6 +53,8 @@ Gameplay.create = function() {
 
 	mobs = [];
 	score = 0;
+
+	game.camera.follow(playerSprite);
 }
 
 Gameplay.update = function() {
@@ -65,30 +70,18 @@ Gameplay.update = function() {
 		}
 
 		player.update();
-		if (upKey.isDown) {
-			if (playerSprite.y <= game.camera.y + game.camera.height / 2) {
-				game.camera.y-=5;
-			}
-			playerSprite.y-=5;
-		}
-		else if (downKey.isDown) {
-			if (playerSprite.y >= game.camera.y + game.camera.height / 2) {
-				game.camera.y+=5;
-			}
-			playerSprite.y+=5;
-		}
 
-		if (leftKey.isDown) {
-			if (playerSprite.x <= game.camera.x + game.camera.width / 2) {
-				game.camera.x-=5;
-			}
-			playerSprite.x-=5;
+		if (cursors.up.isDown) {
+			player.up();
 		}
-		else if (rightKey.isDown) {
-			if (playerSprite.x >= game.camera.x + game.camera.width / 2) {
-				game.camera.x+=5;
-			}
-			playerSprite.x+=5;
+		else if (cursors.down.isDown) {
+			player.down();
+		}
+		if (cursors.right.isDown) {
+			player.right();
+		}
+		else if (cursors.left.isDown) {
+			player.left();
 		}
 	}
 }

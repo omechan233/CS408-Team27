@@ -13,7 +13,8 @@ Mob = function(game) {
 	
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
-	this.sprite.body.stopVelocityOnCollide = true;
+	this.sprite.body.stopVelocityOnCollide = true;	
+	this.sprite.body.collideWorldBounds = true;
 }
 
 Mob.prototype.update = function() {
@@ -26,7 +27,7 @@ Mob.prototype.followPlayer = function() {
 	playerSprite = Gameplay.getPlayer();
 	let dist = game.physics.arcade.distanceBetween(this.sprite, playerSprite);
 	game.physics.arcade.moveToObject(this.sprite, playerSprite, 50);
-	game.physics.arcade.collide(this.sprite, playerSprite, this.collide, null, this);
+	game.physics.arcade.collide(this.sprite, playerSprite);
 }
 
 Mob.prototype.stop = function() {
