@@ -1,11 +1,5 @@
 var HighScores = {};
 
-var scores;
-var scoreText = [];
-var style;
-var topScoreY;
-var bottomScoreY;
-var topPos;
 
 HighScores.preload = function() {
 	game.load.image('menu', 'assets/login.png');
@@ -13,30 +7,37 @@ HighScores.preload = function() {
 }
 
 HighScores.create = function() {
+
+	scoreText = [];
+	topScoreY = 0;
+	bottomScoreY = 0;
+//	var topPos;
+
+
 	menuBtn = game.add.button(10, 10, 'menu', goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
 	menuBtn.onInputOver.add(menuOver, this);
 	menuBtn.onInputOut.add(menuOut, this);
 
-	scores = generateRandomScores(100);
+	scores = this.generateRandomScores(100);
 	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 	topPos = 100;
 	topScoreY = topPos;
-	showScores();
+	this.showScores();
 }
 
 HighScores.update = function() {
 	if (upKey.isDown) {
-		scrollUp();
+		this.scrollUp();
 	}
 	else if (downKey.isDown) {
-		scrollDown();
+		this.scrollDown();
 	}
 }
 
-function showScores() {
+HighScores.showScores = function() {
 	for (var i = 0; i < scores.length; i++) {
 		var temp = game.add.text(game.world.centerX, i * 50 + 100, scores[i], style);
 		temp.anchor.setTo(0.5, 0.5);
@@ -53,19 +54,19 @@ function getPlayerScores() {
 
 }
 
-function goToMenu() {
+HighScores.goToMenu = function() {
 	game.state.start('Menu');
 }
 
-function menuOver() {
+HighScores.menuOver = function() {
 	menuBtn.loadTexture('menuActive');
 }
 
-function menuOut() {
+HighScores.menuOut = function() {
 	menuBtn.loadTexture('menu');
 }
 
-function scrollDown() {
+HighScores.scrollDown = function() {
 	if (bottomScoreY + scoreText[scoreText.length - 1].height > game.camera.height - 10) {
 		bottomScoreY -= 8;
 		topScoreY -= 8;
@@ -75,7 +76,7 @@ function scrollDown() {
 	}
 }
 
-function scrollUp() {
+HighScores.scrollUp = function() {
 	if (topScoreY < topPos) {
 		topScoreY += 8;
 		bottomScoreY += 8;
@@ -85,19 +86,19 @@ function scrollUp() {
 	}
 }
 
-function generateRandomScores(numScores) {
+HighScores.generateRandomScores = function(numScores) {
 	var newScores = [];
 	for (var i = 0; i < numScores; i++) {
 		newScores.push(Math.ceil(Math.random() * 1000));
 	}
-	newScores.sort(compareDescending);
+	newScores.sort(this.compareDescending);
 	return newScores;
 }
 
-function compareAscending(a, b) {
+HighScores.compareAscending = function(a, b) {
 	return a - b;
 }
 
-function compareDescending(a, b) {
+HighScores.compareDescending = function(a, b) {
 	return b - a;
 }
