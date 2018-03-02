@@ -55,6 +55,7 @@ function getPlayerScores() {
 }
 
 HighScores.goToMenu = function() {
+	game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 

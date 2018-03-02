@@ -69,20 +69,24 @@ Menu.changeDifficulty = function() {
 }
 
 Menu.startGame = function() {
+	game.state.clearCurrentState();
 	game.state.start('Select');
 }
 
 Menu.viewScore = function() {
-	game.stage.backgroundColor = '#00ff00';
+	game.stage.backgroundColor = '#00ff00'
+	game.state.clearCurrentState();
 	game.state.start('HighScores');
 }
 
 Menu.logOut = function() {
+	game.state.clearCurrentState();
 	game.state.start('Login');
 }
 
 Menu.viewProfile = function() {
 	game.stage.backgroundColor = '#0000ff';
+	game.state.clearCurrentState();
 	game.state.start('Account');
 }
 

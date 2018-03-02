@@ -133,6 +133,7 @@ Gameplay.pauseUnpause = function() {
 }
 
 function quitGame() {
+	game.state.clearCurrentState();
 	game.state.start('Menu', true, false);
 }
 
