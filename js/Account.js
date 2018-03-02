@@ -64,6 +64,7 @@ function cpOut() {
 }
 
 function goToMenu() {
+    game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 

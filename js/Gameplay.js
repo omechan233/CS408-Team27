@@ -2,6 +2,7 @@ var Gameplay = {};
 
 Gameplay.preload = function() {
 	game.load.image('player', 'assets/Player.png');
+	game.load.image('slashfx', 'assets/gray_bannan.png');
 	game.load.tilemap('test', 'assets/Test.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('testtiles', 'assets/testtiles.png');
 	game.load.image('paused', 'assets/pause.png');
@@ -41,14 +42,15 @@ Gameplay.create = function() {
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 	pauseKey.onDown.add(this.pauseUnpause);
 
-	game.input.onDown.add(this.attack, this);
-
-	playerSprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
+	player = new Player(this);
+	playerSprite = player.sprite;
 	playerSprite.anchor.setTo(0.5, 0.5);
 	game.physics.arcade.enable(playerSprite);
 	playerSprite.scale.setTo(2, 2);
 	playerSprite.body.immovable = true;
 	playerSprite.body.collideWorldBounds = true;
+
+	game.input.onDown.add(player.attack, player);
 
 	var scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
@@ -60,8 +62,15 @@ Gameplay.update = function() {
 	if (!this.state.paused) {
 		this.updateScore();
 		for (var i = 0; i < mobs.length; i++) {
+			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
+				player.swing.children[0].kill();
+				mobs[i].destroy();
+				score++;
+			}
 			mobs[i].update();
 		}
+
+		player.update();
 		if (upKey.isDown) {
 			if (playerSprite.y <= game.camera.y + game.camera.height / 2) {
 				game.camera.y-=5;
@@ -88,10 +97,6 @@ Gameplay.update = function() {
 			playerSprite.x+=5;
 		}
 	}
-}
-
-Gameplay.attack = function() {
-	score += 4;
 }
 
 Gameplay.updateScore = function() {
@@ -128,6 +133,7 @@ Gameplay.pauseUnpause = function() {
 }
 
 function quitGame() {
+	game.state.clearCurrentState();
 	game.state.start('Menu', true, false);
 }
 

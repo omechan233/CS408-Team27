@@ -79,9 +79,9 @@ function logIn() {
 }
 
 function signUp() {
+    game.state.clearCurrentState();
     game.state.start('SignUp');
 }
-
 
 function loginOut() {
     loginButton.loadTexture('login');
@@ -90,7 +90,6 @@ function loginOut() {
 function loginOver() {
     loginButton.loadTexture('loginActive');
 }
-
 
 function signupOut() {
     signupButton.loadTexture('signup');

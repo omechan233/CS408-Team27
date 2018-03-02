@@ -8,6 +8,7 @@ Mob = function(game) {
 
 	this.sprite = game.add.sprite(0, 0, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
+	
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.body.stopVelocityOnCollide = true;
@@ -34,4 +35,8 @@ Mob.prototype.stop = function() {
 Mob.prototype.collide = function() {
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
+}
+
+Mob.prototype.destroy = function() {
+	this.sprite.kill();
 }

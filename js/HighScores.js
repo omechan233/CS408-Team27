@@ -1,11 +1,5 @@
 var HighScores = {};
 
-var scores;
-var scoreText = [];
-var style;
-var topScoreY;
-var bottomScoreY;
-var topPos;
 
 HighScores.preload = function() {
 	game.load.image('menu', 'assets/login.png');
@@ -13,6 +7,13 @@ HighScores.preload = function() {
 }
 
 HighScores.create = function() {
+
+	scoreText = [];
+	topScoreY = 0;
+	bottomScoreY = 0;
+//	var topPos;
+
+
 	menuBtn = game.add.button(10, 10, 'menu', goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
 	menuBtn.onInputOver.add(menuOver, this);
@@ -29,10 +30,10 @@ HighScores.create = function() {
 
 HighScores.update = function() {
 	if (upKey.isDown) {
-		scrollUp();
+		this.scrollUp();
 	}
 	else if (downKey.isDown) {
-		scrollDown();
+		this.scrollDown();
 	}
 }
 
@@ -60,19 +61,20 @@ function getPlayerScores() {
 	});
 }
 
-function goToMenu() {
+HighScores.goToMenu = function() {
+	game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 
-function menuOver() {
+HighScores.menuOver = function() {
 	menuBtn.loadTexture('menuActive');
 }
 
-function menuOut() {
+HighScores.menuOut = function() {
 	menuBtn.loadTexture('menu');
 }
 
-function scrollDown() {
+HighScores.scrollDown = function() {
 	if (bottomScoreY + scoreText[scoreText.length - 1].height > game.camera.height - 10) {
 		bottomScoreY -= 8;
 		topScoreY -= 8;
@@ -82,7 +84,7 @@ function scrollDown() {
 	}
 }
 
-function scrollUp() {
+HighScores.scrollUp = function() {
 	if (topScoreY < topPos) {
 		topScoreY += 8;
 		bottomScoreY += 8;
@@ -92,19 +94,19 @@ function scrollUp() {
 	}
 }
 
-function generateRandomScores(numScores) {
+HighScores.generateRandomScores = function(numScores) {
 	var newScores = [];
 	for (var i = 0; i < numScores; i++) {
 		newScores.push(Math.ceil(Math.random() * 1000));
 	}
-	newScores.sort(compareDescending);
+	newScores.sort(this.compareDescending);
 	return newScores;
 }
 
-function compareAscending(a, b) {
+HighScores.compareAscending = function(a, b) {
 	return a - b;
 }
 
-function compareDescending(a, b) {
+HighScores.compareDescending = function(a, b) {
 	return b - a;
 }
