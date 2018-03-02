@@ -1,5 +1,4 @@
 var Select = {};
-var maps = [];
 
 Select.preload = function() {
     game.load.image('ocean', 'assets/ocean_preview.png');
@@ -15,6 +14,7 @@ Select.preload = function() {
 }
 
 Select.create = function() {
+    var maps = [];
     game.stage.backgroundColor = '#cc1634';
     this.startBtn = game.add.button(game.world.centerX - 100, game.world.centerY + 225, 'startInactive', this.startGame, this);
 //    start.onInputOver.add(startOver, this);
@@ -35,7 +35,7 @@ Select.create = function() {
         maps[i].anchor.setTo(0.5, 0.5);
         maps[i].x = game.width + 150;
         maps[i].y = game.height / 2;
-//        maps[i].inputEnabled = true;
+        maps[i].inputEnabled = true;
         maps[i].events.onInputDown.add(clickListener, this);
     }
     
@@ -44,9 +44,9 @@ Select.create = function() {
     var animationSpeed = 200;
 
     function setToPosition(prime) {
-        maps[prime].x = game.width;
+        maps[prime].x = game.width / 2;
         if (prime<(totalMaps-1)) {
-            maps[prime + 1].x = game.width / 2;
+            maps[prime + 1].x = game.width / 2 + 75 + 67;
             maps[prime + 1].scale.setTo(0.5,0.5);
         }
     
