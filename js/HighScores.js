@@ -18,13 +18,13 @@ HighScores.create = function() {
 	menuBtn.onInputOver.add(menuOver, this);
 	menuBtn.onInputOut.add(menuOut, this);
 
-	scores = generateRandomScores(100);
+	//scores = generateRandomScores(100);
+	getPlayerScores();
 	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 	topPos = 100;
 	topScoreY = topPos;
-	showScores();
 }
 
 HighScores.update = function() {
@@ -36,7 +36,8 @@ HighScores.update = function() {
 	}
 }
 
-function showScores() {
+function showScores(scores) {
+	console.log(scores);
 	for (var i = 0; i < scores.length; i++) {
 		var temp = game.add.text(game.world.centerX, i * 50 + 100, scores[i], style);
 		temp.anchor.setTo(0.5, 0.5);
@@ -50,7 +51,13 @@ function getGlobalScores() {
 }
 
 function getPlayerScores() {
-
+	socket = io.connect();
+	var usrScores;
+	socket.emit('getScores');
+	socket.on('userScores', (highscores) => {
+		console.log(highscores);
+		showScores(highscores);
+	});
 }
 
 function goToMenu() {
