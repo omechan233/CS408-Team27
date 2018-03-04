@@ -1,4 +1,5 @@
 var Select = {};
+var text;
 
 Select.preload = function() {
     game.load.image('ocean', 'assets/ocean_preview.png');
@@ -8,6 +9,7 @@ Select.preload = function() {
     game.load.image('water', 'assets/water.png');
     game.load.image('base', 'assets/base_preview.png');
     game.load.image('startInactive', 'assets/start.png');
+    game.load.image('startActive', 'assets/start_select.png');
     game.load.image('menuInactive', 'assets/login.png');
 	game.load.image('menuActive', 'assets/login_select.png');
     game.add.plugin(PhaserInput.Plugin);
@@ -15,10 +17,12 @@ Select.preload = function() {
 
 Select.create = function() {
     var maps = [];
+    var el;
     game.stage.backgroundColor = '#cc1634';
-    this.startBtn = game.add.button(game.world.centerX - 100, game.world.centerY + 225, 'startInactive', this.startGame, this);
-//    start.onInputOver.add(startOver, this);
-//    start.onInputOut.add(startOut, this);
+    this.startBtn = game.add.button(game.world.centerX - 90, game.world.centerY + 225, 'startInactive', this.startGame, this);
+    
+    this.startBtn.onInputOver.add(this.startOver, this);
+    this.startBtn.onInputOut.add(this.startOut, this);
     
     menuBtn = game.add.button(10, 10, 'menuInactive', this.goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
@@ -108,29 +112,64 @@ Select.create = function() {
         }
         prime--;
     }
-
+    
+    text = game.add.text(game.world.centerX, game.world.centerY + 150, 'Ocean', {
+            font: "65px Arial",
+            fill: "#000000",
+            align: "center"
+    });
+    
+    text.anchor.setTo(0.5, 0.5);
+    
+    function actionOnClick(ind) {
+        var name;
+        switch (ind) {
+            case 0:
+                name = "Ocean";
+                break;
+            case 1:
+                name = "Forest";
+                break;
+            case 2:
+                name = "Forest II";
+                break;
+            case 3:
+                name = "Forest III";
+                break;
+            case 4:
+                name = "Marsh";
+                break;
+            case 5:
+                name = "Base";
+                break;
+        }
+        text.setText(name);
+    }
+    
     function clickListener (el) {
         console.log(maps.indexOf(el));
         var clickedPos = maps.indexOf(el);
         if (clickedPos > prime) {
             //move to left
             nextMap();
+            actionOnClick(clickedPos);
         } else if (clickedPos < prime) {
             previousMap();
+            actionOnClick(clickedPos);
         }
     }
 }
 
-Select.startGame = function() {
+Select.startGame = function(){
     game.state.start('Gameplay');
 }
 
 Select.startOver = function(){
-    
+    this.startBtn.loadTexture('startActive');
 }
 
 Select.startOut = function(){
-
+    this.startBtn.loadTexture('startInactive');
 }
 
 Select.goToMenu = function(){
