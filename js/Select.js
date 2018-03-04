@@ -160,7 +160,8 @@ Select.create = function() {
     }
 }
 
-Select.startGame = function(){
+Select.startGame = function() {
+    game.state.clearCurrentState();
     game.state.start('Gameplay');
 }
 
@@ -173,6 +174,7 @@ Select.startOut = function(){
 }
 
 Select.goToMenu = function(){
+    game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 

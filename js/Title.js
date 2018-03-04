@@ -13,5 +13,6 @@ Title.create = function() {
 }
 
 function goToLogin() {
+    game.state.clearCurrentState();
 	game.state.start('Login');
 }

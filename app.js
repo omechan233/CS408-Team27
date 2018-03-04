@@ -42,6 +42,7 @@ function onSocketConnection(client) {
     client.on('saveData', onSaveData);
     client.on('onLogin', onLogin);
     client.on('changePass', changePass);
+    client.on('getScores', getScores);
 }
 
 function hashPassword(user) {
@@ -77,6 +78,12 @@ function onLogin(user) {
         console.log("invalid login");
         this.emit('loginFalse');
     }
+}
+
+function getScores() {
+    var user = readUserData();
+    console.log(user);
+    this.emit('userScores', user.highscores);
 }
 
 function readUserData() {

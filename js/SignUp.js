@@ -67,10 +67,11 @@ function start() {
     var user = {
         username: newUser,
         password: newPassword,
-        highscore: 0
+        highscores: ["1", "2", "3", "4", "5"]
     }
     saveUserData(user);
     
+    game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 
