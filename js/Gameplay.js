@@ -16,17 +16,17 @@ Gameplay.create = function() {
 	map.addTilesetImage('testworld', 'testtiles');
 	layer = map.createLayer("Tile Layer 1");
 	layer.resizeWorld();
-	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+	downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+	tempKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 	style = { font: "Lucida Console", fontSize: "64px", fill: "#ffffff", wordWrap: false, align: "center", fontWeight: "bold" };
 
 	// M to spawn a mob
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
 	spawnMobKey.onDown.add(() => {
-	//	new MobBadGuy(this);
 		mobs.push(new MobBadGuy(this));	
 	});
 
@@ -45,7 +45,6 @@ Gameplay.create = function() {
 
 	cursors = game.input.keyboard.createCursorKeys();
 	
-
 	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
 	scoreText.fixedToCamera = true;
@@ -58,6 +57,10 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
+	console.log(player.health);
+	if (!player.isAlive()) {
+		this.quitGame();
+	}
 	if (!this.state.paused) {
 		this.updateScore();
 		for (var i = 0; i < mobs.length; i++) {
@@ -70,18 +73,21 @@ Gameplay.update = function() {
 		}
 
 		player.update();
-
-		if (cursors.up.isDown) {
+		
+		if (cursors.up.isDown || upKey.isDown) {
 			player.up();
 		}
-		else if (cursors.down.isDown) {
+		else if (cursors.down.isDown || downKey.isDown) {
 			player.down();
 		}
-		if (cursors.right.isDown) {
+		if (cursors.right.isDown || rightKey.isDown) {
 			player.right();
 		}
-		else if (cursors.left.isDown) {
+		else if (cursors.left.isDown || leftKey.isDown) {
 			player.left();
+		}
+		if (tempKey.isDown) {
+			player.health -= 10;
 		}
 	}
 }
@@ -97,6 +103,7 @@ Gameplay.getPlayer = function() {
 Gameplay.pauseUnpause = function() {
 	this.state.paused = !this.state.paused;
 	if (this.state.paused) {
+		player.stop();
 		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
 		pauseLayer.width = game.camera.width;
 		pauseLayer.height = game.camera.height;

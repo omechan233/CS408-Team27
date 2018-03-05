@@ -9,7 +9,9 @@ Player = function(game) {
 
 	this.game = game;
 
-	this.health = 10;
+	this.health = 100;
+	this.maxHealth = 100;
+	this.isInvincible = false;
 	this.isAttacking = false;
 
 	this.sprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
@@ -23,7 +25,7 @@ Player = function(game) {
 }
 
 Player.prototype.update = function() {
- 	this.stop();
+	this.stop();
 }
 
 Player.prototype.attack = function() {
@@ -97,6 +99,13 @@ Player.prototype.left = function() {
 Player.prototype.stop = function() {
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
+}
+
+Player.prototype.isAlive = function() {
+	if (this.health > 0) {
+		return true;
+	}
+	return false;
 }
 
 Player.prototype.stopAttack = function() {

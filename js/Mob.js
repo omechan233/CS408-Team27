@@ -26,8 +26,9 @@ Mob.prototype.update = function() {
 Mob.prototype.followPlayer = function() {
 	playerSprite = Gameplay.getPlayer();
 	let dist = game.physics.arcade.distanceBetween(this.sprite, playerSprite);
-	game.physics.arcade.moveToObject(this.sprite, playerSprite, 50);
-	game.physics.arcade.collide(this.sprite, playerSprite);
+	if (dist < 1000 && !this.sprite.overlap(playerSprite)) {
+		game.physics.arcade.moveToObject(this.sprite, playerSprite, 50);
+	}
 }
 
 Mob.prototype.stop = function() {
