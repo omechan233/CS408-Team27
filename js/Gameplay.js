@@ -52,12 +52,13 @@ Gameplay.create = function() {
 
 	mobs = [];
 	score = 0;
+	pauseElapsedTime = 0;
 
 	game.camera.follow(playerSprite);
 }
 
 Gameplay.update = function() {
-	console.log(player.health);
+	//console.log(player.health);
 	if (!player.isAlive()) {
 		this.quitGame();
 	}
@@ -107,27 +108,36 @@ Gameplay.player = function() {
 Gameplay.pauseUnpause = function() {
 	this.state.paused = !this.state.paused;
 	if (this.state.paused) {
+		pauseStartTime = new Date().getTime();
+
 		player.stop();
+		for (var i = 0; i < mobs.length; i++) {
+			mobs[i].stop();
+		}
+
 		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
 		pauseLayer.width = game.camera.width;
 		pauseLayer.height = game.camera.height;
 		text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, "PAUSED", style); 
 		text.anchor.setTo(0.5, 0.5);
-		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this)
+		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this);
 		quitBtn.scale.setTo(1.2, 1.2);
-		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2
-		quitBtn.onInputOver.add(this.quitOver, this);
-		quitBtn.onInputOut.add(this.quitOut, this);
+		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
+		quitBtn.onInputOver.add(Gameplay.quitOver, this);
+		quitBtn.onInputOut.add(Gameplay.quitOut, this);
 
-		for (var i = 0; i < mobs.length; i++) {
-			mobs[i].stop();
-		}
 	}
 	else {
 		pauseLayer.destroy();
 		text.destroy();
 		quitBtn.destroy();
+		pauseElapsedTime = new Date().getTime() - pauseStartTime;
+		player.setPauseTime(pauseElapsedTime);
 	}
+}
+
+Gameplay.getLastPausedTime = function() {
+	return pauseElapsedTime;
 }
 
 Gameplay.quitGame = function() {

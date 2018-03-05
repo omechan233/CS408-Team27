@@ -8,12 +8,13 @@
 Player = function(game) {
 
 	this.game = game;
-
+	
 	this.health = 100;
-	this.maxHealth = 100;
-	this.isInvincible = false;
 	this.isAttacking = false;
-
+	this.invincibleLength = 900;
+	this.invincibleStart = 0;
+	this.pausedTime = 0;
+	
 	this.sprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.game.physics.arcade.enable(this.sprite);
@@ -24,8 +25,19 @@ Player = function(game) {
 	this.swing.physicsBodyType = Phaser.Physics.ARCADE;
 }
 
+Player.prototype.create = function() {
+}
+
 Player.prototype.update = function() {
-	this.stop();
+	if (this.sprite.alpha == 1 && this.timeSinceLastDamage() <= this.invincibleLength - 300) {
+		this.sprite.alpha = .5;
+	}
+	
+	else if (this.sprite.alpha < 1 && this.timeSinceLastDamage() > this.invincibleLength - 300) {
+		this.sprite.alpha = 1;
+	}
+	
+	this.stop();	
 }
 
 Player.prototype.attack = function() {
@@ -101,8 +113,27 @@ Player.prototype.stop = function() {
 	this.sprite.body.velocity.y = 0;
 }
 
+Player.prototype.setPauseTime = function(pauseTime) {
+	this.pausedTime = pauseTime;
+}
+
 Player.prototype.damage = function(dmg) {
-	this.health -= dmg;
+	if (!this.isInvincible()) {
+		this.health -= dmg;
+		this.invincibleStart = new Date().getTime();
+		this.setPauseTime(0);
+	}
+}
+
+Player.prototype.isInvincible = function() {
+	if (this.timeSinceLastDamage() <= this.invincibleLength) {
+		return true;
+	}
+	return false;
+}
+
+Player.prototype.timeSinceLastDamage = function() {
+	return new Date().getTime() - this.pausedTime - this.invincibleStart;
 }
 
 Player.prototype.isAlive = function() {
