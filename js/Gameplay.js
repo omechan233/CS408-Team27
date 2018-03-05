@@ -100,6 +100,10 @@ Gameplay.getPlayer = function() {
 	return playerSprite;
 }
 
+Gameplay.player = function() {
+	return player;
+}
+
 Gameplay.pauseUnpause = function() {
 	this.state.paused = !this.state.paused;
 	if (this.state.paused) {

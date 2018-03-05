@@ -29,6 +29,9 @@ Mob.prototype.followPlayer = function() {
 	if (dist < 1000 && !this.sprite.overlap(playerSprite)) {
 		game.physics.arcade.moveToObject(this.sprite, playerSprite, 50);
 	}
+	else if (game.physics.arcade.collide(this.sprite.body, playerSprite) || this.sprite.overlap(playerSprite)) {
+		this.melee(10);		
+	}
 }
 
 Mob.prototype.stop = function() {
@@ -36,9 +39,8 @@ Mob.prototype.stop = function() {
 	this.sprite.body.velocity.y = 0;
 }
 
-Mob.prototype.collide = function() {
-	this.sprite.body.velocity.x = 0;
-	this.sprite.body.velocity.y = 0;
+Mob.prototype.melee = function(dmg) {
+	Gameplay.player().damage(dmg);
 }
 
 Mob.prototype.destroy = function() {

@@ -101,6 +101,10 @@ Player.prototype.stop = function() {
 	this.sprite.body.velocity.y = 0;
 }
 
+Player.prototype.damage = function(dmg) {
+	this.health -= dmg;
+}
+
 Player.prototype.isAlive = function() {
 	if (this.health > 0) {
 		return true;
