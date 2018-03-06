@@ -133,6 +133,9 @@ Gameplay.pauseUnpause = function() {
 		quitBtn.destroy();
 		pauseElapsedTime = new Date().getTime() - pauseStartTime;
 		player.setPauseTime(pauseElapsedTime);
+		for (var i = 0; i < mobs.length; i++) {
+			mobs[i].setPausedTime(pauseElapsedTime);
+		}
 	}
 }
 

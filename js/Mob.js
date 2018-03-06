@@ -1,25 +1,25 @@
 Mob = function(game) {
-
 	this.game = game;
-
 	this.health = 10;
-
-
-	var x = game.rnd.integerInRange(0, game.world._width);
-	var y = game.rnd.integerInRange(0, game.world._height);
-
-	this.sprite = game.add.sprite(x, y, 'player');
+	this.x = game.rnd.integerInRange(0, game.world._width);
+	this.y = game.rnd.integerInRange(0, game.world._height);
+	this.sprite = game.add.sprite(this.x, this.y, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
-	
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.body.stopVelocityOnCollide = true;	
 	this.sprite.body.collideWorldBounds = true;
+
+	this.attackCoolDown = 1150;
+	this.timeSinceLastAttack = 0;
+	this.lastAttackTime = 0;
+	this.pausedTime = 0;
 }
 
 Mob.prototype.update = function() {
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
+	this.timeSinceLastAttack = new Date().getTime() - this.pausedTime - this.lastAttackTime;
 	this.followPlayer();
 }
 
@@ -40,7 +40,16 @@ Mob.prototype.stop = function() {
 }
 
 Mob.prototype.melee = function(dmg) {
-	Gameplay.player().damage(dmg);
+	if (this.timeSinceLastAttack >= this.attackCoolDown) {
+		console.log("attack");
+		this.lastAttackTime = new Date().getTime(); 
+		Gameplay.player().damage(dmg);
+		this.pausedTime = 0;
+	}
+}
+
+Mob.prototype.setPausedTime = function(time) {
+	this.pausedTime = time;
 }
 
 Mob.prototype.destroy = function() {
