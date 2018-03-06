@@ -155,10 +155,12 @@ Gameplay.gameOver = function() {
 	gameOverLayer = game.add.sprite(game.camera.x, game.camera.y, 'gameOver');
 	gameOverLayer.width = game.camera.width;
 	gameOverLayer.height = game.camera.height;
+	gameOverLayer.alpha = 0;
+	game.add.tween(gameOverLayer).to( { alpha: 1}, 1000, Phaser.Easing.Linear.None, true);
 	skull = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'dead');
 	skull.scale.setTo(3, 3);
 	skull.anchor.setTo(0.5, 0.5);
-	text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 - 150, "YOU HAVE DIED!!\nGAME OVER", style); 
+	text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 - 150, "YOU HAVE DIED!\nGAME OVER", style); 
 	text.anchor.setTo(0.5, 0.5);
 	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this);
 	quitBtn.scale.setTo(1.2, 1.2);
