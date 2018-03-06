@@ -32,6 +32,10 @@ Gameplay.create = function() {
 		mobs.push(new MobBadGuy(this));	
 	});
 
+	tempKey.onDown.add(() => {
+		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 10, 'login'));	
+	});
+
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 	pauseKey.onDown.add(this.pauseUnpause);
 
@@ -53,6 +57,9 @@ Gameplay.create = function() {
 	scoreText.anchor.setTo(1, 0);
 
 	mobs = [];
+	mobProjectiles = [];
+	playerProjectiles = [];
+
 	score = 0;
 	pauseElapsedTime = 0;
 
@@ -65,7 +72,9 @@ Gameplay.update = function() {
 		if (!player.isAlive()) {
 			this.gameOver();
 		}
-		this.updateScore();
+
+		player.update();
+		
 		deadMobs = [];
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].update();
@@ -79,8 +88,19 @@ Gameplay.update = function() {
 		for (var i = 0; i < deadMobs.length; i++) {
 			mobs.splice(deadMobs[i], 1);
 		}
-		player.update();
 		
+		removedProjectiles = []
+		for (var i = 0; i < mobProjectiles.length; i++) {
+			mobProjectiles[i].update();
+			if (mobProjectiles[i].outOfBounds()) {
+				mobProjectiles[i].destroy();
+				removedProjectiles.push(i);
+			}
+		}
+		for (var i = 0; i < removedProjectiles.length; i++) {
+			mobProjectiles.splice(removedProjectiles[i], 1);
+		}
+		//console.log(mobProjectiles.length);		
 		if (cursors.up.isDown || upKey.isDown) {
 			player.up();
 		}
@@ -93,9 +113,9 @@ Gameplay.update = function() {
 		else if (cursors.left.isDown || leftKey.isDown) {
 			player.left();
 		}
-		if (tempKey.isDown) {
-			player.health -= 10;
-		}
+
+		this.updateScore();
+
 	}
 }
 
@@ -109,6 +129,10 @@ Gameplay.getPlayer = function() {
 
 Gameplay.player = function() {
 	return player;
+}
+
+Gameplay.getMobs = function() {
+	return mobs;
 }
 
 Gameplay.pauseUnpause = function() {

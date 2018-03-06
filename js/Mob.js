@@ -30,7 +30,7 @@ Mob.prototype.followPlayer = function() {
 		game.physics.arcade.moveToObject(this.sprite, playerSprite, 50);
 	}
 	else if (game.physics.arcade.collide(this.sprite.body, playerSprite) || this.sprite.overlap(playerSprite)) {
-		this.melee(10);		
+		this.melee(10);
 	}
 }
 
