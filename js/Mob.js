@@ -41,7 +41,6 @@ Mob.prototype.stop = function() {
 
 Mob.prototype.melee = function(dmg) {
 	if (this.timeSinceLastAttack >= this.attackCoolDown) {
-		console.log("attack");
 		this.lastAttackTime = new Date().getTime(); 
 		Gameplay.player().damage(dmg);
 		this.pausedTime = 0;
@@ -53,5 +52,5 @@ Mob.prototype.setPausedTime = function(time) {
 }
 
 Mob.prototype.destroy = function() {
-	this.sprite.kill();
+	this.sprite.destroy();
 }

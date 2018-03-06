@@ -8,6 +8,8 @@ Gameplay.preload = function() {
 	game.load.image('paused', 'assets/pause.png');
 	game.load.image('quit', 'assets/login.png');
 	game.load.image('quitActive', 'assets/login_select.png');
+	game.load.image('dead', 'assets/dead.png');
+	game.load.image('gameOver', 'assets/gameOver.png');
 	this.state.paused = false;
 }
 
@@ -58,21 +60,25 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
-	//console.log(player.health);
-	if (!player.isAlive()) {
-		this.quitGame();
-	}
+	
 	if (!this.state.paused) {
+		if (!player.isAlive()) {
+			this.gameOver();
+		}
 		this.updateScore();
+		deadMobs = [];
 		for (var i = 0; i < mobs.length; i++) {
+			mobs[i].update();
 			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
 				player.swing.children[0].kill();
 				mobs[i].destroy();
 				score++;
+				deadMobs.push(i);
 			}
-			mobs[i].update();
 		}
-
+		for (var i = 0; i < deadMobs.length; i++) {
+			mobs.splice(deadMobs[i], 1);
+		}
 		player.update();
 		
 		if (cursors.up.isDown || upKey.isDown) {
@@ -137,6 +143,28 @@ Gameplay.pauseUnpause = function() {
 			mobs[i].setPausedTime(pauseElapsedTime);
 		}
 	}
+}
+
+Gameplay.gameOver = function() {
+	this.state.paused = true;
+	player.stop();
+	for (var i = 0; i < mobs.length; i++) {
+		mobs[i].stop();
+	}
+	
+	gameOverLayer = game.add.sprite(game.camera.x, game.camera.y, 'gameOver');
+	gameOverLayer.width = game.camera.width;
+	gameOverLayer.height = game.camera.height;
+	skull = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'dead');
+	skull.scale.setTo(3, 3);
+	skull.anchor.setTo(0.5, 0.5);
+	text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 - 150, "YOU HAVE DIED!!\nGAME OVER", style); 
+	text.anchor.setTo(0.5, 0.5);
+	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this);
+	quitBtn.scale.setTo(1.2, 1.2);
+	quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
+	quitBtn.onInputOver.add(Gameplay.quitOver, this);
+	quitBtn.onInputOut.add(Gameplay.quitOut, this);
 }
 
 Gameplay.getLastPausedTime = function() {
