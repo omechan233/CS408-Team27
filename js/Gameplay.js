@@ -265,7 +265,9 @@ Gameplay.gameOver = function() {
 	skull.anchor.setTo(0.5, 0.5);
 	text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 - 150, "YOU HAVE DIED!\nGAME OVER", style); 
 	text.anchor.setTo(0.5, 0.5);
-	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', Gameplay.quitGame, this);
+	scoreText = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 + 80, 'FINAL SCORE: ' + score, style);
+	scoreText.anchor.setTo(0.5, 0.5);
+	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 120, 'quit', Gameplay.quitGame, this);
 	quitBtn.scale.setTo(1.2, 1.2);
 	quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
 	quitBtn.onInputOver.add(Gameplay.quitOver, this);
