@@ -44,7 +44,7 @@ Gameplay.create = function() {
 	});
 
 	tempKey.onDown.add(() => {
-		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 10, 0, 'login'));	
+		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
 	});
 
 	shootKey.onDown.add(() =>  {
@@ -57,13 +57,14 @@ Gameplay.create = function() {
 		if (Math.asin(unitY) < 0) {
 			theta = -theta;
 		}
-		type = game.rnd.integerInRange(0, 3);
+		type = game.rnd.integerInRange(1, 3);
 		switch(type) {
 			case 0:
 				playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
 				break;
 			case 1:
 				temp = new Projectile(this, playerSprite.x, playerSprite.y, 300 * unitX, 300 * unitY, theta, 10, 'arrow');
+				temp.sprite.body.setSize(temp.sprite.width, temp.sprite.width, 0, -temp.sprite.width/2);
 				temp.sprite.scale.setTo(2, 2);
 				playerProjectiles.push(temp);
 				break;
@@ -73,7 +74,6 @@ Gameplay.create = function() {
 				playerProjectiles.push(temp);
 				break;
 		}
-		//playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
 	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -124,11 +124,9 @@ Gameplay.update = function() {
 				deadMobs.push(i);
 			}
 			for (var j = 0; j < playerProjectiles.length; j++) {
-				if (game.physics.arcade.collide(playerProjectiles[j].sprite, mobs[i].sprite)) {
-					if(!deadMobs.includes(i)) {
-						mobs[i].destroy();
-						score++;	
-						deadMobs.push(i);
+				if (!removedProjectiles.includes[j]) {
+					if (game.physics.arcade.overlap(playerProjectiles[j].sprite, mobs[i].sprite) || game.physics.arcade.collide(playerProjectiles[j].sprite, mobs[i].sprite)) {
+						mobs[i].damage(playerProjectiles[j].getDamage());
 						if (!removedProjectiles.includes(j)) {
 							playerProjectiles[j].destroy();
 							removedProjectiles.push(j);
@@ -136,14 +134,19 @@ Gameplay.update = function() {
 					}
 				}
 			}
-			for (var j = 0; j < removedProjectiles.length; j++) {
-				playerProjectiles.splice(removedProjectiles[j], 1);
+			
+			if (!mobs[i].isAlive() && !deadMobs.includes(i)) {
+				mobs[i].destroy();
+				score++;
+				deadMobs.push(i);
 			}
 		}
 		for (var i = 0; i < deadMobs.length; i++) {
 			mobs.splice(deadMobs[i], 1);
 		}
-		
+		for (var i = 0; i < removedProjectiles.length; i++) {
+			playerProjectiles.splice(removedProjectiles[i], 1);
+		}
 		removedProjectiles = []
 		for (var i = 0; i < mobProjectiles.length; i++) {
 			mobProjectiles[i].update();
@@ -301,4 +304,10 @@ Gameplay.lockPointer = function() {
 
 Gameplay.unlockPointer = function() {
 	game.input.mouse.releasePointerLock();
+}
+
+Gameplay.render = function() {
+	for (var i = 0; i < playerProjectiles.length; i++) {
+		game.debug.body(playerProjectiles[i].sprite);
+	}
 }

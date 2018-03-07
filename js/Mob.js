@@ -1,10 +1,11 @@
 Mob = function(game) {
 	this.game = game;
-	this.health = 10;
+	this.health = 50;
 	this.x = game.rnd.integerInRange(0, game.world._width);
 	this.y = game.rnd.integerInRange(0, game.world._height);
 	this.sprite = game.add.sprite(this.x, this.y, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
+	this.sprite.scale.setTo(2, 2);
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.body.stopVelocityOnCollide = true;	
@@ -45,6 +46,17 @@ Mob.prototype.melee = function(dmg) {
 		Gameplay.player().damage(dmg);
 		this.pausedTime = 0;
 	}
+}
+
+Mob.prototype.damage = function(dmg) {
+	this.health -= dmg;
+}
+
+Mob.prototype.isAlive = function() {
+	if (this.health > 0) {
+		return true;
+	}
+	return false;
 }
 
 Mob.prototype.setPausedTime = function(time) {

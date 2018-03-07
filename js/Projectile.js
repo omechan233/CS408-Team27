@@ -9,7 +9,7 @@ Projectile = function(game, startX, startY, xVel, yVel, theta, damage, type) {
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.sprite.angle += theta;
 	this.xVel = xVel;
-	this.yVel = yVel;
+	this.yVel = yVel;	
 	this.sprite.checkWorldBounds = true;
 }
 
@@ -30,6 +30,10 @@ Projectile.prototype.stop = function() {
 
 Projectile.prototype.outOfBounds = function() {
 	return !this.sprite.inWorld;
+}
+
+Projectile.prototype.getDamage = function() {
+	return this.damage;
 }
 
 Projectile.prototype.destroy = function() {
