@@ -2,8 +2,8 @@ var HighScores = {};
 
 
 HighScores.preload = function() {
-	game.load.image('menu', 'assets/login.png');
-	game.load.image('menuActive', 'assets/login_select.png');
+	game.load.image('menu', 		'assets/menu/login.png');
+	game.load.image('menuActive', 	'assets/menu/login_select.png');
 }
 
 HighScores.create = function() {

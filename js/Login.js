@@ -3,10 +3,10 @@ var loginUserInput;
 var loginPassInput;
 
 Login.preload = function() {
-    game.load.spritesheet('login', 'assets/login.png');
-    game.load.spritesheet('signup', 'assets/signup.png');
-    game.load.spritesheet('loginActive', 'assets/login_select.png');
-    game.load.spritesheet('signupActive', 'assets/signup_select.png');
+    game.load.spritesheet('login',  'assets/menu/login.png');
+    game.load.spritesheet('signup', 'assets/menu/signup.png');
+    game.load.spritesheet('loginActive',    'assets/menu/login_select.png');
+    game.load.spritesheet('signupActive',   'assets/menu/signup_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 

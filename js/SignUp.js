@@ -4,8 +4,8 @@ var newUserInput;
 var newPassInput;
 
 SignUp.preload = function() {
-    game.load.spritesheet('startInactive', 'assets/start.png');
-    game.load.spritesheet('startActive', 'assets/start_select.png');
+    game.load.spritesheet('startInactive',  'assets/menu/start.png');
+    game.load.spritesheet('startActive',    'assets/menu/start_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
