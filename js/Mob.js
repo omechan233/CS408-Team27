@@ -1,6 +1,14 @@
 Mob = function(game) {
 	this.game = game;
-	this.health = 50;
+    var multiplier = 1;
+    if (difficulty === "easy") {
+        multiplier = 1;
+    } else if (difficulty === "medium") {
+        multiplier = 1.5;
+    } else if (difficulty === "hard") {
+        multiplier = 2;
+    }
+	this.health = 50 * multiplier;
 	this.x = game.rnd.integerInRange(0, game.world._width);
 	this.y = game.rnd.integerInRange(0, game.world._height);
 	this.sprite = game.add.sprite(this.x, this.y, 'player');
