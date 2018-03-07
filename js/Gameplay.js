@@ -144,9 +144,18 @@ Gameplay.update = function() {
 		for (var i = 0; i < deadMobs.length; i++) {
 			mobs.splice(deadMobs[i], 1);
 		}
+
+		for (var i = 0; i < playerProjectiles.length; i++) {
+			if (!removedProjectiles.includes(i) && playerProjectiles[i].outOfBounds()) {
+				playerProjectiles[i].destroy();
+				removedProjectiles.push(i);
+			}
+		}
+
 		for (var i = 0; i < removedProjectiles.length; i++) {
 			playerProjectiles.splice(removedProjectiles[i], 1);
 		}
+		
 		removedProjectiles = []
 		for (var i = 0; i < mobProjectiles.length; i++) {
 			mobProjectiles[i].update();
@@ -159,16 +168,6 @@ Gameplay.update = function() {
 			mobProjectiles.splice(removedProjectiles[i], 1);
 		}
 		
-		for (var i = 0; i < playerProjectiles.length; i++) {
-			if (playerProjectiles[i].outOfBounds()) {
-				playerProjectiles[i].destroy();
-				removedProjectiles.push(i);
-			}
-		}
-		for (var i = 0; i < removedProjectiles.length; i++) {
-			playerProjectiles.splice(removedProjectiles[i], 1);
-		}
-	
 		for (var i = 0; i < playerProjectiles.length; i++) {
 			playerProjectiles[i].update();
 		}
