@@ -46,8 +46,12 @@ Gameplay.create = function() {
 		magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
 		unitX = (target.x - playerSprite.x) / magnitude;	
 		unitY = (target.y - playerSprite.y) / magnitude;
-		console.log("pew");
-		playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, 10, 'login'));	
+		theta = Math.acos(unitX);
+		theta = theta * 180 / Math.PI;
+		if (Math.asin(unitY) < 0) {
+			theta = -theta;
+		}
+		playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
 	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);

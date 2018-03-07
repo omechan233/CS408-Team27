@@ -1,4 +1,4 @@
-Projectile = function(game, startX, startY, xVel, yVel, damage, type) {
+Projectile = function(game, startX, startY, xVel, yVel, theta, damage, type) {
 	this.game = game;
 	this.damage = damage;
 	this.x = startX;
@@ -7,6 +7,8 @@ Projectile = function(game, startX, startY, xVel, yVel, damage, type) {
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.anchor.setTo(0.5, 0.5);
+	console.log(theta);
+	this.sprite.angle += theta;
 	this.xVel = xVel;
 	this.yVel = yVel;
 	this.sprite.checkWorldBounds = true;
