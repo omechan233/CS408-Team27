@@ -119,7 +119,7 @@ Gameplay.update = function() {
 			mobs[i].update();
 			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
 				player.swing.children[0].kill();
-				mobs[i].sprite.kill();
+				mobs[i].health = 0;
 			}
 			for (var j = playerProjectiles.length - 1; j >= 0; j--) {
 				if (game.physics.arcade.overlap(playerProjectiles[j].sprite, mobs[i].sprite)) {
@@ -143,12 +143,13 @@ Gameplay.update = function() {
 				playerProjectiles.splice(i, 1);
 			}
 		}
-		
+
 		for (var i = mobProjectiles.length - 1; i >= 0; i--) {
 			mobProjectiles[i].update();
 			remove = false;
 			if (game.physics.arcade.overlap(mobProjectiles[i].sprite, player.sprite)) {
 				player.damage(mobProjectiles[i].getDamage());
+				player.sprite.position.x += 10;
 				remove = true;
 			}
 			if (mobProjectiles[i].outOfBounds() || remove == true) {
@@ -156,7 +157,7 @@ Gameplay.update = function() {
 				mobProjectiles.splice(i, 1);
 			}
 		}
-		
+
 		if (cursors.up.isDown || upKey.isDown) {
 			player.up();
 		}
