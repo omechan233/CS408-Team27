@@ -100,7 +100,7 @@ Gameplay.update = function() {
 		for (var i = 0; i < removedProjectiles.length; i++) {
 			mobProjectiles.splice(removedProjectiles[i], 1);
 		}
-		//console.log(mobProjectiles.length);		
+		console.log(mobProjectiles.length);		
 		if (cursors.up.isDown || upKey.isDown) {
 			player.up();
 		}

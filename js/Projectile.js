@@ -8,8 +8,6 @@ Projectile = function(game, startX, startY, xVel, yVel, damage, type) {
 	this.xVel = xVel;
 	this.yVel = yVel;
 	this.sprite.checkWorldBounds = true;
-	this.sprite.events.onOutOfBounds.add(this.setOutOfBounds);
-	this.oOB = false;
 }
 
 Projectile.prototype.update = function() {
@@ -28,14 +26,10 @@ Projectile.prototype.stop = function() {
 }
 
 Projectile.prototype.outOfBounds = function() {
-	return this.oOB;
-}
-
-Projectile.prototype.setOutOfBounds = function() {
-	this.stop();
-	this.oOB = true;
+	return !this.sprite.inWorld;
 }
 
 Projectile.prototype.destroy = function() {
+	console.log("destroyed");
 	this.sprite.destroy();
 }
