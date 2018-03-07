@@ -34,10 +34,6 @@ Gameplay.create = function() {
 	shootKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 	style = { font: "Lucida Console", fontSize: "64px", fill: "#ffffff", wordWrap: false, align: "center", fontWeight: "bold" };
 
-	//game.canvas.addEventListener('mousedown', this.lockPointer);
-	
-	game.input.addMoveCallback(this.movePointer, this);
-	
 	mobs = [];
 	mobProjectiles = [];
 	playerProjectiles = [];
@@ -113,6 +109,7 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
+	this.movePointer();
 	if (!this.state.paused) {
 		if (!player.isAlive()) {
 			this.gameOver();
@@ -149,7 +146,12 @@ Gameplay.update = function() {
 		
 		for (var i = mobProjectiles.length - 1; i >= 0; i--) {
 			mobProjectiles[i].update();
-			if (mobProjectiles[i].outOfBounds()) {
+			remove = false;
+			if (game.physics.arcade.overlap(mobProjectiles[i].sprite, player.sprite)) {
+				player.damage(mobProjectiles[i].getDamage());
+				remove = true;
+			}
+			if (mobProjectiles[i].outOfBounds() || remove == true) {
 				mobProjectiles[i].destroy();
 				mobProjectiles.splice(i, 1);
 			}
@@ -272,11 +274,7 @@ Gameplay.quitOut = function() {
 	quitBtn.loadTexture('quit');
 }
 
-Gameplay.movePointer = function(pointer, x, y, click) {
-	/*if (!this.state.paused && !click) {
-		target.x += game.input.mouse.event.movementX;
-		target.y += game.input.mouse.event.movementY;
-	}*/
+Gameplay.movePointer = function() {
 	target.x = game.input.mousePointer.x + game.camera.x;
 	target.y = game.input.mousePointer.y + game.camera.y;
 }
@@ -290,7 +288,7 @@ Gameplay.unlockPointer = function() {
 }
 
 Gameplay.render = function() {
-	for (var i = 0; i < playerProjectiles.length; i++) {
+	/*for (var i = 0; i < playerProjectiles.length; i++) {
 		game.debug.body(playerProjectiles[i].sprite);
-	}
+	}*/
 }

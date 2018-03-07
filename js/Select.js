@@ -110,7 +110,6 @@ Select.create = function() {
     }
 
     function clickListener (el) {
-        console.log(maps.indexOf(el));
         var clickedPos = maps.indexOf(el);
         if (clickedPos > prime) {
             //move to left
