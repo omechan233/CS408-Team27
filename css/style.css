@@ -11,6 +11,7 @@ body {
     box-shadow: 0 0 50px #999;
 
     background: #222;
+	cursor: none;
 }
 
 .container h1 {

@@ -10,6 +10,7 @@ Gameplay.preload = function() {
 	game.load.image('quitActive', 'assets/login_select.png');
 	game.load.image('dead', 'assets/dead.png');
 	game.load.image('gameOver', 'assets/gameOver.png');
+	game.load.image('target', 'assets/target.png');
 	this.state.paused = false;
 }
 
@@ -23,8 +24,12 @@ Gameplay.create = function() {
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 	tempKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
+	shootKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 	style = { font: "Lucida Console", fontSize: "64px", fill: "#ffffff", wordWrap: false, align: "center", fontWeight: "bold" };
+
+	//game.canvas.addEventListener('mousedown', this.lockPointer);
+	
+	game.input.addMoveCallback(this.movePointer, this);
 
 	// M to spawn a mob
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
@@ -34,6 +39,15 @@ Gameplay.create = function() {
 
 	tempKey.onDown.add(() => {
 		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 10, 'login'));	
+	});
+
+	shootKey.onDown.add(() =>  {
+	//	magnitude = Math.sqrt(Math.pow(game.input.mousePointer.x - playerSprite.x, 2) + Math.pow(game.input.mousePointer.y - playerSprite.y, 2));
+		magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+		unitX = (target.x - playerSprite.x) / magnitude;	
+		unitY = (target.y - playerSprite.y) / magnitude;
+		console.log("pew");
+		playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, 10, 'login'));	
 	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -50,11 +64,15 @@ Gameplay.create = function() {
 	game.input.onDown.add(player.attack, player);
 
 	cursors = game.input.keyboard.createCursorKeys();
-	
+
 	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
 	scoreText.fixedToCamera = true;
 	scoreText.anchor.setTo(1, 0);
+
+	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
+	target.anchor.setTo(0.5, 0.5);
+	target.scale.setTo(2, 2);
 
 	mobs = [];
 	mobProjectiles = [];
@@ -67,7 +85,6 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
-	
 	if (!this.state.paused) {
 		if (!player.isAlive()) {
 			this.gameOver();
@@ -100,7 +117,19 @@ Gameplay.update = function() {
 		for (var i = 0; i < removedProjectiles.length; i++) {
 			mobProjectiles.splice(removedProjectiles[i], 1);
 		}
-		console.log(mobProjectiles.length);		
+		
+		removedProjectiles = [];
+		for (var i = 0; i < playerProjectiles.length; i++) {
+			playerProjectiles[i].update();
+			if (playerProjectiles[i].outOfBounds()) {
+				playerProjectiles[i].destroy();
+				removedProjectiles.push(i);
+			}
+		}
+		for (var i = 0; i < removedProjectiles.length; i++) {
+			playerProjectiles.splice(removedProjectiles[i], 1);
+		}
+
 		if (cursors.up.isDown || upKey.isDown) {
 			player.up();
 		}
@@ -145,12 +174,20 @@ Gameplay.pauseUnpause = function() {
 			mobs[i].stop();
 		}
 
+		for (var i = 0; i < mobProjectiles.length; i++) {
+			mobProjectiles[i].stop();
+		}
+
+		for (var i = 0; i < playerProjectiles.length; i++) {
+			playerProjectiles[i].stop();
+		}
+
 		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
 		pauseLayer.width = game.camera.width;
 		pauseLayer.height = game.camera.height;
 		text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, "PAUSED", style); 
 		text.anchor.setTo(0.5, 0.5);
-		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this);
+		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', Gameplay.quitGame, this);
 		quitBtn.scale.setTo(1.2, 1.2);
 		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
 		quitBtn.onInputOver.add(Gameplay.quitOver, this);
@@ -186,7 +223,7 @@ Gameplay.gameOver = function() {
 	skull.anchor.setTo(0.5, 0.5);
 	text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 - 150, "YOU HAVE DIED!\nGAME OVER", style); 
 	text.anchor.setTo(0.5, 0.5);
-	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', this.quitGame, this);
+	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', Gameplay.quitGame, this);
 	quitBtn.scale.setTo(1.2, 1.2);
 	quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
 	quitBtn.onInputOver.add(Gameplay.quitOver, this);
@@ -198,6 +235,7 @@ Gameplay.getLastPausedTime = function() {
 }
 
 Gameplay.quitGame = function() {
+	console.log("quit");
 	game.state.start('Menu', true, false);
 }
 
@@ -207,4 +245,21 @@ Gameplay.quitOver = function() {
 
 Gameplay.quitOut = function() {
 	quitBtn.loadTexture('quit');
+}
+
+Gameplay.movePointer = function(pointer, x, y, click) {
+	/*if (!this.state.paused && !click) {
+		target.x += game.input.mouse.event.movementX;
+		target.y += game.input.mouse.event.movementY;
+	}*/
+	target.x = game.input.mousePointer.x;
+	target.y = game.input.mousePointer.y;
+}
+
+Gameplay.lockPointer = function() {
+	game.input.mouse.requestPointerLock();
+}
+
+Gameplay.unlockPointer = function() {
+	game.input.mouse.releasePointerLock();
 }

@@ -1,7 +1,9 @@
 Projectile = function(game, startX, startY, xVel, yVel, damage, type) {
 	this.game = game;
-	this.damage = damage
-	this.sprite = game.add.sprite(this.startX, this.startY, type);
+	this.damage = damage;
+	this.x = startX;
+	this.y = startY;
+	this.sprite = game.add.sprite(this.x, this.y, type);
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.anchor.setTo(0.5, 0.5);
