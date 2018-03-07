@@ -261,7 +261,7 @@ Gameplay.pauseUnpause = function() {
 
 Gameplay.gameOver = function() {
 	this.state.paused = true;
-	this.state,gameover = true;
+	this.state.gameover = true;
 	player.stop();
 	for (var i = 0; i < mobs.length; i++) {
 		mobs[i].stop();
