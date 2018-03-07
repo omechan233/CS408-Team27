@@ -7,7 +7,7 @@ Gameplay.preload = function() {
 	game.load.image('target', 	'assets/sprites/target.png');
 	game.load.image('arrow', 	'assets/sprites/arrow.png');
 	game.load.image('bullet', 	'assets/sprites/bullet.png');
-	
+
 	game.load.tilemap('test', 		'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('testtiles', 	'assets/maps/testtiles.png');
 
@@ -19,6 +19,7 @@ Gameplay.preload = function() {
 
 
 	this.state.paused = false;
+	this.state.gameover = false;
 }
 
 Gameplay.create = function() {
@@ -41,20 +42,21 @@ Gameplay.create = function() {
 	// M to spawn a mob
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
 	spawnMobKey.onDown.add(() => {
-		mobs.push(new MobBadGuy(this));	
-	});
+			mobs.push(new MobBadGuy(this));	
+			});
 
 	tempKey.onDown.add(() => {
-		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
-	});
+			mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
+			});
 
 	shootKey.onDown.add(() =>  {
-	//	magnitude = Math.sqrt(Math.pow(game.input.mousePointer.x - playerSprite.x, 2) + Math.pow(game.input.mousePointer.y - playerSprite.y, 2));
-		magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
-		unitX = (target.x - playerSprite.x) / magnitude;	
-		unitY = (target.y - playerSprite.y) / magnitude;
-		theta = Math.acos(unitX);
-		theta = theta * 180 / Math.PI;
+			//	magnitude = Math.sqrt(Math.pow(game.input.mousePointer.x - playerSprite.x, 2) + Math.pow(game.input.mousePointer.y - playerSprite.y, 2));
+		if (!this.state.paused) {
+			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			unitX = (target.x - playerSprite.x) / magnitude;	
+			unitY = (target.y - playerSprite.y) / magnitude;
+			theta = Math.acos(unitX);
+			theta = theta * 180 / Math.PI;
 		if (Math.asin(unitY) < 0) {
 			theta = -theta;
 		}
@@ -74,11 +76,28 @@ Gameplay.create = function() {
 				temp.sprite.scale.setTo(2, 2);
 				playerProjectiles.push(temp);
 				break;
+			}
 		}
 	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-	pauseKey.onDown.add(this.pauseUnpause);
+	pauseKey.onDown.add(() => {
+		if (!this.state.gameover) {
+			this.pauseUnpause();
+		}
+	});
+	killKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
+	superSpawnKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
+
+	killKey.onDown.add(() => {
+		player.health = 0;	
+	});
+
+	superSpawnKey.onDown.add(() => {
+		for (var i = 0; i < 500; i++) {
+			mobs.push(new MobBadGuy(this));	
+		}
+	});
 
 	player = new Player(this);
 	playerSprite = player.sprite;
@@ -88,7 +107,11 @@ Gameplay.create = function() {
 	playerSprite.body.immovable = true;
 	playerSprite.body.collideWorldBounds = true;
 
-	game.input.onDown.add(player.attack, player);
+	game.input.onDown.add(() => {
+		if (!this.state.paused) {
+			player.attack();
+		}
+	});
 
 	cursors = game.input.keyboard.createCursorKeys();
 
@@ -101,7 +124,7 @@ Gameplay.create = function() {
 	target.anchor.setTo(0.5, 0.5);
 	target.scale.setTo(2, 2);
 
-	
+
 	score = 0;
 	pauseElapsedTime = 0;
 
@@ -128,7 +151,7 @@ Gameplay.update = function() {
 					playerProjectiles.splice(j, 1);
 				}
 			}
-			
+
 			if (!mobs[i].isAlive()) {
 				mobs[i].destroy();
 				mobs.splice(i, 1);
@@ -143,7 +166,7 @@ Gameplay.update = function() {
 				playerProjectiles.splice(i, 1);
 			}
 		}
-		
+
 		for (var i = mobProjectiles.length - 1; i >= 0; i--) {
 			mobProjectiles[i].update();
 			remove = false;
@@ -156,7 +179,7 @@ Gameplay.update = function() {
 				mobProjectiles.splice(i, 1);
 			}
 		}
-		
+
 		if (cursors.up.isDown || upKey.isDown) {
 			player.up();
 		}
@@ -171,6 +194,9 @@ Gameplay.update = function() {
 		}
 
 		this.updateScore();
+	}
+	else {
+		player.stop();
 	}
 }
 
@@ -234,14 +260,15 @@ Gameplay.pauseUnpause = function() {
 
 Gameplay.gameOver = function() {
 	this.state.paused = true;
+	this.state,gameover = true;
 	player.stop();
 	for (var i = 0; i < mobs.length; i++) {
 		mobs[i].stop();
 	}
-	
-	gameOverLayer = game.add.sprite(game.camera.x, game.camera.y, 'gameOver');
-	gameOverLayer.width = game.camera.width;
-	gameOverLayer.height = game.camera.height;
+
+	gameOverLayer = game.add.sprite(game.camera.x - 50, game.camera.y - 50, 'gameOver');
+	gameOverLayer.width = game.camera.width + 100;
+	gameOverLayer.height = game.camera.height + 100;
 	gameOverLayer.alpha = 0;
 	game.add.tween(gameOverLayer).to( { alpha: 1}, 1000, Phaser.Easing.Linear.None, true);
 	skull = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'dead');
@@ -249,7 +276,7 @@ Gameplay.gameOver = function() {
 	skull.anchor.setTo(0.5, 0.5);
 	text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 - 150, "YOU HAVE DIED!\nGAME OVER", style); 
 	text.anchor.setTo(0.5, 0.5);
-	scoreText = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 + 80, 'FINAL SCORE: ' + score, style);
+	scoreText = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2 + 90, 'FINAL SCORE: ' + score, style);
 	scoreText.anchor.setTo(0.5, 0.5);
 	quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 120, 'quit', Gameplay.quitGame, this);
 	quitBtn.scale.setTo(1.2, 1.2);
@@ -289,6 +316,6 @@ Gameplay.unlockPointer = function() {
 
 Gameplay.render = function() {
 	/*for (var i = 0; i < playerProjectiles.length; i++) {
-		game.debug.body(playerProjectiles[i].sprite);
-	}*/
+	  game.debug.body(playerProjectiles[i].sprite);
+	  }*/
 }
