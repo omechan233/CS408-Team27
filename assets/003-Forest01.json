@@ -1,0 +1,20 @@
+{ "columns":8,
+ "image":"003-Forest01.png",
+ "imageheight":608,
+ "imagewidth":256,
+ "margin":0,
+ "name":"003-Forest01",
+ "properties":
+    {
+     "path":"..\/..\/map\/003-Forest01.png"
+    },
+ "propertytypes":
+    {
+     "path":"file"
+    },
+ "spacing":0,
+ "tilecount":152,
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset"
+}
