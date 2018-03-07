@@ -11,6 +11,8 @@ Gameplay.preload = function() {
 	game.load.image('dead', 'assets/dead.png');
 	game.load.image('gameOver', 'assets/gameOver.png');
 	game.load.image('target', 'assets/target.png');
+	game.load.image('arrow', 'assets/arrow.png');
+	game.load.image('bullet', 'assets/bullet.png');
 	this.state.paused = false;
 }
 
@@ -30,6 +32,10 @@ Gameplay.create = function() {
 	//game.canvas.addEventListener('mousedown', this.lockPointer);
 	
 	game.input.addMoveCallback(this.movePointer, this);
+	
+	mobs = [];
+	mobProjectiles = [];
+	playerProjectiles = [];
 
 	// M to spawn a mob
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
@@ -38,7 +44,7 @@ Gameplay.create = function() {
 	});
 
 	tempKey.onDown.add(() => {
-		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 10, 'login'));	
+		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 10, 0, 'login'));	
 	});
 
 	shootKey.onDown.add(() =>  {
@@ -51,7 +57,23 @@ Gameplay.create = function() {
 		if (Math.asin(unitY) < 0) {
 			theta = -theta;
 		}
-		playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
+		type = game.rnd.integerInRange(0, 3);
+		switch(type) {
+			case 0:
+				playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
+				break;
+			case 1:
+				temp = new Projectile(this, playerSprite.x, playerSprite.y, 300 * unitX, 300 * unitY, theta, 10, 'arrow');
+				temp.sprite.scale.setTo(2, 2);
+				playerProjectiles.push(temp);
+				break;
+			case 3:
+				temp = new Projectile(this, playerSprite.x, playerSprite.y, 500 * unitX, 500 * unitY, theta, 10, 'bullet');
+				temp.sprite.scale.setTo(2, 2);
+				playerProjectiles.push(temp);
+				break;
+		}
+		//playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
 	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -78,10 +100,7 @@ Gameplay.create = function() {
 	target.anchor.setTo(0.5, 0.5);
 	target.scale.setTo(2, 2);
 
-	mobs = [];
-	mobProjectiles = [];
-	playerProjectiles = [];
-
+	
 	score = 0;
 	pauseElapsedTime = 0;
 
@@ -93,10 +112,9 @@ Gameplay.update = function() {
 		if (!player.isAlive()) {
 			this.gameOver();
 		}
-
 		player.update();
-		
 		deadMobs = [];
+		removedProjectiles = [];
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].update();
 			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
@@ -104,6 +122,22 @@ Gameplay.update = function() {
 				mobs[i].destroy();
 				score++;
 				deadMobs.push(i);
+			}
+			for (var j = 0; j < playerProjectiles.length; j++) {
+				if (game.physics.arcade.collide(playerProjectiles[j].sprite, mobs[i].sprite)) {
+					if(!deadMobs.includes(i)) {
+						mobs[i].destroy();
+						score++;	
+						deadMobs.push(i);
+						if (!removedProjectiles.includes(j)) {
+							playerProjectiles[j].destroy();
+							removedProjectiles.push(j);
+						}
+					}
+				}
+			}
+			for (var j = 0; j < removedProjectiles.length; j++) {
+				playerProjectiles.splice(removedProjectiles[j], 1);
 			}
 		}
 		for (var i = 0; i < deadMobs.length; i++) {
@@ -122,9 +156,7 @@ Gameplay.update = function() {
 			mobProjectiles.splice(removedProjectiles[i], 1);
 		}
 		
-		removedProjectiles = [];
 		for (var i = 0; i < playerProjectiles.length; i++) {
-			playerProjectiles[i].update();
 			if (playerProjectiles[i].outOfBounds()) {
 				playerProjectiles[i].destroy();
 				removedProjectiles.push(i);
@@ -132,6 +164,10 @@ Gameplay.update = function() {
 		}
 		for (var i = 0; i < removedProjectiles.length; i++) {
 			playerProjectiles.splice(removedProjectiles[i], 1);
+		}
+	
+		for (var i = 0; i < playerProjectiles.length; i++) {
+			playerProjectiles[i].update();
 		}
 
 		if (cursors.up.isDown || upKey.isDown) {
@@ -239,7 +275,6 @@ Gameplay.getLastPausedTime = function() {
 }
 
 Gameplay.quitGame = function() {
-	console.log("quit");
 	game.state.start('Menu', true, false);
 }
 
