@@ -43,6 +43,10 @@ function onSocketConnection(client) {
     client.on('onLogin', onLogin);
     client.on('changePass', changePass);
     client.on('getScores', getScores);
+    client.on('postScore', (score) => {
+        console.log(score);
+        postScore(score);
+    });
 }
 
 function hashPassword(user) {
@@ -84,6 +88,19 @@ function getScores() {
     var user = readUserData();
     console.log(user);
     this.emit('userScores', user.highscores);
+}
+
+//remove lowest score and replace with new score
+function postScore(score) {
+    var user = readUserData();
+    console.log(user);
+    var min = 0;
+    for (var i = 0; i < user.highscores.length; i++) {
+        if (user.highscores[min] > user.highscores[i]) min = i;
+    }
+    if (user.highscores[min] < score) {
+        user.highscores[min] = score;
+    }
 }
 
 function readUserData() {
