@@ -7,6 +7,7 @@ Gameplay.preload = function() {
 	game.load.image('target', 'assets/sprites/target.png');
 	game.load.image('crowbar', 'assets/sprites/crowbar.png');
 	game.load.image('pipe', 'assets/sprites/pipe.png');
+	game.load.image('sword', 'assets/sprites/sword.png');	
 	game.load.image('heavySword', 'assets/sprites/sword_heavy.png');
 	game.load.image('lightSword', 'assets/sprites/sword_light.png');
 	game.load.image('lance', 'assets/sprites/lance.png');
