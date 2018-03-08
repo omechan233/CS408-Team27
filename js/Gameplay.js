@@ -16,17 +16,12 @@ Gameplay.preload = function() {
 	game.load.image('crossbow', 'assets/sprites/crossbow.png');
 	game.load.image('arrow', 'assets/sprites/arrow.png');
 	game.load.image('bullet', 'assets/sprites/bullet.png');
-
-
-	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
-	game.load.image('testtiles', 	'assets/maps/testtiles.png');
-
+	game.load.image('testtiles', 'assets/maps/testtiles.png');
 	game.load.image('quit', 'assets/menu/login.png');
 	game.load.image('quitActive', 'assets/menu/login_select.png');
-
 	game.load.image('paused', 'assets/pause.png');
 	game.load.image('gameOver', 'assets/gameOver.png');
-
+	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
 
 	this.state.paused = false;
 	this.state.gameover = false;
@@ -161,12 +156,8 @@ Gameplay.create = function() {
 	playerSprite.body.immovable = true;
 	playerSprite.body.collideWorldBounds = true;
 
-	game.input.onDown.add(() => {
-		if (!this.state.paused) {
-			player.attack();
-		}
-	});
-
+	game.input.mouse.capture = true;
+	
 	cursors = game.input.keyboard.createCursorKeys();
 
 	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
@@ -192,17 +183,18 @@ Gameplay.update = function() {
 			this.gameOver();
 		}
 		player.update();
+		
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
 			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
 				player.swing.children[0].kill();
 				mobs[i].health = 0;
 			}
-			for (var j = playerProjectiles.length - 1; j >= 0; j--) {
-				if (game.physics.arcade.overlap(playerProjectiles[j].sprite, mobs[i].sprite)) {
-					mobs[i].damage(playerProjectiles[j].getDamage());
-					playerProjectiles[j].destroy();
-					playerProjectiles.splice(j, 1);
+			for (var j = player.projectiles.length - 1; j >= 0; j--) {
+				if (game.physics.arcade.overlap(player.projectiles[j].sprite, mobs[i].sprite)) {
+					mobs[i].damage(player.projectiles[j].getDamage());
+					player.projectiles[j].destroy();
+					player.projectiles.splice(j, 1);
 				}
 			}
 
@@ -213,11 +205,11 @@ Gameplay.update = function() {
 			}
 		}
 
-		for (var i = playerProjectiles.length - 1; i >= 0; i--) {
-			playerProjectiles[i].update();
-			if (playerProjectiles[i].outOfBounds()) {
-				playerProjectiles[i].destroy();
-				playerProjectiles.splice(i, 1);
+		for (var i = player.projectiles.length - 1; i >= 0; i--) {
+			player.projectiles[i].update();
+			if (player.projectiles[i].outOfBounds()) {
+				player.projectiles[i].destroy();
+				player.projectiles.splice(i, 1);
 			}
 		}
 
@@ -259,11 +251,11 @@ Gameplay.updateScore = function() {
 	scoreText.setText("SCORE: " + score);
 }
 
-Gameplay.getPlayer = function() {
+Gameplay.getPlayerSprite = function() {
 	return playerSprite;
 }
 
-Gameplay.player = function() {
+Gameplay.getPlayer = function() {
 	return player;
 }
 
@@ -368,6 +360,10 @@ Gameplay.lockPointer = function() {
 
 Gameplay.unlockPointer = function() {
 	game.input.mouse.releasePointerLock();
+}
+
+Gameplay.getTarget = function() {
+	return target;
 }
 
 Gameplay.render = function() {

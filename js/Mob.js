@@ -29,7 +29,7 @@ Mob.prototype.update = function() {
 }
 
 Mob.prototype.followPlayer = function() {
-	playerSprite = Gameplay.getPlayer();
+	playerSprite = Gameplay.getPlayerSprite();
 	let dist = game.physics.arcade.distanceBetween(this.sprite, playerSprite);
 	if (dist < 1000 && !this.sprite.overlap(playerSprite)) {
 		game.physics.arcade.moveToObject(this.sprite, playerSprite, 50);
@@ -47,7 +47,7 @@ Mob.prototype.stop = function() {
 Mob.prototype.melee = function(dmg) {
 	if (this.canAttack) {
 		console.log("slash");
-		Gameplay.player().damage(dmg);
+		Gameplay.getPlayer().damage(dmg);
 		this.canAttack = false;
 		this.game.time.events.add(this.attackCoolDown, this.letAttack, this);
 	}
