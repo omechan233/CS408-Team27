@@ -1,20 +1,29 @@
 var Gameplay = {};
 
 Gameplay.preload = function() {
-	game.load.image('player', 	'assets/sprites/Player.png');
-	game.load.image('slashfx', 	'assets/sprites/gray_bannan.png');
-	game.load.image('dead', 	'assets/sprites/dead.png');
-	game.load.image('target', 	'assets/sprites/target.png');
-	game.load.image('arrow', 	'assets/sprites/arrow.png');
-	game.load.image('bullet', 	'assets/sprites/bullet.png');
+	game.load.image('player', 'assets/sprites/Player.png');
+	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
+	game.load.image('dead', 'assets/sprites/dead.png');
+	game.load.image('target', 'assets/sprites/target.png');
+	game.load.image('crowbar', 'assets/sprites/crowbar.png');
+	game.load.image('pipe', 'assets/sprites/pipe.png');
+	game.load.image('heavySword', 'assets/sprites/sword_heavy.png');
+	game.load.image('lightSword', 'assets/sprites/sword_light.png');
+	game.load.image('lance', 'assets/sprites/lance.png');
+	game.load.image('m16', 'assets/sprites/m16.png');
+	game.load.image('deagle', 'assets/sprites/deagle.png');
+	game.load.image('crossbow', 'assets/sprites/crossbow.png');
+	game.load.image('arrow', 'assets/sprites/arrow.png');
+	game.load.image('bullet', 'assets/sprites/bullet.png');
 
-	game.load.tilemap('test', 		'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
+
+	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('testtiles', 	'assets/maps/testtiles.png');
 
-	game.load.image('quit', 		'assets/menu/login.png');
-	game.load.image('quitActive', 	'assets/menu/login_select.png');
+	game.load.image('quit', 'assets/menu/login.png');
+	game.load.image('quitActive', 'assets/menu/login_select.png');
 
-	game.load.image('paused', 	'assets/pause.png');
+	game.load.image('paused', 'assets/pause.png');
 	game.load.image('gameOver', 'assets/gameOver.png');
 
 
