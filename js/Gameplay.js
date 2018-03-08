@@ -186,9 +186,13 @@ Gameplay.update = function() {
 		
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
-			if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
-				player.swing.children[0].kill();
-				mobs[i].health = 0;
+			if (player.isAttacking) {
+				player.hit(mobs[i]);
+
+				if (game.physics.arcade.overlap(player.swing.children[0], mobs[i].sprite)) {
+					player.swing.children[0].kill();
+					mobs[i].health = 0;
+				}
 			}
 			for (var j = player.projectiles.length - 1; j >= 0; j--) {
 				if (game.physics.arcade.overlap(player.projectiles[j].sprite, mobs[i].sprite)) {
@@ -226,20 +230,20 @@ Gameplay.update = function() {
 				mobProjectiles.splice(i, 1);
 			}
 		}
-
-		if (cursors.up.isDown || upKey.isDown) {
-			player.up();
+		if (!player.stunned) {
+			if (cursors.up.isDown || upKey.isDown) {
+				player.up();
+			}
+			else if (cursors.down.isDown || downKey.isDown) {
+				player.down();
+			}
+			if (cursors.right.isDown || rightKey.isDown) {
+				player.right();
+			}
+			else if (cursors.left.isDown || leftKey.isDown) {
+				player.left();
+			}
 		}
-		else if (cursors.down.isDown || downKey.isDown) {
-			player.down();
-		}
-		if (cursors.right.isDown || rightKey.isDown) {
-			player.right();
-		}
-		else if (cursors.left.isDown || leftKey.isDown) {
-			player.left();
-		}
-
 		this.updateScore();
 	}
 	else {
@@ -368,6 +372,12 @@ Gameplay.getTarget = function() {
 
 Gameplay.render = function() {
 	/*for (var i = 0; i < playerProjectiles.length; i++) {
-	  game.debug.body(playerProjectiles[i].sprite);
-	  }*/
+		game.debug.body(playerProjectiles[i].sprite);
+	}
+	
+	for (var i = 0; i < mobs.length; i++) {
+		game.debug.body(mobs[i].sprite);
+	}
+	game.debug.geom(player.tip, '#0000ff');
+	*/
 }

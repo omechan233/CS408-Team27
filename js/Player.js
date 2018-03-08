@@ -13,15 +13,23 @@ Player = function(game, weaponAsset) {
 	this.health = 100;
 	this.isAttacking = false;
 	this.canAttack = true;
-	this.attackCooldown = 400; 
+	this.attackCooldown = 100; 
+	this.attackAnimationTime = 250;
 	this.isInvincible = false;
 	this.invincibleLength = 900;
 	this.reloading = false;
 	this.reloadTime = 500;
+	this.stunned = false;
+	this.lockTip = false;
+	this.tipUnitX = 0;
+	this.tipUnitY = 0;
 	this.dmg = 10;
 	this.ammoCapacity = 30;
 	this.ammoReserve = 30;
 	this.projectileVelocity = 300;
+	this.resetX = 0;
+	this.resetY = 0;
+
 	/* Weapon Type 
 	 * Used to determine type of attacks
 	 * 0: Normal
@@ -47,10 +55,13 @@ Player = function(game, weaponAsset) {
 	this.game.physics.arcade.enable(this.sprite);
 	
 	// Weapon Sprite
-	this.weapon = this.sprite.addChild(game.make.sprite(this.sprite.width / 4, 0, weaponAsset));
+	this.weapon = this.sprite.addChild(game.make.sprite(0, 0, weaponAsset));
 	this.weapon.anchor.setTo(0.5, 1);
 	this.weapon.scale.setTo(1.5, 1.5);
+	this.weapon.pivot.x = 0;
+	this.weapon.pivot.y = this.sprite.width / 5;
 	this.game.physics.arcade.enable(this.weapon);
+	this.tip = new Phaser.Point();
 
 	// melee
 	this.swing = this.game.add.group();
@@ -64,12 +75,14 @@ Player.prototype.create = function() {
 }
 
 Player.prototype.update = function() {
-	this.stop();
-	this.pointWeapon();
-	if (this.game.input.activePointer.leftButton.isDown) {
-		this.attack();
+	this.findTip();
+	if (!this.stunned) {
+		this.stop();
+		this.pointWeapon();
+		if (this.game.input.activePointer.leftButton.isDown && !this.isAttacking) {
+			this.attack();
+		}
 	}
-
 }
 
 Player.prototype.up = function() {
@@ -99,6 +112,7 @@ Player.prototype.attack = function() {
 
 	this.isAttacking = true;
 	switch(this.weaponType) {
+		// Normal attack
 		case 0:
 			// get mouse quadrant position (based on player location)
 			mpx = this.game.input.mousePointer.x;
@@ -144,6 +158,35 @@ Player.prototype.attack = function() {
 			slashBox.enableBody = true;
 			break;
 
+		// Light Attack
+		case 1:
+			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			target = Gameplay.getTarget();
+			unitX = (target.x - this.sprite.x) / magnitude;
+			unitY = (target.y - this.sprite.y) / magnitude;
+			theta = Math.acos(unitX);
+			theta = theta * 180 / Math.PI;
+			if (Math.asin(unitY) < 0) {
+				theta = -theta;
+			}
+			theta += 90;
+			this.tipUnitX = unitX;
+			this.tipUnitY = unitY;
+			this.isInvincible = true;
+			this.stunned = true;
+			this.lockTip = true;
+			this.resetX = this.sprite.x;
+			this.resetY = this.sprite.y;
+			this.sprite.body.velocity.x += (150 * unitX);
+			this.sprite.body.velocity.y += (150 * unitY);
+			this.game.camera.follow(null);
+			break;
+
+		// Heavy Attack
+		case 2:
+			break;
+
+		// Ranged Attack
 		case 3:
 			if (!this.reloading) {
 				magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
@@ -155,7 +198,8 @@ Player.prototype.attack = function() {
 				if (Math.asin(unitY) < 0) {
 					theta = -theta;
 				}
-				temp = new Projectile(this.game, this.sprite.x, this.sprite.y, this.projectileVelocity * unitX, this.projectileVelocity * unitY, theta, this.getDamage(), this.projectileType);
+				temp = new Projectile(this.game, this.sprite.x + this.weapon.x, this.sprite.y + this.weapon.y, this.projectileVelocity * unitX, this.projectileVelocity * unitY, theta, this.getDamage(), this.projectileType);
+				game.world.bringToTop(this.weapon);
 				this.projectiles.push(temp);
 				this.ammoReserve -= 1;
 				if (this.ammoReserve <= 0) {
@@ -168,7 +212,14 @@ Player.prototype.attack = function() {
 
 	this.canAttack = false;
 	this.game.time.events.add(this.attackCooldown, this.letAttack, this);
-	this.game.time.events.add(100, this.stopAttack, this);
+	this.game.time.events.add(this.attackAnimationCooldown, this.stopAttack, this);
+}
+
+Player.prototype.hit = function(mob) {
+	if (this.tip.x > mob.sprite.x - mob.sprite.width / 2 && this.tip.x < mob.sprite.x + mob.sprite.width / 2 && this.tip.y > mob.sprite.y - mob.sprite.height / 2 && this.tip.y < mob.sprite.y + mob.sprite.height/2) {
+		console.log("impact");
+		mob.damage(this.getDamage);
+	}
 }
 
 Player.prototype.getDamage = function() {
@@ -177,10 +228,19 @@ Player.prototype.getDamage = function() {
 
 Player.prototype.stopAttack = function() {
 	this.isAttacking = false;
-	if (this.weaponType != 3) {
+	if (this.weaponType == 0) {
 		this.swing.remove(slashBox);
 		slashfx.kill();
 		slashBox.kill();
+	}
+	else if (this.weaponType == 1) {
+		this.stop();
+		this.lockTip = false;
+		this.sprite.x = this.resetX;
+		this.sprite.y = this.resetY;
+		this.game.camera.follow(this.sprite);
+		this.game.time.events.add(250, this.stopInvincible, this);	
+		this.game.time.events.add(150, this.stopStunned, this);
 	}
 }
 
@@ -195,7 +255,6 @@ Player.prototype.damage = function(dmg) {
 		this.game.time.events.add(this.invincibleLength * this.invincibleModifier, this.stopInvincible, this);	
 		this.sprite.alpha = .5;
 		this.isInvincible = true;
-		console.log("ouch");
 	}
 }
 
@@ -212,6 +271,10 @@ Player.prototype.stopInvincible = function() {
 	this.isInvincible = false;
 }
 
+Player.prototype.stopStunned = function() {
+	this.stunned = false;
+}
+
 Player.prototype.isAlive = function() {
 	if (this.health > 0) {
 		return true;
@@ -223,23 +286,28 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 	switch(weaponAsset) {
 		case 'sword':
 		case 'crowbar':
+			this.attackAnimationCooldown = 100;
 			this.attackCooldown = 550;
 			this.weaponType = 0;
 			break;
 
 		case 'lightSword':
 		case 'lance':
-			this.attackCooldown = 250;
+			this.attackAnimationCooldown = 250;
+			this.attackCooldown = 450;
+			this.dmg = 25;
 			this.weaponType = 1;
 			break;
 
 		case 'heavySword':
 		case 'pipe':
+			this.attackAnimationCooldown = 150;
 			this.attackCooldown = 950;
 			this.weaponType = 2;
 			break;
 
 		case 'm16':
+			this.attackAnimationCooldown = 0;
 			this.attackCooldown = 100;
 			this.dmg = 7;
 			this.projectileType = 'bullet';
@@ -250,7 +318,8 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			this.projectileVelocity = 500;
 			break;
 		
-		case 'deagle':
+		case 'deagle':	
+			this.attackAnimationCooldown = 0;
 			this.attackCooldown = 500;
 			this.dmg = 25;
 			this.projectileType = 'bullet';
@@ -262,6 +331,7 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			break;
 
 		case 'crossbow':
+			this.attackAnimationCooldown = 0;
 			this.attackCooldown = 0;
 			this.dmg = 50;
 			this.projectileType = 'arrow';
@@ -297,6 +367,26 @@ Player.prototype.switchWeapon = function(newWeaponAsset) {
 }
 
 Player.prototype.pointWeapon = function() {
+	this.weapon.angle = this.targetAngle();
+}
+
+Player.prototype.findTip = function(theta) {
+	if (!this.lockTip) {
+		magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+		unitX = (target.x - playerSprite.x) / magnitude;	
+		unitY = (target.y - playerSprite.y) / magnitude;
+	}
+	else {
+		unitX = this.tipUnitX;
+		unitY = this.tipUnitY;
+	}
+	this.tip.x = ((this.sprite.width / 5) + this.weapon.height * 2) * unitX;
+	this.tip.y = ((this.sprite.width / 5) + this.weapon.height * 2) * unitY;
+	this.tip.x += this.sprite.x;
+	this.tip.y += this.sprite.y;
+}
+
+Player.prototype.targetAngle = function() {
 	magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
 	unitX = (target.x - playerSprite.x) / magnitude;	
 	unitY = (target.y - playerSprite.y) / magnitude;
@@ -305,7 +395,7 @@ Player.prototype.pointWeapon = function() {
 	if (Math.asin(unitY) < 0) {
 		theta = -theta;
 	}
-	this.weapon.angle = theta + 90;	
+	return theta + 90;
 }
 
 function calculateQuadrant(mpx, mpy, slope) {

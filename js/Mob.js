@@ -9,6 +9,8 @@ Mob = function(game) {
         multiplier = 2;
     }
 	this.health = 50 * multiplier;
+	this.isInvincible = false;
+	this.invincibleTime = 100;
 	this.x = game.rnd.integerInRange(0, game.world._width);
 	this.y = game.rnd.integerInRange(0, game.world._height);
 	this.sprite = game.add.sprite(this.x, this.y, 'player');
@@ -46,7 +48,6 @@ Mob.prototype.stop = function() {
 
 Mob.prototype.melee = function(dmg) {
 	if (this.canAttack) {
-		console.log("slash");
 		Gameplay.getPlayer().damage(dmg);
 		this.canAttack = false;
 		this.game.time.events.add(this.attackCoolDown, this.letAttack, this);
@@ -58,7 +59,16 @@ Mob.prototype.letAttack = function() {
 }
 
 Mob.prototype.damage = function(dmg) {
-	this.health -= dmg;
+	if (!this.isInvincible) {
+		console.log("dmg");
+		this.isInvincible = true;
+		this.health -= dmg;
+		this.game.time.events.add(this.invincibleTime, this.stopInvincible, this);
+	}
+}
+
+Mob.prototype.stopInvincible = function() {
+	this.isInvincible = false;
 }
 
 Mob.prototype.isAlive = function() {
