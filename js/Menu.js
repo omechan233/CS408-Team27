@@ -1,13 +1,13 @@
 var Menu = {};
 
 Menu.preload = function() {
-	game.load.image('start', 'assets/start.png');
-	game.load.image('startActive', 'assets/start_select.png');
-	game.load.image('account', 'assets/account.png');
-	game.load.image('accountActive', 'assets/account_select.png');
-	game.load.image('score', 'assets/scores.png');
-	game.load.image('scoreActive', 'assets/scores_select.png');
-	game.load.image('difficulty', 'assets/login.png');
+	game.load.image('start', 			'assets/menu/start.png');
+	game.load.image('startActive', 		'assets/menu/start_select.png');
+	game.load.image('account', 			'assets/menu/account.png');
+	game.load.image('accountActive', 	'assets/menu/account_select.png');
+	game.load.image('score', 			'assets/menu/scores.png');
+	game.load.image('scoreActive', 		'assets/menu/scores_select.png');
+	game.load.image('difficulty', 		'assets/menu/login.png');
 }
 
 var difficulty = "easy";

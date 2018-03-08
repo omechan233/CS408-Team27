@@ -2,17 +2,16 @@ var Select = {};
 var text;
 
 Select.preload = function() {
-    game.load.image('ocean', 'assets/ocean_preview.png');
-    game.load.image('forest', 'assets/forest_preview.png');
-    game.load.image('forest2', 'assets/forest2_preview.png');
-    game.load.image('forest3', 'assets/forest3_preview.png');
-    game.load.image('water', 'assets/water.png');
-    game.load.image('base', 'assets/base_preview.png');
-    game.load.image('startInactive', 'assets/start.png');
-    game.load.image('startActive', 'assets/start_select.png');
-    game.load.image('menuInactive', 'assets/login.png');
-	game.load.image('menuActive', 'assets/login_select.png');
-    game.add.plugin(PhaserInput.Plugin);
+	game.load.image('ocean',    'assets/maps/ocean_preview.png');
+	game.load.image('forest',   'assets/maps/forest_preview.png');
+	game.load.image('forest2',  'assets/maps/forest2_preview.png');
+	game.load.image('forest3',  'assets/maps/forest3_preview.png');
+	game.load.image('water',    'assets/maps/water.png');
+	game.load.image('base',     'assets/maps/base_preview.png');
+	game.load.image('startInactive',    'assets/menu/start.png');
+	game.load.image('menuInactive',     'assets/menu/login.png');
+	game.load.image('menuActive',       'assets/menu/login_select.png');
+	game.add.plugin(PhaserInput.Plugin);
 }
 
 Select.create = function() {
@@ -147,7 +146,6 @@ Select.create = function() {
     }
     
     function clickListener (el) {
-        console.log(maps.indexOf(el));
         var clickedPos = maps.indexOf(el);
         if (clickedPos > prime) {
             //move to left
