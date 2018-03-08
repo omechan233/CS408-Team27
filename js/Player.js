@@ -8,21 +8,42 @@
 Player = function(game, weaponAsset) {
 
 	this.game = game;
-	
+
+	// Player Stats	
 	this.health = 100;
 	this.isAttacking = false;
+	this.canAttack = true;
+	this.attackLength = 400; 
+	this.isInvincible = false;
 	this.invincibleLength = 900;
-	this.invincibleStart = 0;
-	this.pausedTime = 0;
-	
+	this.damage = 10;
+
+	/* Weapon Type 
+	 * Used to determine type of attacks
+	 * 0: Normal
+	 * 1: Light
+	 * 2: Heavy
+	 * 3: Ranged
+	 */
+	this.weaponType = 0;
+	this.changeWeaponType(weaponAsset);
+
+	// Player Modifiers
+	this.invincibleModifier = 0.0;
+	this.attackSpeedModifer = 0.0;
+ 	this.speedModifier = 0.0;
+	this.damageModifier = 0.0;
+
+	// Player Sprite
 	this.sprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
-
+	this.game.physics.arcade.enable(this.sprite);
+	
+	// Weapon Sprite
 	this.weapon = this.sprite.addChild(game.make.sprite(this.sprite.width / 4, 0, weaponAsset));
 	this.weapon.anchor.setTo(0.5, 1);
 	this.weapon.scale.setTo(1.5, 1.5);
-
-	this.game.physics.arcade.enable(this.sprite);
+	this.game.physics.arcade.enable(this.weapon);
 
 	// melee
 	this.swing = this.game.add.group();
@@ -34,21 +55,34 @@ Player.prototype.create = function() {
 }
 
 Player.prototype.update = function() {
-	console.log(this.weapon.height);
-	if (this.sprite.alpha == 1 && this.timeSinceLastDamage() <= this.invincibleLength - 300) {
-		this.sprite.alpha = .5;
-	}
-	
-	else if (this.sprite.alpha < 1 && this.timeSinceLastDamage() > this.invincibleLength - 300) {
-		this.sprite.alpha = 1;
-	}
-	
+	console.log(this.weaponType);
 	this.stop();
 	this.pointWeapon();
 }
 
+Player.prototype.up = function() {
+	this.sprite.body.velocity.y = -200;
+}
+
+Player.prototype.down = function() {
+	this.sprite.body.velocity.y = 200;
+}
+
+Player.prototype.right = function() {
+	this.sprite.body.velocity.x = 200;
+}
+
+Player.prototype.left = function() {
+	this.sprite.body.velocity.x = -200;
+}
+
+Player.prototype.stop = function() {
+	this.sprite.body.velocity.x = 0;
+	this.sprite.body.velocity.y = 0;
+}
+
 Player.prototype.attack = function() {
-	if (this.isAttacking)
+	if (this.isAttacking || !this.canAttack)
 		return;
 
 	this.isAttacking = true;
@@ -96,58 +130,9 @@ Player.prototype.attack = function() {
 	slashBox.scale.setTo(2 * dirX, 2);
 	slashBox.enableBody = true;
 
+	this.canAttack = false;
+	this.game.time.events.add(this.attackLength, this.letAttack, this);
 	this.game.time.events.add(100, this.stopAttack, this);
-}
-
-Player.prototype.up = function() {
-	this.sprite.body.velocity.y = -200;
-}
-
-Player.prototype.down = function() {
-	this.sprite.body.velocity.y = 200;
-}
-
-Player.prototype.right = function() {
-	this.sprite.body.velocity.x = 200;
-}
-
-Player.prototype.left = function() {
-	this.sprite.body.velocity.x = -200;
-}
-
-Player.prototype.stop = function() {
-	this.sprite.body.velocity.x = 0;
-	this.sprite.body.velocity.y = 0;
-}
-
-Player.prototype.setPauseTime = function(pauseTime) {
-	this.pausedTime = pauseTime;
-}
-
-Player.prototype.damage = function(dmg) {
-	if (!this.isInvincible()) {
-		this.health -= dmg;
-		this.invincibleStart = new Date().getTime();
-		this.setPauseTime(0);
-	}
-}
-
-Player.prototype.isInvincible = function() {
-	if (this.timeSinceLastDamage() <= this.invincibleLength) {
-		return true;
-	}
-	return false;
-}
-
-Player.prototype.timeSinceLastDamage = function() {
-	return new Date().getTime() - this.pausedTime - this.invincibleStart;
-}
-
-Player.prototype.isAlive = function() {
-	if (this.health > 0) {
-		return true;
-	}
-	return false;
 }
 
 Player.prototype.stopAttack = function() {
@@ -157,8 +142,64 @@ Player.prototype.stopAttack = function() {
 	slashBox.kill();
 }
 
+Player.prototype.letAttack = function() {
+	this.canAttack = true;
+}
+
+Player.prototype.damage = function(dmg) {
+	if (!this.isInvincible) {
+		this.health -= dmg;
+		this.game.time.events.add(this.invincibleLength - 200, this.flash, this);
+		this.game.time.events.add(this.invincibleLength, this.stopInvincible, this);	
+		this.sprite.alpha = .5;
+		this.isInvincible = true;
+		console.log("ouch");
+	}
+}
+
+Player.prototype.flash = function() {
+	this.sprite.alpha = 1;
+}
+
+Player.prototype.stopInvincible = function() {
+	this.isInvincible = false;
+}
+
+Player.prototype.isAlive = function() {
+	if (this.health > 0) {
+		return true;
+	}
+	return false;
+}
+
+Player.prototype.changeWeaponType = function(weaponAsset) {
+	switch(weaponAsset) {
+		case 'sword':
+		case 'crowbar':
+			this.weaponType = 0;
+			break;
+
+		case 'lightSword':
+		case 'lance':
+			this.weaponType = 1;
+			break;
+
+		case 'heavySword':
+		case 'pipe':
+			this.weaponType = 2;
+			break;
+
+		case 'm16':
+		case 'deagle':
+		case 'crossbow':
+			this.weaponType = 3;
+			break;
+	}
+}
+
 Player.prototype.switchWeapon = function(newWeaponAsset) {
 	this.weapon.loadTexture(newWeaponAsset);
+	this.changeWeaponType(newWeaponAsset);
 }
 
 Player.prototype.pointWeapon = function() {

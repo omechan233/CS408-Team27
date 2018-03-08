@@ -274,6 +274,7 @@ Gameplay.getMobs = function() {
 Gameplay.pauseUnpause = function() {
 	this.state.paused = !this.state.paused;
 	if (this.state.paused) {
+		game.time.events.pause();
 		pauseStartTime = new Date().getTime();
 
 		player.stop();
@@ -302,11 +303,11 @@ Gameplay.pauseUnpause = function() {
 
 	}
 	else {
+		game.time.events.resume();
 		pauseLayer.destroy();
 		text.destroy();
 		quitBtn.destroy();
 		pauseElapsedTime = new Date().getTime() - pauseStartTime;
-		player.setPauseTime(pauseElapsedTime);
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].setPausedTime(pauseElapsedTime);
 		}

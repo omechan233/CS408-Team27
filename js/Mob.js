@@ -19,16 +19,12 @@ Mob = function(game) {
 	this.sprite.body.stopVelocityOnCollide = true;	
 	this.sprite.body.collideWorldBounds = true;
 
+	this.canAttack = true;
 	this.attackCoolDown = 1150;
-	this.timeSinceLastAttack = 0;
-	this.lastAttackTime = 0;
-	this.pausedTime = 0;
 }
 
 Mob.prototype.update = function() {
-	this.sprite.body.velocity.x = 0;
-	this.sprite.body.velocity.y = 0;
-	this.timeSinceLastAttack = new Date().getTime() - this.pausedTime - this.lastAttackTime;
+	this.stop();
 	this.followPlayer();
 }
 
@@ -49,11 +45,16 @@ Mob.prototype.stop = function() {
 }
 
 Mob.prototype.melee = function(dmg) {
-	if (this.timeSinceLastAttack >= this.attackCoolDown) {
-		this.lastAttackTime = new Date().getTime(); 
+	if (this.canAttack) {
+		console.log("slash");
 		Gameplay.player().damage(dmg);
-		this.pausedTime = 0;
+		this.canAttack = false;
+		this.game.time.events.add(this.attackCoolDown, this.letAttack, this);
 	}
+}
+
+Mob.prototype.letAttack = function() {
+	this.canAttack = true;
 }
 
 Mob.prototype.damage = function(dmg) {
