@@ -43,11 +43,55 @@ Gameplay.create = function() {
 	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 	tempKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	shootKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+	weaponKey = game.input.keyboard.addKey(Phaser.Keyboard.Q);
 	style = { font: "Lucida Console", fontSize: "64px", fill: "#ffffff", wordWrap: false, align: "center", fontWeight: "bold" };
 
 	mobs = [];
 	mobProjectiles = [];
 	playerProjectiles = [];
+
+	weapon = 'sword';
+
+	weaponKey.onDown.add(() => {
+		switch(weapon) {
+			case 'sword':
+				player.switchWeapon('heavySword');
+				weapon = 'heavySword';
+				break;
+			case 'heavySword':
+				player.switchWeapon('lightSword');
+				weapon = 'lightSword';
+				break;
+			case 'lightSword':
+				player.switchWeapon('crowbar');
+				weapon = 'crowbar';
+				break;
+			case 'crowbar':
+				player.switchWeapon('pipe');
+				weapon = 'pipe';
+				break;
+			case 'pipe':
+				player.switchWeapon('lance');
+				weapon = 'lance';
+				break;
+			case 'lance':
+				player.switchWeapon('m16');
+				weapon = 'm16';
+				break;
+			case 'm16':
+				player.switchWeapon('deagle');
+				weapon = 'deagle';
+				break;
+			case 'deagle':
+				player.switchWeapon('crossbow');
+				weapon = 'crossbow';
+				break;
+			case 'crossbow':
+				player.switchWeapon('sword');
+				weapon = 'sword'
+				break;
+		}	
+	});
 
 	// M to spawn a mob
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
@@ -109,7 +153,7 @@ Gameplay.create = function() {
 		}
 	});
 
-	player = new Player(this);
+	player = new Player(this, 'sword');
 	playerSprite = player.sprite;
 	playerSprite.anchor.setTo(0.5, 0.5);
 	game.physics.arcade.enable(playerSprite);

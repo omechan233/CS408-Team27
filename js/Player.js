@@ -5,7 +5,7 @@
  *
  */
 
-Player = function(game) {
+Player = function(game, weaponAsset) {
 
 	this.game = game;
 	
@@ -17,6 +17,11 @@ Player = function(game) {
 	
 	this.sprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
 	this.sprite.anchor.setTo(0.5, 0.5);
+
+	this.weapon = this.sprite.addChild(game.make.sprite(this.sprite.width / 4, 0, weaponAsset));
+	this.weapon.anchor.setTo(0.5, 1);
+	this.weapon.scale.setTo(1.5, 1.5);
+
 	this.game.physics.arcade.enable(this.sprite);
 
 	// melee
@@ -29,6 +34,7 @@ Player.prototype.create = function() {
 }
 
 Player.prototype.update = function() {
+	console.log(this.weapon.height);
 	if (this.sprite.alpha == 1 && this.timeSinceLastDamage() <= this.invincibleLength - 300) {
 		this.sprite.alpha = .5;
 	}
@@ -37,7 +43,8 @@ Player.prototype.update = function() {
 		this.sprite.alpha = 1;
 	}
 	
-	this.stop();	
+	this.stop();
+	this.pointWeapon();
 }
 
 Player.prototype.attack = function() {
@@ -148,6 +155,22 @@ Player.prototype.stopAttack = function() {
 	this.swing.remove(slashBox);
 	slashfx.kill();
 	slashBox.kill();
+}
+
+Player.prototype.switchWeapon = function(newWeaponAsset) {
+	this.weapon.loadTexture(newWeaponAsset);
+}
+
+Player.prototype.pointWeapon = function() {
+	magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+	unitX = (target.x - playerSprite.x) / magnitude;	
+	unitY = (target.y - playerSprite.y) / magnitude;
+	theta = Math.acos(unitX);
+	theta = theta * 180 / Math.PI;
+	if (Math.asin(unitY) < 0) {
+		theta = -theta;
+	}
+	this.weapon.angle = theta + 90;	
 }
 
 function calculateQuadrant(mpx, mpy, slope) {
