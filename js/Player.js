@@ -384,7 +384,9 @@ Player.prototype.setAttackDamage = function(damage) {
 }
 
 Player.prototype.switchWeapon = function(newWeaponAsset) {
-	//this.stopAttack();	
+	if (this.isAttacking) {
+		this.stopAttack();
+	}	
 	this.weapon.scale.setTo(1.5, 1.5);
 	this.projectileType = '';
 	if (newWeaponAsset == 'deagle') {
