@@ -28,6 +28,9 @@ Gameplay.preload = function() {
 }
 
 Gameplay.create = function() {
+	game.canvas.oncontextmenu = function (e) {
+		e.preventDefault();
+	}
 	map = game.add.tilemap('test');
 	map.addTilesetImage('testworld', 'testtiles');
 	layer = map.createLayer("Tile Layer 1");
@@ -37,7 +40,6 @@ Gameplay.create = function() {
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 	tempKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-	shootKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 	weaponKey = game.input.keyboard.addKey(Phaser.Keyboard.Q);
 	style = { font: "Lucida Console", fontSize: "64px", fill: "#ffffff", wordWrap: false, align: "center", fontWeight: "bold" };
 
@@ -97,37 +99,6 @@ Gameplay.create = function() {
 	tempKey.onDown.add(() => {
 			mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
 			});
-
-	shootKey.onDown.add(() =>  {
-			//	magnitude = Math.sqrt(Math.pow(game.input.mousePointer.x - playerSprite.x, 2) + Math.pow(game.input.mousePointer.y - playerSprite.y, 2));
-		if (!this.state.paused) {
-			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
-			unitX = (target.x - playerSprite.x) / magnitude;	
-			unitY = (target.y - playerSprite.y) / magnitude;
-			theta = Math.acos(unitX);
-			theta = theta * 180 / Math.PI;
-		if (Math.asin(unitY) < 0) {
-			theta = -theta;
-		}
-		type = game.rnd.integerInRange(1, 3);
-		switch(type) {
-			case 0:
-				playerProjectiles.push(new Projectile(this, playerSprite.x, playerSprite.y, 100 * unitX, 100 * unitY, theta, 10, 'login'));	
-				break;
-			case 1:
-				temp = new Projectile(this, playerSprite.x, playerSprite.y, 300 * unitX, 300 * unitY, theta, 10, 'arrow');
-				temp.sprite.body.setSize(temp.sprite.width, temp.sprite.width, 0, -temp.sprite.width/2);
-				temp.sprite.scale.setTo(2, 2);
-				playerProjectiles.push(temp);
-				break;
-			case 3:
-				temp = new Projectile(this, playerSprite.x, playerSprite.y, 500 * unitX, 500 * unitY, theta, 10, 'bullet');
-				temp.sprite.scale.setTo(2, 2);
-				playerProjectiles.push(temp);
-				break;
-			}
-		}
-	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 	pauseKey.onDown.add(() => {

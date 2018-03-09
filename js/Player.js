@@ -15,12 +15,16 @@ Player = function(game, weaponAsset) {
 	this.canAttack = true;
 	this.attackCooldown = 100; 
 	this.attackAnimationTime = 250;
+	this.isSpecial = false;
+	this.canSpecial = true;
+	this.specialCooldown = 10 * 1000;
 	this.isInvincible = false;
 	this.invincibleLength = 900;
 	this.reloading = false;
 	this.reloadTime = 500;
 	this.stunned = false;
 	this.lockTip = false;
+	this.reset = true;
 	this.tipUnitX = 0;
 	this.tipUnitY = 0;
 	this.dmg = 10;
@@ -48,6 +52,9 @@ Player = function(game, weaponAsset) {
 	this.attackSpeedModifer = 1.0;
  	this.speedModifier = 1.0;
 	this.damageModifier = 1.0;
+	this.specialAttackModifier = 1.0;
+	this.specialLengthModifier = 1.0;
+	this.specialReloadModifier = 1.0;
 
 	// Player Sprite
 	this.sprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
@@ -82,7 +89,10 @@ Player.prototype.update = function() {
 	}
 	if (!this.stunned) {
 		this.stop();
-		if (this.game.input.activePointer.leftButton.isDown && !this.isAttacking) {
+		if (this.game.input.activePointer.rightButton.isDown && !this.isAttacking && this.canSpecial) {
+			this.specialAttack();
+		}
+		else if (this.game.input.activePointer.leftButton.isDown && !this.isAttacking) {
 			this.attack();
 		}
 		this.resetX = this.sprite.x;
@@ -144,8 +154,7 @@ Player.prototype.attack = function() {
 			this.isInvincible = true;
 			this.stunned = true;
 			this.lockTip = true;
-			this.resetX = this.sprite.x;
-			this.resetY = this.sprite.y;
+			this.reset = true;
 			this.sprite.body.velocity.x += (200 * unitX);
 			this.sprite.body.velocity.y += (200 * unitY);
 			this.game.camera.follow(null);
@@ -179,7 +188,7 @@ Player.prototype.attack = function() {
 				this.ammoReserve -= 1;
 				if (this.ammoReserve <= 0) {
 					this.reloading = true;
-					this.game.time.events.add(this.reloadTime, this.reload, this);
+					this.game.time.events.add(this.reloadTime * this.specialReloadModifier, this.reload, this);
 				}
 			}
 			break; 
@@ -187,6 +196,116 @@ Player.prototype.attack = function() {
 
 	this.canAttack = false;
 	this.game.time.events.add(this.attackAnimationCooldown, this.stopAttack, this);
+}
+
+Player.prototype.specialAttack = function() {
+	if (this.weapon.key == 'crossbow') {
+		this.specialReloadModifier = 0.1;
+		this.game.time.events.add(2.5 * 1000, this.resetSpecialReload, this);
+		this.reload();
+	}
+	if (this.isAttacking || !this.canAttack)
+		return;
+
+	this.isSpecial = true;
+	this.isAttacking = true;
+	this.canSpecial = false;
+	switch(this.weaponType) {
+		// Normal attack
+		case 0:
+			this.isInvincible = true;
+			attackRangeTheta = 70;
+			thetaPerMillis = attackRangeTheta / this.attackAnimationCooldown;
+			thetaPerSec = thetaPerMillis * 1000;
+			this.weapon.angle -= (this.attackAnimationCooldown * (thetaPerMillis)) / 2;
+			this.weapon.body.angularVelocity = thetaPerSec;
+			this.specialAttackModifier = 2.5;
+		break;
+
+		// Light Attack
+		case 1:
+			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			target = Gameplay.getTarget();
+			unitX = (target.x - this.sprite.x) / magnitude;
+			unitY = (target.y - this.sprite.y) / magnitude;
+			theta = Math.acos(unitX);
+			theta = theta * 180 / Math.PI;
+			if (Math.asin(unitY) < 0) {
+				theta = -theta;
+			}
+			theta += 90;
+			this.tipUnitX = unitX;
+			this.tipUnitY = unitY;
+			this.isInvincible = true;
+			this.stunned = true;
+			this.lockTip = true;
+			this.reset = false;
+			this.sprite.body.velocity.x += (800 * unitX);
+			this.sprite.body.velocity.y += (800 * unitY);
+			this.specialLengthModifier = 2.5;
+			this.specialAttackModifier = 2.0;
+			break;
+
+		// Heavy Attack
+		case 2:
+			this.specialLengthModifier = 8;
+			this.isInvincible = true;
+			attackRangeTheta = 1080 * 2.5;
+			thetaPerMillis = attackRangeTheta / (this.attackAnimationCooldown * this.specialLengthModifier);
+			thetaPerSec = thetaPerMillis * 1000;
+			this.weapon.angle -= ((this.attackAnimationCooldown * this.specialLengthModifier) * (thetaPerMillis)) / 2;
+			this.weapon.body.angularVelocity = thetaPerSec;
+			break;
+
+		// Ranged Attack
+		case 3:
+			if (!this.reloading) {
+				magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+				target = Gameplay.getTarget();
+				unitX = (target.x - this.sprite.x) / magnitude;
+				unitY = (target.y - this.sprite.y) / magnitude;
+				theta = Math.acos(unitX);
+				theta = theta * 180 / Math.PI;
+				if (Math.asin(unitY) < 0) {
+					theta = -theta;
+				}
+				switch (this.weapon.key) {
+					case 'm16':
+						tempTheta = theta;
+						for (var i = 0; i < 15; i++) {
+							theta = tempTheta;
+							offset = game.rnd.integerInRange(-15, 15);
+							theta += offset;
+							theta = theta * Math.PI / 180;
+							unitX = Math.cos(theta);
+							unitY = Math.sin(theta);
+							theta = theta * 180 / Math.PI;
+							temp = new Projectile(this.game, this.sprite.x + this.weapon.x, this.sprite.y + this.weapon.y, this.projectileVelocity * unitX, this.projectileVelocity * unitY, theta, this.getDamage(), this.projectileType);
+							game.world.bringToTop(this.weapon);
+							this.projectiles.push(temp);
+						}
+						break;
+
+					case 'deagle':
+						temp = new Projectile(this.game, this.sprite.x + this.weapon.x, this.sprite.y + this.weapon.y, this.projectileVelocity * unitX, this.projectileVelocity * unitY, theta, this.getDamage() * 3, this.projectileType);
+						temp.sprite.scale.setTo(3, 3);
+						game.world.bringToTop(this.weapon);
+						this.projectiles.push(temp);
+						this.ammoReserve -= 3;
+						if (this.ammoReserve <= 0) {
+							this.reloading = true;
+							this.game.time.events.add(this.reloadTime, this.reload, this);
+						}
+						break;
+				}
+			}
+			break; 
+		}
+
+	this.canAttack = false;
+	this.game.time.events.add(this.attackAnimationCooldown * this.specialLengthModifier, this.stopAttack, this);	
+	this.game.time.events.add(this.attackAnimationCooldown * this.specialLengthModifier, this.stopSpecial, this);
+	this.game.time.events.add(this.specialCooldown, this.letSpecial, this);
 }
 
 Player.prototype.hit = function(mob) {
@@ -199,9 +318,13 @@ Player.prototype.hit = function(mob) {
 
 		case 2:
 		case 0:
+			invinTime = this.attackCooldown;
 			knockback = true;
 			if (this.weaponType == 0) {
 				knockback = false;
+			}
+			else if (this.weaponType == 2 && this.isSpecial) {
+				invinTime = 150;
 			}
 			weaponLine = new Phaser.Line(this.tip.x, this.tip.y, this.base.x, this.base.y);
 			topLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2, mob.sprite.x + mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2);
@@ -210,14 +333,14 @@ Player.prototype.hit = function(mob) {
 			leftLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2, mob.sprite.x - mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2);
 
 			if (weaponLine.intersects(topLine) || weaponLine.intersects(rightLine) || weaponLine.intersects(bottomLine) || weaponLine.intersects(leftLine)) {
-				mob.damage(this.getDamage(), this.attackCooldown, true, knockback);
+				mob.damage(this.getDamage(), invinTime, true, knockback);
 			}
 			break;
 	}
 }
 
 Player.prototype.getDamage = function() {
-	return this.dmg * this.damageModifier;
+	return this.dmg * this.damageModifier * this.specialAttackModifier;
 }
 
 Player.prototype.stopAttack = function() {
@@ -232,9 +355,11 @@ Player.prototype.stopAttack = function() {
 		else if (this.weaponType == 1) {
 			this.stop();
 			this.lockTip = false;
-			this.sprite.x = this.resetX;
-			this.sprite.y = this.resetY;
-			this.game.camera.follow(this.sprite);
+			if (this.reset) {
+				this.sprite.x = this.resetX;
+				this.sprite.y = this.resetY;
+				this.game.camera.follow(this.sprite);
+			}
 			this.game.time.events.add(150, this.stopStunned, this);
 		}
 		else if (this.weaponType == 2) {
@@ -245,6 +370,20 @@ Player.prototype.stopAttack = function() {
 
 Player.prototype.letAttack = function() {
 	this.canAttack = true;
+}
+
+Player.prototype.stopSpecial = function() {
+	this.isSpecial = false;
+	this.specialAttackModifier = 1.0;
+	this.specialLengthModifier = 1.0;
+}
+
+Player.prototype.resetSpecialReload = function() {
+	this.specialReloadModifier = 1.0;
+}
+
+Player.prototype.letSpecial = function() {
+	this.canSpecial = true;
 }
 
 Player.prototype.damage = function(dmg) {
@@ -285,7 +424,7 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 	switch(weaponAsset) {
 		case 'sword':
 		case 'crowbar':
-			this.attackAnimationCooldown = 100;
+			this.attackAnimationCooldown = 300;
 			this.attackCooldown = 550;
 			this.weaponType = 0;
 			this.dmg = 30;
