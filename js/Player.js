@@ -11,6 +11,7 @@ Player = function(game, weaponAsset) {
 
 	// Player Stats	
 	this.health = 100;
+	this.speed = 275;
 	this.isAttacking = false;
 	this.canAttack = true;
 	this.attackCooldown = 100; 
@@ -344,7 +345,7 @@ Player.prototype.hit = function(mob) {
 					mob.damage(this.getDamage(), this.attackCooldown, false, false);
 				}
 				else {
-					mob.damage(this.getDamage(), this.attackCooldown, true, true);
+					mob.damage(this.getDamage(), 150, false, false);
 				}
 			}
 			break;
@@ -496,7 +497,7 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			this.ammoReserve = 30;
 			this.reloadTime = 1800;
 			this.weaponType = 3;
-			this.projectileVelocity = 500;
+			this.projectileVelocity = 550;
 			break;
 		
 		case 'deagle':	
@@ -508,7 +509,7 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			this.ammoReserve = 7;
 			this.reloadTime = 1350;
 			this.weaponType = 3;
-			this.projectileVelodity = 350;
+			this.projectileVelodity = 500;
 			break;
 
 		case 'crossbow':
@@ -520,7 +521,7 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			this.ammoReserve = 1;
 			this.reloadTime = 1450;
 			this.weaponType = 3;
-			this.projectileVelocity = 270;
+			this.projectileVelocity = 400;
 			break;
 	}
 }
@@ -577,6 +578,14 @@ Player.prototype.targetAngle = function() {
 		theta = -theta;
 	}
 	return theta + 90;
+}
+
+Player.prototype.normalizeSpeed = function() {
+	magnitude = Math.sqrt(Math.pow(this.sprite.body.velocity.x, 2) + Math.pow(this.sprite.body.velocity.y, 2));
+	unitX = this.sprite.body.velocity.x / magnitude;
+	unitY = this.sprite.body.velocity.y / magnitude;
+	this.sprite.body.velocity.x = this.speed * unitX;
+	this.sprite.body.velocity.y = this.speed * unitY;
 }
 
 function calculateQuadrant(mpx, mpy, slope) {

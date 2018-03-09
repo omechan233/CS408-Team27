@@ -140,7 +140,6 @@ Gameplay.create = function() {
 	target.anchor.setTo(0.5, 0.5);
 	target.scale.setTo(2, 2);
 
-
 	score = 0;
 	pauseElapsedTime = 0;
 
@@ -214,6 +213,7 @@ Gameplay.update = function() {
 			else if (cursors.left.isDown || leftKey.isDown) {
 				player.left();
 			}
+			player.normalizeSpeed();
 		}
 		this.updateScore();
 	}
