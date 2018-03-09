@@ -62,6 +62,7 @@ Player = function(game, weaponAsset) {
 	this.weapon.pivot.y = this.sprite.width / 5;
 	this.game.physics.arcade.enable(this.weapon);
 	this.tip = new Phaser.Point();
+	this.base = new Phaser.Point();
 
 	// melee
 	this.swing = this.game.add.group();
@@ -76,12 +77,16 @@ Player.prototype.create = function() {
 
 Player.prototype.update = function() {
 	this.findTip();
+	if (!this.isAttacking) {
+		this.pointWeapon();
+	}
 	if (!this.stunned) {
 		this.stop();
-		this.pointWeapon();
 		if (this.game.input.activePointer.leftButton.isDown && !this.isAttacking) {
 			this.attack();
 		}
+		this.resetX = this.sprite.x;
+		this.resetY = this.sprite.y;
 	}
 }
 
@@ -184,6 +189,12 @@ Player.prototype.attack = function() {
 
 		// Heavy Attack
 		case 2:
+			this.isInvincible = true;
+			thetaPerMillis = 15;
+			thetaPerSec = thetaPerMillis * 1000;
+			radPerSec = thetaPerSec * Math.PI / 180;
+			this.weapon.angle -= (this.attackAnimationCooldown * (thetaPerMillis)) / 4;
+			this.weapon.body.angularVelocity = radPerSec;
 			break;
 
 		// Ranged Attack
@@ -216,9 +227,24 @@ Player.prototype.attack = function() {
 }
 
 Player.prototype.hit = function(mob) {
-	if (this.tip.x > mob.sprite.x - mob.sprite.width / 2 && this.tip.x < mob.sprite.x + mob.sprite.width / 2 && this.tip.y > mob.sprite.y - mob.sprite.height / 2 && this.tip.y < mob.sprite.y + mob.sprite.height/2) {
-		console.log("impact");
-		mob.damage(this.getDamage);
+	switch(this.weaponType) {
+		case 1:
+			if (this.tip.x > mob.sprite.x - mob.sprite.width / 2 && this.tip.x < mob.sprite.x + mob.sprite.width / 2 && this.tip.y > mob.sprite.y - mob.sprite.height / 2 && this.tip.y < mob.sprite.y + mob.sprite.height/2) {
+				mob.damage(this.getDamage(), this.attackCooldown, false);
+			}
+			break;
+
+		case 2:
+			weaponLine = new Phaser.Line(this.tip.x, this.tip.y, this.base.x, this.base.y);
+			topLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2, mob.sprite.x + mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2);
+			rightLine = new Phaser.Line(mob.sprite.x + mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2, mob.sprite.x + mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2);
+			bottomLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2, mob.sprite.x + mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2);
+			leftLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2, mob.sprite.x - mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2);
+
+			if (weaponLine.intersects(topLine) || weaponLine.intersects(rightLine) || weaponLine.intersects(bottomLine) || weaponLine.intersects(leftLine)) {
+				mob.damage(this.getDamage(), this.attackCooldown, true);
+			}
+			break;
 	}
 }
 
@@ -241,6 +267,10 @@ Player.prototype.stopAttack = function() {
 		this.game.camera.follow(this.sprite);
 		this.game.time.events.add(250, this.stopInvincible, this);	
 		this.game.time.events.add(150, this.stopStunned, this);
+	}
+	else if (this.weaponType == 2) {
+		this.weapon.body.angularVelocity = 0;
+		this.game.time.events.add(250, this.stopInvincible, this);
 	}
 }
 
@@ -301,8 +331,9 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 
 		case 'heavySword':
 		case 'pipe':
-			this.attackAnimationCooldown = 150;
+			this.attackAnimationCooldown = 500;
 			this.attackCooldown = 950;
+			this.dmg = 35;
 			this.weaponType = 2;
 			break;
 
@@ -353,6 +384,7 @@ Player.prototype.setAttackDamage = function(damage) {
 }
 
 Player.prototype.switchWeapon = function(newWeaponAsset) {
+	//this.stopAttack();	
 	this.weapon.scale.setTo(1.5, 1.5);
 	this.projectileType = '';
 	if (newWeaponAsset == 'deagle') {
@@ -371,19 +403,16 @@ Player.prototype.pointWeapon = function() {
 }
 
 Player.prototype.findTip = function(theta) {
-	if (!this.lockTip) {
-		magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
-		unitX = (target.x - playerSprite.x) / magnitude;	
-		unitY = (target.y - playerSprite.y) / magnitude;
-	}
-	else {
-		unitX = this.tipUnitX;
-		unitY = this.tipUnitY;
-	}
+	unitX = Math.cos((this.weapon.angle - 90) * Math.PI / 180);
+	unitY = Math.sin((this.weapon.angle - 90) * Math.PI / 180);
 	this.tip.x = ((this.sprite.width / 5) + this.weapon.height * 2) * unitX;
 	this.tip.y = ((this.sprite.width / 5) + this.weapon.height * 2) * unitY;
+	this.base.x = ((this.sprite.width / 5) + this.weapon.height / 8) * unitX;
+	this.base.y = ((this.sprite.width / 5) + this.weapon.height / 8) * unitY;
 	this.tip.x += this.sprite.x;
 	this.tip.y += this.sprite.y;
+	this.base.x += this.sprite.x;
+	this.base.y += this.sprite.y;
 }
 
 Player.prototype.targetAngle = function() {

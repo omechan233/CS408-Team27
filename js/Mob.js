@@ -10,7 +10,8 @@ Mob = function(game) {
     }
 	this.health = 50 * multiplier;
 	this.isInvincible = false;
-	this.invincibleTime = 100;
+	this.stunned = false;
+	this.invincibleTime = 0;
 	this.x = game.rnd.integerInRange(0, game.world._width);
 	this.y = game.rnd.integerInRange(0, game.world._height);
 	this.sprite = game.add.sprite(this.x, this.y, 'player');
@@ -20,14 +21,15 @@ Mob = function(game) {
 	this.sprite.body.immovable = true;
 	this.sprite.body.stopVelocityOnCollide = true;	
 	this.sprite.body.collideWorldBounds = true;
-
 	this.canAttack = true;
 	this.attackCoolDown = 1150;
 }
 
 Mob.prototype.update = function() {
-	this.stop();
-	this.followPlayer();
+	if (!this.stunned) {
+		this.stop();
+		this.followPlayer();
+	}
 }
 
 Mob.prototype.followPlayer = function() {
@@ -58,13 +60,29 @@ Mob.prototype.letAttack = function() {
 	this.canAttack = true;
 }
 
-Mob.prototype.damage = function(dmg) {
+Mob.prototype.damage = function(dmg, invinTime, stun) {
 	if (!this.isInvincible) {
-		console.log("dmg");
 		this.isInvincible = true;
 		this.health -= dmg;
-		this.game.time.events.add(this.invincibleTime, this.stopInvincible, this);
+		if (this.health > 0) {
+			this.game.time.events.add(invinTime, this.stopInvincible, this);
+			if (stun) {
+				this.stun(invinTime * 1.5);
+			}
+		}
 	}
+}
+
+Mob.prototype.stun = function(time) {
+	this.stunned = true;
+	this.stop();
+	this.sprite.alpha = .5;
+	this.game.time.events.add(time, this.stopStun, this);
+}
+
+Mob.prototype.stopStun = function() {
+	this.sprite.alpha = 1;
+	this.stunned = false;
 }
 
 Mob.prototype.stopInvincible = function() {

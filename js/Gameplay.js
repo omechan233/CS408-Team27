@@ -196,7 +196,7 @@ Gameplay.update = function() {
 			}
 			for (var j = player.projectiles.length - 1; j >= 0; j--) {
 				if (game.physics.arcade.overlap(player.projectiles[j].sprite, mobs[i].sprite)) {
-					mobs[i].damage(player.projectiles[j].getDamage());
+					mobs[i].damage(player.projectiles[j].getDamage(), 0, false);
 					player.projectiles[j].destroy();
 					player.projectiles.splice(j, 1);
 				}
@@ -379,5 +379,6 @@ Gameplay.render = function() {
 		game.debug.body(mobs[i].sprite);
 	}
 	game.debug.geom(player.tip, '#0000ff');
-	*/
+	game.debug.geom(player.base, '#0000ff');
+	*/	
 }
