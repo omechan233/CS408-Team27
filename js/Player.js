@@ -73,7 +73,10 @@ Player = function(game, weaponAsset) {
 	this.sprite.animations.add('walkup', 	[12, 13, 14, 15], 10, true, true);
 
 	this.sprite.anchor.setTo(0.5, 0.5);
+	this.sprite.scale.setTo(2, 2);
 	this.game.physics.arcade.enable(this.sprite);
+	this.sprite.body.immovable = true;
+	this.sprite.body.collideWorldBounds = true;
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
 	
@@ -175,7 +178,7 @@ Player.prototype.attack = function() {
 
 		// Light Attack
 		case 1:
-			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 			target = Gameplay.getTarget();
 			unitX = (target.x - this.sprite.x) / magnitude;
 			unitY = (target.y - this.sprite.y) / magnitude;
@@ -209,7 +212,7 @@ Player.prototype.attack = function() {
 		// Ranged Attack
 		case 3:
 			if (!this.reloading) {
-				magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+				magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 				target = Gameplay.getTarget();
 				unitX = (target.x - this.sprite.x) / magnitude;
 				unitY = (target.y - this.sprite.y) / magnitude;
@@ -260,7 +263,7 @@ Player.prototype.specialAttack = function() {
 
 		// Light Attack
 		case 1:
-			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 			target = Gameplay.getTarget();
 			unitX = (target.x - this.sprite.x) / magnitude;
 			unitY = (target.y - this.sprite.y) / magnitude;
@@ -298,7 +301,7 @@ Player.prototype.specialAttack = function() {
 		// Ranged Attack
 		case 3:
 			if (!this.reloading) {
-				magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+				magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 				target = Gameplay.getTarget();
 				unitX = (target.x - this.sprite.x) / magnitude;
 				unitY = (target.y - this.sprite.y) / magnitude;
@@ -578,9 +581,9 @@ Player.prototype.findTip = function(theta) {
 }
 
 Player.prototype.targetAngle = function() {
-	magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
-	unitX = (target.x - playerSprite.x) / magnitude;	
-	unitY = (target.y - playerSprite.y) / magnitude;
+	magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
+	unitX = (target.x - player.sprite.x) / magnitude;	
+	unitY = (target.y - player.sprite.y) / magnitude;
 	theta = Math.acos(unitX);
 	theta = theta * 180 / Math.PI;
 	if (Math.asin(unitY) < 0) {
