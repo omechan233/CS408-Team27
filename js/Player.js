@@ -119,48 +119,12 @@ Player.prototype.attack = function() {
 	switch(this.weaponType) {
 		// Normal attack
 		case 0:
-			// get mouse quadrant position (based on player location)
-			mpx = this.game.input.mousePointer.x;
-			mpy = this.game.input.mousePointer.y;
-			// window center
-			wCenter = {x: window.innerWidth / 2, y: window.innerHeight / 2}
-			slope = window.innerHeight / window.innerWidth;
-
-			quadrant = calculateQuadrant(mpx, mpy, slope);
-
-			xOff = 0, yOff = 0, dirX = 1, dirY = 1, rot = 0;
-
-			switch (quadrant) {
-				case "north":
-					yOff = -40;
-					dirY = 1;
-					rot = 270;
-					break;
-				case "east":
-					xOff = 30;
-					dirX = 1;
-					break;
-				case "south":
-					yOff = 40;
-					dirY = -1;
-					rot = 90;
-					break;
-				case "west":
-					xOff = -30;
-					dirX = -1;
-					break;
-			}
-
-			slashfx = this.game.add.sprite(this.sprite.x + xOff, this.sprite.y + yOff, 'slashfx');
-			slashfx.angle = rot;
-			slashfx.anchor.setTo(0.5, 0.5);
-			slashfx.scale.setTo(2 * dirX, 2);
-
-			slashBox = this.swing.create(this.sprite.x + xOff, this.sprite.y + yOff);
-			slashBox.angle = rot;
-			slashBox.anchor.setTo(0.5, 0.5);
-			slashBox.scale.setTo(2 * dirX, 2);
-			slashBox.enableBody = true;
+			this.isInvincible = true;
+			attackRangeTheta = 70;
+			thetaPerMillis = attackRangeTheta / this.attackAnimationCooldown;
+			thetaPerSec = thetaPerMillis * 1000;
+			this.weapon.angle -= (this.attackAnimationCooldown * (thetaPerMillis)) / 2;
+			this.weapon.body.angularVelocity = thetaPerSec;
 			break;
 
 		// Light Attack
@@ -182,19 +146,19 @@ Player.prototype.attack = function() {
 			this.lockTip = true;
 			this.resetX = this.sprite.x;
 			this.resetY = this.sprite.y;
-			this.sprite.body.velocity.x += (150 * unitX);
-			this.sprite.body.velocity.y += (150 * unitY);
+			this.sprite.body.velocity.x += (200 * unitX);
+			this.sprite.body.velocity.y += (200 * unitY);
 			this.game.camera.follow(null);
 			break;
 
 		// Heavy Attack
 		case 2:
 			this.isInvincible = true;
-			thetaPerMillis = 15;
+			attackRangeTheta = 160;
+			thetaPerMillis = attackRangeTheta / this.attackAnimationCooldown;
 			thetaPerSec = thetaPerMillis * 1000;
-			radPerSec = thetaPerSec * Math.PI / 180;
-			this.weapon.angle -= (this.attackAnimationCooldown * (thetaPerMillis)) / 4;
-			this.weapon.body.angularVelocity = radPerSec;
+			this.weapon.angle -= (this.attackAnimationCooldown * (thetaPerMillis)) / 2;
+			this.weapon.body.angularVelocity = thetaPerSec;
 			break;
 
 		// Ranged Attack
@@ -222,7 +186,6 @@ Player.prototype.attack = function() {
 		}
 
 	this.canAttack = false;
-	this.game.time.events.add(this.attackCooldown, this.letAttack, this);
 	this.game.time.events.add(this.attackAnimationCooldown, this.stopAttack, this);
 }
 
@@ -230,11 +193,16 @@ Player.prototype.hit = function(mob) {
 	switch(this.weaponType) {
 		case 1:
 			if (this.tip.x > mob.sprite.x - mob.sprite.width / 2 && this.tip.x < mob.sprite.x + mob.sprite.width / 2 && this.tip.y > mob.sprite.y - mob.sprite.height / 2 && this.tip.y < mob.sprite.y + mob.sprite.height/2) {
-				mob.damage(this.getDamage(), this.attackCooldown, false);
+				mob.damage(this.getDamage(), this.attackCooldown, false, false);
 			}
 			break;
 
 		case 2:
+		case 0:
+			knockback = true;
+			if (this.weaponType == 0) {
+				knockback = false;
+			}
 			weaponLine = new Phaser.Line(this.tip.x, this.tip.y, this.base.x, this.base.y);
 			topLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2, mob.sprite.x + mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2);
 			rightLine = new Phaser.Line(mob.sprite.x + mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2, mob.sprite.x + mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2);
@@ -242,7 +210,7 @@ Player.prototype.hit = function(mob) {
 			leftLine = new Phaser.Line(mob.sprite.x - mob.sprite.width / 2, mob.sprite.y + mob.sprite.height / 2, mob.sprite.x - mob.sprite.width / 2, mob.sprite.y - mob.sprite.height / 2);
 
 			if (weaponLine.intersects(topLine) || weaponLine.intersects(rightLine) || weaponLine.intersects(bottomLine) || weaponLine.intersects(leftLine)) {
-				mob.damage(this.getDamage(), this.attackCooldown, true);
+				mob.damage(this.getDamage(), this.attackCooldown, true, knockback);
 			}
 			break;
 	}
@@ -253,24 +221,25 @@ Player.prototype.getDamage = function() {
 }
 
 Player.prototype.stopAttack = function() {
-	this.isAttacking = false;
-	if (this.weaponType == 0) {
-		this.swing.remove(slashBox);
-		slashfx.kill();
-		slashBox.kill();
-	}
-	else if (this.weaponType == 1) {
-		this.stop();
-		this.lockTip = false;
-		this.sprite.x = this.resetX;
-		this.sprite.y = this.resetY;
-		this.game.camera.follow(this.sprite);
-		this.game.time.events.add(250, this.stopInvincible, this);	
-		this.game.time.events.add(150, this.stopStunned, this);
-	}
-	else if (this.weaponType == 2) {
-		this.weapon.body.angularVelocity = 0;
-		this.game.time.events.add(250, this.stopInvincible, this);
+	if (this.isAttacking) {
+		this.isAttacking = false;	
+		this.game.time.events.add(this.attackCooldown, this.letAttack, this);
+		this.game.time.events.add(150, this.stopInvincible, this);	
+		
+		if (this.weaponType == 0) {
+			this.weapon.body.angularVelocity = 0;
+		}
+		else if (this.weaponType == 1) {
+			this.stop();
+			this.lockTip = false;
+			this.sprite.x = this.resetX;
+			this.sprite.y = this.resetY;
+			this.game.camera.follow(this.sprite);
+			this.game.time.events.add(150, this.stopStunned, this);
+		}
+		else if (this.weaponType == 2) {
+			this.weapon.body.angularVelocity = 0;
+		}
 	}
 }
 
@@ -319,12 +288,13 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			this.attackAnimationCooldown = 100;
 			this.attackCooldown = 550;
 			this.weaponType = 0;
+			this.dmg = 30;
 			break;
 
 		case 'lightSword':
 		case 'lance':
-			this.attackAnimationCooldown = 250;
-			this.attackCooldown = 450;
+			this.attackAnimationCooldown = 200;
+			this.attackCooldown = 350;
 			this.dmg = 25;
 			this.weaponType = 1;
 			break;
@@ -332,14 +302,14 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 		case 'heavySword':
 		case 'pipe':
 			this.attackAnimationCooldown = 500;
-			this.attackCooldown = 950;
+			this.attackCooldown = 850;
 			this.dmg = 35;
 			this.weaponType = 2;
 			break;
 
 		case 'm16':
 			this.attackAnimationCooldown = 0;
-			this.attackCooldown = 100;
+			this.attackCooldown = 50;
 			this.dmg = 7;
 			this.projectileType = 'bullet';
 			this.ammoCapacity = 30;

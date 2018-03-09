@@ -196,7 +196,7 @@ Gameplay.update = function() {
 			}
 			for (var j = player.projectiles.length - 1; j >= 0; j--) {
 				if (game.physics.arcade.overlap(player.projectiles[j].sprite, mobs[i].sprite)) {
-					mobs[i].damage(player.projectiles[j].getDamage(), 0, false);
+					mobs[i].damage(player.projectiles[j].getDamage(), 0, false, false);
 					player.projectiles[j].destroy();
 					player.projectiles.splice(j, 1);
 				}
