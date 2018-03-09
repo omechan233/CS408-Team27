@@ -2,6 +2,12 @@ var Gameplay = {};
 
 Gameplay.preload = function() {
 	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
+	game.load.image('hpbarback', 'assets/sprites/HP_Bar.PNG');
+	game.load.image('hpbarfront', 'assets/sprites/HP_Bar2.PNG');
+	game.load.image('hpText', 'assets/sprites/HP_Tx.png');
+	game.load.image('xpbarback', 'assets/sprites/Exp_Back.png');
+	game.load.image('xpbarfront', 'assets/sprites/Exp_Meter.png');
+	game.load.image('levelText', 'assets/sprites/Lv_Tx.PNG');
 	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
 	game.load.image('dead', 'assets/sprites/dead.png');
 	game.load.image('target', 'assets/sprites/target.png');
@@ -131,10 +137,61 @@ Gameplay.create = function() {
 	
 	cursors = game.input.keyboard.createCursorKeys();
 
-	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
-	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
+	// Build HUD
+	scoreStyle = { 
+		font: "Lucida Console", 
+		fontSize: "24px", 
+		fill: "#000000", 
+		wordWrap: false, 
+		fontWeight: "bold",
+	};
+	scoreText = game.add.text(0, 0, "000000", scoreStyle);
+	scoreText.x = game.camera.width / 2;
 	scoreText.fixedToCamera = true;
-	scoreText.anchor.setTo(1, 0);
+	scoreText.anchor.setTo(0.5, 0);
+
+	healthBarBack = game.add.image(game.camera.width - 10, 10, 'hpbarback');
+	healthBarBack.fixedToCamera = true;
+	healthBarBack.scale.setTo(3, 1);
+	healthBarBack.anchor.setTo(1, 0);
+
+	healthBarFront = game.add.image(healthBarBack.x - healthBarBack.width, 10, 'hpbarfront');
+	healthBarFront.fixedToCamera = true;
+	healthBarFront.scale.setTo(3, 1);
+	healthBarFront.anchor.setTo(0, 0);
+
+	healthText = game.add.image(healthBarFront.x - 8, 10, 'hpText');
+	healthText.fixedToCamera = true;
+	healthText.scale.setTo(1, 1);
+	healthText.anchor.setTo(1, 0);
+
+	xpBarBack = game.add.image(game.camera.width - 10, 30, 'xpbarback');
+	xpBarBack.fixedToCamera = true;
+	xpBarBack.scale.setTo(4, 1.5);
+	xpBarBack.anchor.setTo(1, 0);
+
+	xpBarFront = game.add.image(xpBarBack.x - xpBarBack.width, 30, 'xpbarfront');
+	xpBarFront.fixedToCamera = true;
+	xpBarFront.scale.setTo(4, 1.5);
+	xpBarFront.anchor.setTo(0, 0);
+
+	levelTextImage = game.add.image(xpBarFront.x - 30, 30, 'levelText');
+	levelTextImage.fixedToCamera = true;
+	levelTextImage.scale.setTo(1, 1);
+	levelTextImage.anchor.setTo(1, 0);
+
+	levelText = game.add.text(levelTextImage.x + 3, 25, player.level);
+	levelText.fixedToCamera = true;
+	levelText.scale.setTo(0.8, 0.8);
+	levelText.anchor.setTo(0, 0);
+
+	ammoTextCap = game.add.text(game.camera.width - 10, game.camera.height, '/ ' + player.ammoCapacity);
+	ammoTextCap.fixedToCamera = true;
+	ammoTextCap.anchor.setTo(1, 1);
+
+	ammoTextRes = game.add.text(game.camera.width - 60, game.camera.height, player.ammoReserve);
+	ammoTextRes.fixedToCamera = true;
+	ammoTextRes.anchor.setTo(1, 1);
 
 	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
 	target.anchor.setTo(0.5, 0.5);
@@ -153,6 +210,10 @@ Gameplay.update = function() {
 			this.gameOver();
 		}
 		player.update();
+		healthBarFront.scale.setTo(3 * (player.health / 100), 1);
+		xpBarFront.scale.setTo(4 * ((player.xp % 100) / 100), 1.5);
+		levelText.setText(player.level);
+		ammoTextRes.setText(player.ammoReserve);
 		
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
@@ -175,6 +236,7 @@ Gameplay.update = function() {
 			if (!mobs[i].isAlive()) {
 				mobs[i].destroy();
 				mobs.splice(i, 1);
+				player.xp += 10;
 				score++;
 			}
 		}

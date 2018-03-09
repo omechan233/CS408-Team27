@@ -11,6 +11,8 @@ Player = function(game, weaponAsset) {
 
 	// Player Stats	
 	this.health = 100;
+	this.xp = 0;
+	this.level = 0;
 	this.speed = 275;
 	this.isAttacking = false;
 	this.canAttack = true;
@@ -98,6 +100,11 @@ Player.prototype.create = function() {
 
 Player.prototype.update = function() {
 	this.findTip();
+	if (player.xp >= 100) {
+		player.level++;
+		player.xp %= 100;
+		player.health = 100;
+	}
 	if (!this.isAttacking) {
 		this.pointWeapon();
 	}
