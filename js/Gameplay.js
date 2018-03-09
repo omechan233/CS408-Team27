@@ -2,12 +2,15 @@ var Gameplay = {};
 
 Gameplay.preload = function() {
 	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
+	// HUD
 	game.load.image('hpbarback', 'assets/sprites/HP_Bar.PNG');
 	game.load.image('hpbarfront', 'assets/sprites/HP_Bar2.PNG');
 	game.load.image('hpText', 'assets/sprites/HP_Tx.png');
 	game.load.image('xpbarback', 'assets/sprites/Exp_Back.png');
 	game.load.image('xpbarfront', 'assets/sprites/Exp_Meter.png');
 	game.load.image('levelText', 'assets/sprites/Lv_Tx.PNG');
+	game.load.image('specReady', 'assets/sprites/special_ready.png');
+
 	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
 	game.load.image('dead', 'assets/sprites/dead.png');
 	game.load.image('target', 'assets/sprites/target.png');
@@ -126,12 +129,6 @@ Gameplay.create = function() {
 	});
 
 	player = new Player(this, 'sword');
-	playerSprite = player.sprite;
-	playerSprite.anchor.setTo(0.5, 0.5);
-	game.physics.arcade.enable(playerSprite);
-	playerSprite.scale.setTo(2, 2);
-	playerSprite.body.immovable = true;
-	playerSprite.body.collideWorldBounds = true;
 
 	game.input.mouse.capture = true;
 	
@@ -193,14 +190,19 @@ Gameplay.create = function() {
 	ammoTextRes.fixedToCamera = true;
 	ammoTextRes.anchor.setTo(1, 1);
 
+	specReady = game.add.image(game.camera.width - 10, game.camera.height - 40, 'specReady');
+	specReady.fixedToCamera = true;
+	specReady.scale.setTo(1.5, 1.5);
+	specReady.anchor.setTo(1, 1);
+
 	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
-	target.anchor.setTo(0.5, 0.5);
 	target.scale.setTo(2, 2);
+	target.anchor.setTo(0.5, 0.5);
 
 	score = 0;
 	pauseElapsedTime = 0;
 
-	game.camera.follow(playerSprite);
+	game.camera.follow(player.sprite);
 }
 
 Gameplay.update = function() {
@@ -214,6 +216,7 @@ Gameplay.update = function() {
 		xpBarFront.scale.setTo(4 * ((player.xp % 100) / 100), 1.5);
 		levelText.setText(player.level);
 		ammoTextRes.setText(player.ammoReserve);
+		specReady.alpha = player.canSpecial ? 1.0 : 0.2;
 		
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
@@ -289,7 +292,7 @@ Gameplay.updateScore = function() {
 }
 
 Gameplay.getPlayerSprite = function() {
-	return playerSprite;
+	return player.sprite;
 }
 
 Gameplay.getPlayer = function() {
