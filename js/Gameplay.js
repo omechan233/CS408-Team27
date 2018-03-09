@@ -2,6 +2,8 @@ var Gameplay = {};
 
 Gameplay.preload = function() {
 	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
+	game.load.spritesheet('monster1', 'assets/sprites/monster-01.png', 32, 48, 16);
+	game.load.spritesheet('monster2', 'assets/sprites/monster-02.png', 80, 96, 16);
 	// HUD
 	game.load.image('hpbarback', 'assets/sprites/HP_Bar.PNG');
 	game.load.image('hpbarfront', 'assets/sprites/HP_Bar2.PNG');
@@ -102,7 +104,7 @@ Gameplay.create = function() {
 	// M to spawn a mob
 	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
 	spawnMobKey.onDown.add(() => {
-			mobs.push(new MobBadGuy(this));	
+			mobs.push(new MobGhost(this));	
 			});
 
 	tempKey.onDown.add(() => {
@@ -124,7 +126,7 @@ Gameplay.create = function() {
 
 	superSpawnKey.onDown.add(() => {
 		for (var i = 0; i < 500; i++) {
-			mobs.push(new MobBadGuy(this));	
+			mobs.push(new MobGhost(this));	
 		}
 	});
 
