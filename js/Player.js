@@ -312,7 +312,13 @@ Player.prototype.hit = function(mob) {
 	switch(this.weaponType) {
 		case 1:
 			if (this.tip.x > mob.sprite.x - mob.sprite.width / 2 && this.tip.x < mob.sprite.x + mob.sprite.width / 2 && this.tip.y > mob.sprite.y - mob.sprite.height / 2 && this.tip.y < mob.sprite.y + mob.sprite.height/2) {
-				mob.damage(this.getDamage(), this.attackCooldown, false, false);
+				if (!this.isSpecial) {
+					mob.damage(this.getDamage(), this.attackCooldown, false, false);
+				}
+				else {
+					mob.damage(this.getDamage(), 150, false, false);
+				}
+				
 			}
 			break;
 
