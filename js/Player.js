@@ -58,7 +58,17 @@ Player = function(game, weaponAsset) {
 	this.specialReloadModifier = 1.0;
 
 	// Player Sprite
-	this.sprite = game.add.sprite(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, 'player');
+	this.sprite = game.add.sprite(
+		game.camera.x + game.camera.width / 2,
+		game.camera.y + game.camera.height / 2,
+		 'player'
+	);
+	this.sprite.animations.add('stand', 	[0], 10, true, true);
+	this.sprite.animations.add('walkdown', 	[0, 1, 2, 3], 10, true, true);
+	this.sprite.animations.add('walkleft', 	[4, 5, 6, 7], 10, true, true);
+	this.sprite.animations.add('walkright', [8, 9, 10, 11], 10, true, true);
+	this.sprite.animations.add('walkup', 	[12, 13, 14, 15], 10, true, true);
+
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.game.physics.arcade.enable(this.sprite);
 	
@@ -89,7 +99,20 @@ Player.prototype.update = function() {
 		this.pointWeapon();
 	}
 	if (!this.stunned) {
+		// play animations
+		var velX = this.sprite.body.velocity.x;
+		var velY = this.sprite.body.velocity.y;
+		if (velX > 0)
+			this.sprite.animations.play('walkright', 10, true);
+		else if (velX < 0)
+			this.sprite.animations.play('walkleft', 10, true);
+		else if (velY > 0)
+			this.sprite.animations.play('walkdown', 10, true);
+		else if (velY < 0)
+			this.sprite.animations.play('walkup', 10, true);
+
 		this.stop();
+
 		if (this.game.input.activePointer.rightButton.isDown && !this.isAttacking && this.canSpecial) {
 			this.specialAttack();
 		}
@@ -118,6 +141,8 @@ Player.prototype.left = function() {
 }
 
 Player.prototype.stop = function() {
+	if (this.sprite.body.velocity.x == 0 && this.sprite.body.velocity.y == 0)
+		this.sprite.animations.stop(null, true);
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
 }

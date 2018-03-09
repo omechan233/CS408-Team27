@@ -1,7 +1,7 @@
 var Gameplay = {};
 
 Gameplay.preload = function() {
-	game.load.image('player', 'assets/sprites/Player.png');
+	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
 	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
 	game.load.image('dead', 'assets/sprites/dead.png');
 	game.load.image('target', 'assets/sprites/target.png');
