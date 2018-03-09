@@ -68,6 +68,12 @@ Mob.prototype.damage = function(dmg, invinTime, stun) {
 			this.game.time.events.add(invinTime, this.stopInvincible, this);
 			if (stun) {
 				this.stun(invinTime * 1.5);
+				playerSprite = Gameplay.getPlayerSprite();
+				magnitude = Math.sqrt(Math.pow(this.sprite.x - playerSprite.x, 2) + Math.pow(this.sprite.y - playerSprite.y, 2));
+				unitX = (this.sprite.x - playerSprite.x) / magnitude;
+				unitY = (this.sprite.y - playerSprite.y) / magnitude;
+				this.sprite.body.velocity.x = 35 * unitX;
+				this.sprite.body.velocity.y = 35 * unitY;
 			}
 		}
 	}
