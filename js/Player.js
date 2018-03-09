@@ -72,6 +72,8 @@ Player = function(game, weaponAsset) {
 
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.game.physics.arcade.enable(this.sprite);
+	this.sprite.body.velocity.x = 0;
+	this.sprite.body.velocity.y = 0;
 	
 	// Weapon Sprite
 	this.weapon = this.sprite.addChild(game.make.sprite(0, 0, weaponAsset));
@@ -142,7 +144,7 @@ Player.prototype.left = function() {
 }
 
 Player.prototype.stop = function() {
-	if (this.sprite.body.velocity.x == 0 && this.sprite.body.velocity.y == 0)
+	if (!this.sprite.body.velocity.x && !this.sprite.body.velocity.y)
 		this.sprite.animations.stop(null, true);
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
