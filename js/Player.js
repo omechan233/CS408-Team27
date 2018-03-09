@@ -19,6 +19,7 @@ Player = function(game, weaponAsset) {
 	this.canSpecial = true;
 	this.specialCooldown = 10 * 1000;
 	this.isInvincible = false;
+	this.specialInvincible = false;
 	this.invincibleLength = 900;
 	this.reloading = false;
 	this.reloadTime = 500;
@@ -238,6 +239,7 @@ Player.prototype.specialAttack = function() {
 			this.tipUnitY = unitY;
 			this.isInvincible = true;
 			this.stunned = true;
+			this.isSpecialInvincible = true;
 			this.lockTip = true;
 			this.reset = false;
 			this.sprite.body.velocity.x += (800 * unitX);
@@ -250,6 +252,7 @@ Player.prototype.specialAttack = function() {
 		case 2:
 			this.specialLengthModifier = 8;
 			this.isInvincible = true;
+			this.isSpecialInvincible = true;
 			attackRangeTheta = 1080 * 2.5;
 			thetaPerMillis = attackRangeTheta / (this.attackAnimationCooldown * this.specialLengthModifier);
 			thetaPerSec = thetaPerMillis * 1000;
@@ -303,7 +306,7 @@ Player.prototype.specialAttack = function() {
 		}
 
 	this.canAttack = false;
-	this.game.time.events.add(this.attackAnimationCooldown * this.specialLengthModifier, this.stopAttack, this);	
+	this.game.time.events.add(this.attackAnimationCooldown * this.specialLengthModifier, this.stopAttack, this);
 	this.game.time.events.add(this.attackAnimationCooldown * this.specialLengthModifier, this.stopSpecial, this);
 	this.game.time.events.add(this.specialCooldown, this.letSpecial, this);
 }
@@ -318,7 +321,6 @@ Player.prototype.hit = function(mob) {
 				else {
 					mob.damage(this.getDamage(), 150, false, false);
 				}
-				
 			}
 			break;
 
@@ -382,6 +384,7 @@ Player.prototype.stopSpecial = function() {
 	this.isSpecial = false;
 	this.specialAttackModifier = 1.0;
 	this.specialLengthModifier = 1.0;
+	this.stopSpecialInvincible();
 }
 
 Player.prototype.resetSpecialReload = function() {
@@ -412,7 +415,14 @@ Player.prototype.flash = function() {
 }
 
 Player.prototype.stopInvincible = function() {
-	this.isInvincible = false;
+	if (!this.isSpecialInvincible) {
+		this.isInvincible = false;
+	}
+}
+
+Player.prototype.stopSpecialInvincible = function() {
+	this.isSpecialInvincible = false;
+	this.stopInvincible();
 }
 
 Player.prototype.stopStunned = function() {
