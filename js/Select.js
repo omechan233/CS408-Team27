@@ -4,7 +4,6 @@ var text;
 Select.preload = function() {
 	game.load.image('forest', 'assets/maps/preview_anicent_forest.png');
 	game.load.image('desert', 'assets/maps/preview_great_desert.png');
-	game.load.image('base', 'assets/maps/preview_secret_base.png');
 	game.load.image('cave', 'assets/maps/preview_underground_cave.png');
 	game.load.image('forestBkg', 'assets/maps/preview_background_ancient_forest.jpg');
 	game.load.image('desertBkg', 'assets/maps/preview_background_great_desert.jpg');
@@ -34,8 +33,8 @@ Select.create = function() {
 	menuBtn.onInputOut.add(this.menuOut, this);
     
     maps.push(game.add.sprite(0, 0, 'forest')); 
+    maps.push(game.add.sprite(0, 0, 'forest')); 
     maps.push(game.add.sprite(0, 0, 'desert'));
-    maps.push(game.add.sprite(0, 0, 'base')); 
     maps.push(game.add.sprite(0, 0, 'cave')); 
     for (var i = 0; i < maps.length; i++) {
         maps[i].anchor.setTo(0.5, 0.5);
@@ -139,24 +138,27 @@ Select.create = function() {
 		text.fill = "#228b22";
                 text.stroke = "#ffffff";
 		break;
-            case 1:
-                name = "Desert";
-		background.loadTexture('desertBkg');
-		text.fill = "#fffacd";
-                text.stroke = "#000000";
+		
+		case 1:
+                	name = "Forest - 2";
+			background.loadTexture('forestBkg');
+			text.fill = "#228b22";
+                	text.stroke = "#ffffff";
                 break;
-            case 2:
-                name = "Base";
-		background.loadTexture('baseBkg');
-		text.fill = "#333333";
-                text.stroke = "#ffffff";
-                break;
-            case 3:
-                name = "Cave";
-		background.loadTexture('caveBkg');
-		text.fill = "#111111";
-                text.stroke = "#ffffff";
-                break;
+		
+		case 2:
+                	name = "Desert";
+			background.loadTexture('desertBkg');
+			text.fill = "#fffacd";
+                	text.stroke = "#000000";
+                	break;
+           
+		case 3:
+                	name = "Cave";
+			background.loadTexture('caveBkg');
+			text.fill = "#111111";
+                	text.stroke = "#ffffff";
+                	break;
         }
         text.setText(name);
     }
