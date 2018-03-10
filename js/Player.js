@@ -613,8 +613,8 @@ Player.prototype.normalizeSpeed = function() {
 	magnitude = Math.sqrt(Math.pow(this.sprite.body.velocity.x, 2) + Math.pow(this.sprite.body.velocity.y, 2));
 	unitX = this.sprite.body.velocity.x / magnitude;
 	unitY = this.sprite.body.velocity.y / magnitude;
-	this.sprite.body.velocity.x = this.speed * unitX;
-	this.sprite.body.velocity.y = this.speed * unitY;
+	this.sprite.body.velocity.x = (this.speed * this.speedModifier) * unitX;
+	this.sprite.body.velocity.y = (this.speed * this.speedModifier) * unitY;
 }
 
 function calculateQuadrant(mpx, mpy, slope) {
