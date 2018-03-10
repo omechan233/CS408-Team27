@@ -101,15 +101,19 @@ Gameplay.create = function() {
 		}	
 	});
 
-	// M to spawn a mob
-	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-	spawnMobKey.onDown.add(() => {
-			mobs.push(new MobGhost(this));	
-			});
+	// M or N to spawn a mob
+	spawnGhost = game.input.keyboard.addKey(Phaser.Keyboard.M);
+	spawnGhost.onDown.add(() => {
+		mobs.push(new MobGhost(this));	
+	});
+	spawnBigGuy = game.input.keyboard.addKey(Phaser.Keyboard.N);
+	spawnBigGuy.onDown.add(() => {
+		mobs.push(new MobBigGuy(this));
+	})
 
 	tempKey.onDown.add(() => {
-			mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
-			});
+		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
+	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 	pauseKey.onDown.add(() => {
