@@ -105,11 +105,15 @@ Mob.prototype.letAttack = function() {
 
 Mob.prototype.damage = function(dmg, invinTime, stun, knockback) {
 	if (!this.isInvincible) {
-		this.isInvincible = true;
+		if (invinTime > 0) {
+			this.isInvincible = true;
+		}
 		this.health -= dmg;
 		this.healthBarFront.scale.setTo(this.health / this.maxHealth, 1);
 		if (this.health > 0) {
-			this.game.time.events.add(invinTime, this.stopInvincible, this);
+			if (invinTime > 0) {
+				this.game.time.events.add(invinTime, this.stopInvincible, this);
+			}
 			if (stun) {
 				this.stun(invinTime * 1.5);
 			}

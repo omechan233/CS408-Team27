@@ -32,17 +32,19 @@ Select.create = function() {
 	menuBtn.onInputOver.add(this.menuOver, this);
 	menuBtn.onInputOut.add(this.menuOut, this);
     
-    maps.push(game.add.sprite(0, 0, 'forest')); 
-    maps.push(game.add.sprite(0, 0, 'forest')); 
-    maps.push(game.add.sprite(0, 0, 'desert'));
-    maps.push(game.add.sprite(0, 0, 'cave')); 
-    for (var i = 0; i < maps.length; i++) {
-        maps[i].anchor.setTo(0.5, 0.5);
-        maps[i].x = game.width + 150;
-        maps[i].y = game.height / 2;
-        maps[i].inputEnabled = true;
-        maps[i].events.onInputDown.add(clickListener, this);
-    }
+	maps.push(game.add.sprite(0, 0, 'forest')); 
+	maps.push(game.add.sprite(0, 0, 'forest')); 
+    	maps.push(game.add.sprite(0, 0, 'desert'));
+	maps.push(game.add.sprite(0, 0, 'desert'));
+	maps.push(game.add.sprite(0, 0, 'cave')); 
+    
+	for (var i = 0; i < maps.length; i++) {
+        	maps[i].anchor.setTo(0.5, 0.5);
+        	maps[i].x = game.width + 150;
+        	maps[i].y = game.height / 2;
+        	maps[i].inputEnabled = true;
+        	maps[i].events.onInputDown.add(clickListener, this);
+	}
 	game.world.bringToTop(maps[0]);
     
     var totalMaps = maps.length;
@@ -75,12 +77,12 @@ Select.create = function() {
     
         game.add.tween(maps[prime].scale).to( { x: 0.5 , y: 0.5}, animationSpeed, null, true);
         
-        if (prime < 3) {
+        if (prime < 4) {
             game.add.tween(maps[prime+1]).to( { x: xprime}, animationSpeed, null, true);
             game.add.tween(maps[prime+1].scale).to( { x: 1 , y: 1}, animationSpeed, null, true);
         }
         
-        if (prime < 2) {
+        if (prime < 3) {
             maps[prime+2].x = game.width + 150;
             maps[prime+2].scale.setTo(0.5,0.5);
             game.add.tween(maps[prime+2]).to( { x: xright}, animationSpeed, null, true);
@@ -147,13 +149,20 @@ Select.create = function() {
                 break;
 		
 		case 2:
-                	name = "Desert";
+			name = "Desert";
+			background.loadTexture('desertBkg');
+			text.fill = "#fffacd";
+                	text.stroke = "#000000";
+                	break;
+
+		case 3:
+                	name = "Desert - 2";
 			background.loadTexture('desertBkg');
 			text.fill = "#fffacd";
                 	text.stroke = "#000000";
                 	break;
            
-		case 3:
+		case 4:
                 	name = "Cave";
 			background.loadTexture('caveBkg');
 			text.fill = "#111111";

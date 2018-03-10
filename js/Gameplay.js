@@ -41,13 +41,20 @@ Gameplay.preload = function() {
 	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('testtiles', 'assets/maps/testtiles.png');
 
-	// Forest Map Assets
-	game.load.tilemap('forest1', 'assets/maps/forest_1.json', null, Phaser.Tilemap.TILED_JSON);
+	// Tile Maps
+	game.load.tilemap('forest1', 'assets/maps/forest_1.json', null, Phaser.Tilemap.TILED_JSON);	
+	game.load.tilemap('forest2', 'assets/maps/forest_2.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('desert1', 'assets/maps/desert_1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('desert2', 'assets/maps/desert_2.json', null, Phaser.Tilemap.TILED_JSON);
+
+	// Tile Assets
 	game.load.image('Woods1', 'assets/maps/002-Woods01.png');
-	game.load.image('Water1', 'assets/maps/001-G_Water01.png');
+	game.load.image('GWater1', 'assets/maps/001-G_Water01.png');
+	game.load.image('SaWater1', 'assets/maps/015-Sa_Water01.png')
 	game.load.image('Tree1', 'assets/maps/036-Tree01.png');
 	game.load.image('Tree2', 'assets/maps/037-Tree02.png');
 	game.load.image('Road1', 'assets/maps/039-Road.png');
+	game.load.image('Desert1', 'assets/maps/006-Desert01.png');
 	
 	this.state.paused = false;
 	this.state.gameover = false;
@@ -64,7 +71,7 @@ Gameplay.create = function() {
 		case "Forest":
 			map = game.add.tilemap('forest1');
 			map.addTilesetImage('002-Woods01', 'Woods1');
-			map.addTilesetImage('001-G_Water01', 'Water1');
+			map.addTilesetImage('001-G_Water01', 'GWater1');
 			map.addTilesetImage('036-Tree01', 'Tree1');
 			map.addTilesetImage('037-Tree02', 'Tree2');
 			map.addTilesetImage('039-Road', 'Road1');
@@ -89,12 +96,59 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
 			break;
+	
 		case "Forest - 2":
-
+			map = game.add.tilemap('forest2');
+			map.addTilesetImage('001-G_Water01', 'GWater1');
+			map.createLayer("background").resizeWorld();
+			map.createLayer("background2").resizeWorld();
 			break;
 
 		case "Desert": 
-
+			map = game.add.tilemap('desert1');
+			map.addTilesetImage('006-Desert01', 'Desert1');
+			map.addTilesetImage('015-Sa_Water01', 'SaWater1');
+			map.createLayer("background_1").resizeWorld();
+			map.createLayer("background_2").resizeWorld();
+			blocked1 = map.createLayer("blocked_1");
+			blocked2 = map.createLayer("blocked_2");
+			blocked3 = map.createLayer("blocked_3");
+			map.createLayer("foreground").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
+			map.setCollisionBetween(1, 10000, true, blocked2);
+			map.setCollisionBetween(1, 10000, true, blocked3);
+			blocked1.resizeWorld();
+			blocked2.resizeWorld();
+			blocked3.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			game.physics.arcade.enable(blocked2);
+			game.physics.arcade.enable(blocked3);
+			this.collisionLayers.push(blocked1);
+			this.collisionLayers.push(blocked2);
+			this.collisionLayers.push(blocked3);
+			break;
+	
+		case "Desert - 2":
+			map = game.add.tilemap('desert2');
+			map.addTilesetImage('006-Desert01', 'Desert1');
+			map.createLayer("background_1").resizeWorld();
+			map.createLayer("background_2").resizeWorld();
+			blocked1 = map.createLayer("blocked_1");
+			blocked2 = map.createLayer("blocked_2");
+			blocked3 = map.createLayer("blocked_3");
+			map.createLayer("foreground").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
+			map.setCollisionBetween(1, 10000, true, blocked2);
+			map.setCollisionBetween(1, 10000, true, blocked3);
+			blocked1.resizeWorld();
+			blocked2.resizeWorld();
+			blocked3.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			game.physics.arcade.enable(blocked2);
+			game.physics.arcade.enable(blocked3);
+			this.collisionLayers.push(blocked1);
+			this.collisionLayers.push(blocked2);
+			this.collisionLayers.push(blocked3);
 			break;
 	}
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -180,7 +234,7 @@ Gameplay.create = function() {
 	});
 
 	superSpawnKey.onDown.add(() => {
-		for (var i = 0; i < 500; i++) {
+		for (var i = 0; i < 100; i++) {
 			mobs.push(new MobGhost(this));	
 		}
 	});
