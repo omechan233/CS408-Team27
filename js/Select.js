@@ -9,13 +9,13 @@ Select.preload = function() {
 	game.load.image('water',    'assets/maps/water.png');
 	game.load.image('base',     'assets/maps/base_preview.png');
 	game.load.image('startInactive',    'assets/menu/start.png');
-	game.load.image('menuInactive',     'assets/menu/login.png');
-	game.load.image('menuActive',       'assets/menu/login_select.png');
+	game.load.image('menuInactive',     'assets/menu/exit.png');
+	game.load.image('menuActive',       'assets/menu/exit_select.png');
 	game.add.plugin(PhaserInput.Plugin);
 }
 
 Select.create = function() {
-    var maps = [];
+   var maps = [];
     var el;
     game.stage.backgroundColor = '#cc1634';
     this.startBtn = game.add.button(game.world.centerX - 90, game.world.centerY + 225, 'startInactive', this.startGame, this);

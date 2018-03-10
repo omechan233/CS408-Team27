@@ -33,10 +33,10 @@ Gameplay.preload = function() {
 	game.load.image('testtiles', 'assets/maps/testtiles.png');
 
 	// Game State
-	game.load.image('quit', 'assets/menu/login.png');
-	game.load.image('quitActive', 'assets/menu/login_select.png');
+	game.load.image('quit', 'assets/menu/exit.png');
+	game.load.image('quitActive', 'assets/menu/exit_select.png');
 	game.load.image('paused', 'assets/pause.png');
-	game.load.image('gameOver', 'assets/gameOver.png');
+	game.load.image('gameOver', 'assets/gameover.jpg');
 	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
 
 	this.state.paused = false;
