@@ -2,20 +2,25 @@ var Select = {};
 var text;
 
 Select.preload = function() {
-	game.load.image('ocean',    'assets/maps/ocean_preview.png');
-	game.load.image('forest',   'assets/maps/forest_preview.png');
-	game.load.image('forest2',  'assets/maps/forest2_preview.png');
-	game.load.image('forest3',  'assets/maps/forest3_preview.png');
-	game.load.image('water',    'assets/maps/water.png');
-	game.load.image('base',     'assets/maps/base_preview.png');
-	game.load.image('startInactive',    'assets/menu/start.png');
-	game.load.image('menuInactive',     'assets/menu/exit.png');
-	game.load.image('menuActive',       'assets/menu/exit_select.png');
+	game.load.image('forest', 'assets/maps/preview_anicent_forest.png');
+	game.load.image('desert', 'assets/maps/preview_great_desert.png');
+	game.load.image('base', 'assets/maps/preview_secret_base.png');
+	game.load.image('cave', 'assets/maps/preview_underground_cave.png');
+	game.load.image('forestBkg', 'assets/maps/preview_background_ancient_forest.jpg');
+	game.load.image('desertBkg', 'assets/maps/preview_background_great_desert.jpg');
+	game.load.image('baseBkg', 'assets/maps/preview_background_secret_base.jpg');
+	game.load.image('caveBkg', 'assets/maps/preview_background_underground_cave.jpg');
+	game.load.image('startInactive', 'assets/menu/start.png');
+	game.load.image('menuInactive', 'assets/menu/exit.png');
+	game.load.image('menuActive', 'assets/menu/exit_select.png');
 	game.add.plugin(PhaserInput.Plugin);
 }
 
 Select.create = function() {
-   var maps = [];
+	background = game.add.sprite(0, 0, 'forestBkg', this);
+	background.width = game.camera.width;
+	background.height = game.camera.height; 
+  var maps = [];
     var el;
     game.stage.backgroundColor = '#cc1634';
     this.startBtn = game.add.button(game.world.centerX - 90, game.world.centerY + 225, 'startInactive', this.startGame, this);
@@ -28,12 +33,10 @@ Select.create = function() {
 	menuBtn.onInputOver.add(this.menuOver, this);
 	menuBtn.onInputOut.add(this.menuOut, this);
     
-    maps.push(game.add.sprite(0, 0, 'ocean')); 
-    maps.push(game.add.sprite(0, 0, 'forest'));
-    maps.push(game.add.sprite(0, 0, 'forest2')); 
-    maps.push(game.add.sprite(0, 0, 'forest3')); 
-    maps.push(game.add.sprite(0, 0, 'water')); 
+    maps.push(game.add.sprite(0, 0, 'forest')); 
+    maps.push(game.add.sprite(0, 0, 'desert'));
     maps.push(game.add.sprite(0, 0, 'base')); 
+    maps.push(game.add.sprite(0, 0, 'cave')); 
     for (var i = 0; i < maps.length; i++) {
         maps[i].anchor.setTo(0.5, 0.5);
         maps[i].x = game.width + 150;
@@ -41,6 +44,7 @@ Select.create = function() {
         maps[i].inputEnabled = true;
         maps[i].events.onInputDown.add(clickListener, this);
     }
+	game.world.bringToTop(maps[0]);
     
     var totalMaps = maps.length;
     var prime = 0;
@@ -49,8 +53,11 @@ Select.create = function() {
     function setToPosition(prime) {
         maps[prime].x = game.width / 2;
         if (prime<(totalMaps-1)) {
-            maps[prime + 1].x = game.width / 2 + 75 + 67;
+            maps[prime + 1].x = game.width * .75;
             maps[prime + 1].scale.setTo(0.5,0.5);
+		for (var i = prime + 2; i < totalMaps; i++) {
+			maps[i].x = game.world.width + (game.width/2) * i;
+		}
         }
     
         if (prime > 0) {
@@ -60,21 +67,21 @@ Select.create = function() {
     }
     
     setToPosition(prime);
-    var xleft = game.width / 2 - 67 - 75;
+    var xleft = game.width / 4;
     var xprime = game.width / 2;
-    var xright = game.width / 2 + 67 + 75;
+    var xright = game.width * .75;
 
     function nextMap() {
         game.add.tween(maps[prime]).to( { x: xleft}, animationSpeed, null, true);
     
         game.add.tween(maps[prime].scale).to( { x: 0.5 , y: 0.5}, animationSpeed, null, true);
         
-        if (prime < 5) {
+        if (prime < 3) {
             game.add.tween(maps[prime+1]).to( { x: xprime}, animationSpeed, null, true);
             game.add.tween(maps[prime+1].scale).to( { x: 1 , y: 1}, animationSpeed, null, true);
         }
         
-        if (prime < 4) {
+        if (prime < 2) {
             maps[prime+2].x = game.width + 150;
             maps[prime+2].scale.setTo(0.5,0.5);
             game.add.tween(maps[prime+2]).to( { x: xright}, animationSpeed, null, true);
@@ -102,6 +109,7 @@ Select.create = function() {
             maps[prime-2].x = - 150;
             maps[prime-2].scale.setTo(0.5,0.5);
             game.add.tween(maps[prime-2]).to( { x: xleft}, animationSpeed, null, true);
+		//drive.google.com/open?id=1dnIYw2BC718_7rzWmlvxA3f8_Ekm3Mqlor (var i = prime, i < totalMaps; i++) {
         }
     
         if (prime < (totalMaps - 1)) {
@@ -109,14 +117,16 @@ Select.create = function() {
             maps[prime+1].scale.setTo(0.5,0.5);
             game.add.tween(maps[prime+1]).to( { x: game.width +    150}, animationSpeed, null, true);
         }
-        prime--;
+	prime--;
     }
     
-    text = game.add.text(game.world.centerX, game.world.centerY + 150, 'Ocean', {
+    text = game.add.text(game.world.centerX, game.world.centerY + 175, 'Forest', {
             font: "65px Arial",
-            fill: "#000000",
-            align: "center"
+            fill: "#22ff55",
+            align: "center",
+	   	stroke: "#000000"
     });
+	text.strokeThickness = 5;
     
     text.anchor.setTo(0.5, 0.5);
     
@@ -124,22 +134,28 @@ Select.create = function() {
         var name;
         switch (ind) {
             case 0:
-                name = "Ocean";
-                break;
-            case 1:
                 name = "Forest";
+		background.loadTexture('forestBkg');
+		text.fill = "#228b22";
+                text.stroke = "#ffffff";
+		break;
+            case 1:
+                name = "Desert";
+		background.loadTexture('desertBkg');
+		text.fill = "#fffacd";
+                text.stroke = "#000000";
                 break;
             case 2:
-                name = "Forest II";
+                name = "Base";
+		background.loadTexture('baseBkg');
+		text.fill = "#333333";
+                text.stroke = "#ffffff";
                 break;
             case 3:
-                name = "Forest III";
-                break;
-            case 4:
-                name = "Marsh";
-                break;
-            case 5:
-                name = "Base";
+                name = "Cave";
+		background.loadTexture('caveBkg');
+		text.fill = "#111111";
+                text.stroke = "#ffffff";
                 break;
         }
         text.setText(name);
@@ -155,6 +171,7 @@ Select.create = function() {
             previousMap();
             actionOnClick(clickedPos);
         }
+	game.world.bringToTop(maps[prime]);
     }
 }
 
