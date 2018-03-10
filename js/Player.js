@@ -132,17 +132,13 @@ Player.prototype.update = function() {
 		}
 		// vertical animation
 		else if (Math.abs(velY) > Math.abs(velX)) {
-			if (velY < 0)
-				this.sprite.animations.play('walkup', this.animSpeed, true);
-			else
-				this.sprite.animations.play('walkdown', this.animSpeed, true);
+			anim = velY < 0 ? 'walkup' : 'walkdown';
+			this.sprite.animations.play(anim, this.animSpeed, true);
 		}
 		// horizontal animation
 		else {
-			if (velX < 0)
-				this.sprite.animations.play('walkleft', this.animSpeed, true);
-			else
-				this.sprite.animations.play('walkright', this.animSpeed, true);
+			anim = velX < 0 ? 'walkleft' : 'walkright';
+			this.sprite.animations.play(anim, this.animSpeed, true);
 		}
 
 		this.stop();
