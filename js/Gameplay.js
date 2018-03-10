@@ -30,15 +30,25 @@ Gameplay.preload = function() {
 	game.load.image('crossbow', 'assets/sprites/crossbow.png');
 	game.load.image('arrow', 'assets/sprites/arrow.png');
 	game.load.image('bullet', 'assets/sprites/bullet.png');
-	game.load.image('testtiles', 'assets/maps/testtiles.png');
 
 	// Game State
 	game.load.image('quit', 'assets/menu/exit.png');
 	game.load.image('quitActive', 'assets/menu/exit_select.png');
 	game.load.image('paused', 'assets/pause.png');
 	game.load.image('gameOver', 'assets/gameover.jpg');
+	
+	// Map Assets
 	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.image('testtiles', 'assets/maps/testtiles.png');
 
+	// Forest Map Assets
+	game.load.tilemap('forest1', 'assets/maps/forest_1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.image('Woods1', 'assets/maps/002-Woods01.png');
+	game.load.image('Water1', 'assets/maps/001-G_Water01.png');
+	game.load.image('Tree1', 'assets/maps/036-Tree01.png');
+	game.load.image('Tree2', 'assets/maps/037-Tree02.png');
+	game.load.image('Road1', 'assets/maps/039-Road.png');
+	
 	this.state.paused = false;
 	this.state.gameover = false;
 }
@@ -49,10 +59,44 @@ Gameplay.create = function() {
 	game.canvas.oncontextmenu = function (e) {
 		e.preventDefault();
 	}
-	map = game.add.tilemap('test');
-	map.addTilesetImage('testworld', 'testtiles');
-	layer = map.createLayer("Tile Layer 1");
-	layer.resizeWorld();
+	this.collisionLayers = [];
+	switch (map) {
+		case "Forest":
+			map = game.add.tilemap('forest1');
+			map.addTilesetImage('002-Woods01', 'Woods1');
+			map.addTilesetImage('001-G_Water01', 'Water1');
+			map.addTilesetImage('036-Tree01', 'Tree1');
+			map.addTilesetImage('037-Tree02', 'Tree2');
+			map.addTilesetImage('039-Road', 'Road1');
+			map.createLayer("background_1").resizeWorld();
+			map.createLayer("background_2").resizeWorld();
+			map.createLayer("background_3").resizeWorld();
+			blocked1 = map.createLayer("blocked_1")
+			blocked2 = map.createLayer("blocked_2");
+			blocked3 = map.createLayer("blocked_3");
+			map.createLayer("foreground_1").resizeWorld();
+			map.createLayer("foreground_2").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
+			map.setCollisionBetween(1, 10000, true, blocked2);
+			map.setCollisionBetween(1, 10000, true, blocked3);
+			blocked1.resizeWorld();
+			blocked2.resizeWorld();
+			blocked3.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			game.physics.arcade.enable(blocked2);
+			game.physics.arcade.enable(blocked3);
+			this.collisionLayers.push(blocked1);
+			this.collisionLayers.push(blocked2);
+			this.collisionLayers.push(blocked3);
+			break;
+		case "Forest - 2":
+
+			break;
+
+		case "Desert": 
+
+			break;
+	}
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
@@ -243,6 +287,9 @@ Gameplay.create = function() {
 }
 
 Gameplay.update = function() {
+	for (var i = 0; i < this.collisionLayers.length; i++) {
+		game.physics.arcade.collide(player.sprite, this.collisionLayers[i]);
+	}
 	this.movePointer();
 	if (!this.state.paused) {
 		if (!player.isAlive()) {
@@ -556,5 +603,6 @@ Gameplay.render = function() {
 	}
 	game.debug.geom(player.tip, '#0000ff');
 	game.debug.geom(player.base, '#0000ff');
-	*/	
+	*/
+//	game.debug.body(player.sprite);	
 }

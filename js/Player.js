@@ -89,7 +89,8 @@ Player = function(game, weaponAsset) {
 	this.sprite.body.collideWorldBounds = true;
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
-	
+	this.sprite.body.setSize((this.sprite.width / 4) - 4, (this.sprite.width / 4 - 4), (this.sprite.width / 8) + 2.5, (this.sprite.height/3) + 4);
+
 	// Weapon Sprite
 	this.weapon = this.sprite.addChild(game.make.sprite(0, 0, weaponAsset));
 	this.weapon.anchor.setTo(0.5, 1);
