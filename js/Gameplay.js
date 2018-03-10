@@ -485,12 +485,14 @@ Gameplay.pauseUnpause = function() {
 }
 
 Gameplay.gameOver = function() {
+	socket = io.connect();
 	this.state.paused = true;
 	this.state.gameover = true;
 	player.stop();
 	for (var i = 0; i < mobs.length; i++) {
 		mobs[i].stop();
 	}
+	socket.emit('postScore', score);
 
 	gameOverLayer = game.add.sprite(game.camera.x - 50, game.camera.y - 50, 'gameOver');
 	gameOverLayer.width = game.camera.width + 100;
