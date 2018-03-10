@@ -1,4 +1,4 @@
-Mob = function(game, spriteKey) {
+Mob = function(game, spriteKey, baseHealth) {
 	this.game = game;
     var multiplier = 1;
     if (difficulty === "easy") {
@@ -8,7 +8,8 @@ Mob = function(game, spriteKey) {
     } else if (difficulty === "hard") {
         multiplier = 2;
     }
-	this.health = 50 * multiplier;
+    this.maxHealth = baseHealth * multiplier;
+	this.health = this.maxHealth;
 	this.isInvincible = false;
 	this.stunned = false;
 	this.invincibleTime = 0;
@@ -19,6 +20,19 @@ Mob = function(game, spriteKey) {
 	this.sprite = game.add.sprite(this.x, this.y, spriteKey);
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.sprite.scale.setTo(2, 2);
+
+	// hp bar
+	this.healthBarBack = this.sprite.addChild(
+		game.make.sprite(0, -this.sprite.height / 4, 'xpbarback')
+	);
+	this.healthBarBack.width = this.sprite.width / 2;
+	this.healthBarBack.x -= this.healthBarBack.width / 2;
+
+	this.healthBarFront = this.healthBarBack.addChild(
+		game.make.sprite(0, 0, 'xpbarfront')
+	);
+	this.healthBarFront.width = this.healthBarBack.width;
+	this.healthBarFront.scale.setTo(1, 1);
 
 	// mob animations
 	this.animSpeed = 7;
@@ -97,6 +111,7 @@ Mob.prototype.damage = function(dmg, invinTime, stun, knockback) {
 	if (!this.isInvincible) {
 		this.isInvincible = true;
 		this.health -= dmg;
+		this.healthBarFront.scale.setTo(this.health / this.maxHealth, 1);
 		if (this.health > 0) {
 			this.game.time.events.add(invinTime, this.stopInvincible, this);
 			if (stun) {
