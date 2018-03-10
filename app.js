@@ -93,6 +93,7 @@ function getScores() {
 //remove lowest score and replace with new score
 function postScore(score) {
     var user = readUserData();
+    console.log("BEFORE");
     console.log(user);
     var min = 0;
     for (var i = 0; i < user.highscores.length; i++) {
@@ -101,6 +102,15 @@ function postScore(score) {
     if (user.highscores[min] < score) {
         user.highscores[min] = score;
     }
+    console.log("AFTER");
+    console.log(user);
+    var userData = JSON.stringify(user);
+    fs.writeFile("user.txt", userData, function(err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+    
 }
 
 function readUserData() {
