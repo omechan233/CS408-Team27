@@ -1,7 +1,21 @@
 var Gameplay = {};
 
 Gameplay.preload = function() {
+	// Entities
 	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
+	game.load.spritesheet('monster1', 'assets/sprites/monster-01.png', 32, 48, 16);
+	game.load.spritesheet('monster2', 'assets/sprites/monster-02.png', 80, 96, 16);
+
+	// HUD
+	game.load.image('hpbarback', 'assets/sprites/HP_Bar.PNG');
+	game.load.image('hpbarfront', 'assets/sprites/HP_Bar2.PNG');
+	game.load.image('hpText', 'assets/sprites/HP_Tx.png');
+	game.load.image('xpbarback', 'assets/sprites/Exp_Back.png');
+	game.load.image('xpbarfront', 'assets/sprites/Exp_Meter.png');
+	game.load.image('levelText', 'assets/sprites/Lv_Tx.PNG');
+	game.load.image('specReady', 'assets/sprites/special_ready.png');
+
+	// Special Effects & Weapons
 	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
 	game.load.image('dead', 'assets/sprites/dead.png');
 	game.load.image('target', 'assets/sprites/target.png');
@@ -17,6 +31,8 @@ Gameplay.preload = function() {
 	game.load.image('arrow', 'assets/sprites/arrow.png');
 	game.load.image('bullet', 'assets/sprites/bullet.png');
 	game.load.image('testtiles', 'assets/maps/testtiles.png');
+
+	// Game State
 	game.load.image('quit', 'assets/menu/login.png');
 	game.load.image('quitActive', 'assets/menu/login_select.png');
 	game.load.image('paused', 'assets/pause.png');
@@ -26,6 +42,8 @@ Gameplay.preload = function() {
 	this.state.paused = false;
 	this.state.gameover = false;
 }
+
+var group;
 
 Gameplay.create = function() {
 	game.canvas.oncontextmenu = function (e) {
@@ -90,15 +108,19 @@ Gameplay.create = function() {
 		}	
 	});
 
-	// M to spawn a mob
-	spawnMobKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-	spawnMobKey.onDown.add(() => {
-			mobs.push(new MobBadGuy(this));	
-			});
+	// M or N to spawn a mob
+	spawnGhost = game.input.keyboard.addKey(Phaser.Keyboard.M);
+	spawnGhost.onDown.add(() => {
+		mobs.push(new MobGhost(this));	
+	});
+	spawnBigGuy = game.input.keyboard.addKey(Phaser.Keyboard.N);
+	spawnBigGuy.onDown.add(() => {
+		mobs.push(new MobBigGuy(this));
+	})
 
 	tempKey.onDown.add(() => {
-			mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
-			});
+		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
+	});
 
 	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 	pauseKey.onDown.add(() => {
@@ -115,35 +137,109 @@ Gameplay.create = function() {
 
 	superSpawnKey.onDown.add(() => {
 		for (var i = 0; i < 500; i++) {
-			mobs.push(new MobBadGuy(this));	
+			mobs.push(new MobGhost(this));	
 		}
 	});
 
 	player = new Player(this, 'sword');
-	playerSprite = player.sprite;
-	playerSprite.anchor.setTo(0.5, 0.5);
-	game.physics.arcade.enable(playerSprite);
-	playerSprite.scale.setTo(2, 2);
-	playerSprite.body.immovable = true;
-	playerSprite.body.collideWorldBounds = true;
 
 	game.input.mouse.capture = true;
 	
 	cursors = game.input.keyboard.createCursorKeys();
 
-	scoreStyle = { font: "Lucida Console", fontSize: "24px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
-	scoreText = game.add.text(game.camera.width, 0, "000000", scoreStyle);
+	// Build HUD
+	scoreStyle = { 
+		font: "Lucida Console", 
+		fontSize: "24px", 
+		fill: "#000000", 
+		wordWrap: false, 
+		fontWeight: "bold",
+	};
+	scoreText = game.add.text(0, 0, "000000", scoreStyle);
+	scoreText.x = game.camera.width / 2;
 	scoreText.fixedToCamera = true;
-	scoreText.anchor.setTo(1, 0);
+	scoreText.anchor.setTo(0.5, 0);
+
+	healthBarBack = game.add.image(game.camera.width - 10, 10, 'hpbarback');
+	healthBarBack.fixedToCamera = true;
+	healthBarBack.scale.setTo(3, 1);
+	healthBarBack.anchor.setTo(1, 0);
+
+	healthBarFront = game.add.image(healthBarBack.x - healthBarBack.width, 10, 'hpbarfront');
+	healthBarFront.fixedToCamera = true;
+	healthBarFront.scale.setTo(3, 1);
+	healthBarFront.anchor.setTo(0, 0);
+
+	healthText = game.add.image(healthBarFront.x - 8, 10, 'hpText');
+	healthText.fixedToCamera = true;
+	healthText.scale.setTo(1, 1);
+	healthText.anchor.setTo(1, 0);
+
+	xpBarBack = game.add.image(game.camera.width - 10, 30, 'xpbarback');
+	xpBarBack.fixedToCamera = true;
+	xpBarBack.scale.setTo(4, 1.5);
+	xpBarBack.anchor.setTo(1, 0);
+
+	xpBarFront = game.add.image(xpBarBack.x - xpBarBack.width, 30, 'xpbarfront');
+	xpBarFront.fixedToCamera = true;
+	xpBarFront.scale.setTo(4, 1.5);
+	xpBarFront.anchor.setTo(0, 0);
+
+	levelTextImage = game.add.image(xpBarFront.x - 30, 30, 'levelText');
+	levelTextImage.fixedToCamera = true;
+	levelTextImage.scale.setTo(1, 1);
+	levelTextImage.anchor.setTo(1, 0);
+
+	levelText = game.add.text(levelTextImage.x + 3, 25, player.level);
+	levelText.fixedToCamera = true;
+	levelText.scale.setTo(0.8, 0.8);
+	levelText.anchor.setTo(0, 0);
+
+	ammoTextCap = game.add.text(game.camera.width - 10, game.camera.height, '/ ' + player.ammoCapacity);
+	ammoTextCap.fixedToCamera = true;
+	ammoTextCap.anchor.setTo(1, 1);
+
+	ammoTextRes = game.add.text(game.camera.width - 60, game.camera.height, player.ammoReserve);
+	ammoTextRes.fixedToCamera = true;
+	ammoTextRes.anchor.setTo(1, 1);
+
+	specReady = game.add.image(game.camera.width - 10, game.camera.height - 40, 'specReady');
+	specReady.fixedToCamera = true;
+	specReady.scale.setTo(1.5, 1.5);
+	specReady.anchor.setTo(1, 1);
+
+	// HUD Group
+	hudGroup = game.add.group();
+	hudGroup.add(scoreText);
+	hudGroup.add(healthBarBack);
+	hudGroup.add(healthBarFront);
+	hudGroup.add(healthText);
+	hudGroup.add(xpBarBack);
+	hudGroup.add(xpBarFront);
+	hudGroup.add(levelTextImage);
+	hudGroup.add(levelText);
+	hudGroup.add(ammoTextCap);
+	hudGroup.add(ammoTextRes);
+	hudGroup.add(specReady);
 
 	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
-	target.anchor.setTo(0.5, 0.5);
 	target.scale.setTo(2, 2);
+	target.anchor.setTo(0.5, 0.5);
 
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    group = game.add.physicsGroup();
+    var i = 0;
+    for (i; i < 5; i++) {
+//        game.add.sprite(game.rnd.integerInRange(0, game.world.width), game.rnd.integerInRange(0, game.world.height), 'player');
+//        game.add.sprite(game.camera.x + game.camera.width / 2 + 100 + (i * 20), game.camera.y + game.camera.height / 2 + 100, 'player');
+        
+        var c = group.create(game.camera.x + game.camera.width / 2 + 100 + (i * 20), game.camera.y + game.camera.height / 2 + 100, 'heavySword', 10);
+    }
+    
 	score = 0;
 	pauseElapsedTime = 0;
 
-	game.camera.follow(playerSprite);
+	game.camera.follow(player.sprite);
 }
 
 Gameplay.update = function() {
@@ -153,6 +249,20 @@ Gameplay.update = function() {
 			this.gameOver();
 		}
 		player.update();
+        
+		healthBarFront.scale.setTo(3 * (player.health / 100), 1);
+		xpBarFront.scale.setTo(4 * ((player.xp % 100) / 100), 1.5);
+		levelText.setText(player.level);
+		ammoTextRes.setText(player.ammoReserve);
+		specReady.alpha = player.canSpecial ? 1.0 : 0.2;
+        
+        if (game.physics.arcade.collide(playerSprite, group, this.collisionHandler, this.processHandler, this)) {
+            group.disabled = false;
+            var c = setInterval(function() {
+                group.disabled = true;
+                clearInterval(c);
+            }, 15000);
+        }
 		
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
@@ -175,6 +285,7 @@ Gameplay.update = function() {
 			if (!mobs[i].isAlive()) {
 				mobs[i].destroy();
 				mobs.splice(i, 1);
+				player.xp += 10;
 				score++;
 			}
 		}
@@ -216,10 +327,99 @@ Gameplay.update = function() {
 			player.normalizeSpeed();
 		}
 		this.updateScore();
+		game.world.bringToTop(hudGroup);
 	}
 	else {
 		player.stop();
 	}
+}
+
+Gameplay.processHandler = function(player, item) {
+    return true;
+}
+
+Gameplay.collisionHandler = function (play, item) {
+    
+    text = game.add.text(game.camera.width / 2 + 200, 0, '', {
+            font: "65px Arial",
+            fill: "#000000",
+            align: "center"
+    });
+    
+    text.anchor.setTo(1, 0);
+    text.fixedToCamera = true;
+    var powerUp = game.rnd.integerInRange(0, 5);
+    switch(powerUp) {
+        // Speed boost
+        case 0:
+            player.speedModifier = 2.00;
+            text.setText("Speed Boost");
+            var c = setInterval(function() {
+//                console.log("Resetting speed");
+                player.speedModifier = 1.00;
+                text.setText("");
+                clearInterval(c);
+            }, 15000);
+            break;
+            
+        // Extra health
+        case 1:
+            player.health += 50;
+            text.setText("Extra Health");
+            var c = setInterval(function() {
+                text.setText("");
+                clearInterval(c);
+            }, 5000);
+            break;
+            
+        // Increased damage
+        case 2:
+            player.damageModifier = 1.5;
+            text.setText("Extra Damage");
+            var c = setInterval(function() {
+                player.damageModifier = 1.00;
+                text.setText("");
+                clearInterval(c);
+            }, 15000);
+            break;
+        
+        // Decreased reload speed
+        case 3:
+            player.reloadTime = 250;
+            text.setText("Faster Reload");
+            var c = setInterval(function() {
+                player.reloadTime = 500;
+                text.setText("");
+                clearInterval(c);
+            }, 15000);
+            break;
+        
+        // Infinite ammo
+        case 4:
+            player.reloadTime = 0;
+            text.setText("Infinte Ammo");
+            var c = setInterval(function() {
+                player.reloadTime = 500;
+                text.setText("");
+                clearInterval(c);
+            }, 7500);
+            break;
+            
+        // Invincibility
+        case 5:
+            player.isInvincible = true;
+            text.setText("Invincible");
+            var c = setInterval(function() {
+                player.isInvincible = false;
+                text.setText("");
+                clearInterval(c);
+            }, 5000);
+            break;
+    }
+    item.kill();
+    var i = setInterval(function() {
+        item.reset(item.x, item.y);
+    }, 10000);
 }
 
 Gameplay.updateScore = function() {
@@ -227,7 +427,7 @@ Gameplay.updateScore = function() {
 }
 
 Gameplay.getPlayerSprite = function() {
-	return playerSprite;
+	return player.sprite;
 }
 
 Gameplay.getPlayer = function() {
@@ -247,6 +447,7 @@ Gameplay.pauseUnpause = function() {
 		player.stop();
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].stop();
+			mobs[i].sprite.animations.stop();
 		}
 
 		for (var i = 0; i < mobProjectiles.length; i++) {
@@ -260,8 +461,10 @@ Gameplay.pauseUnpause = function() {
 		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
 		pauseLayer.width = game.camera.width;
 		pauseLayer.height = game.camera.height;
+
 		text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, "PAUSED", style); 
 		text.anchor.setTo(0.5, 0.5);
+
 		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', Gameplay.quitGame, this);
 		quitBtn.scale.setTo(1.2, 1.2);
 		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;

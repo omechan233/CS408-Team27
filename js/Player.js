@@ -11,27 +11,35 @@ Player = function(game, weaponAsset) {
 
 	// Player Stats	
 	this.health = 100;
+	this.xp = 0;
+	this.level = 0;
 	this.speed = 275;
+	this.dmg = 10;
+
+	// Player Status
 	this.isAttacking = false;
 	this.canAttack = true;
-	this.attackCooldown = 100; 
-	this.attackAnimationTime = 250;
 	this.isSpecial = false;
 	this.canSpecial = true;
-	this.specialCooldown = 10 * 1000;
 	this.isInvincible = false;
-	this.specialInvincible = false;
-	this.invincibleLength = 900;
 	this.reloading = false;
-	this.reloadTime = 500;
 	this.stunned = false;
+	this.specialInvincible = false;
+
+	// Player Limits
+	this.attackCooldown = 100; 
+	this.attackAnimationTime = 250;
+	this.specialCooldown = 10 * 1000;
+	this.invincibleLength = 900;
+	this.ammoCapacity = 30;
+	this.ammoReserve = 30;
+	this.reloadTime = 500;
+	
+	// Other
 	this.lockTip = false;
 	this.reset = true;
 	this.tipUnitX = 0;
-	this.tipUnitY = 0;
-	this.dmg = 10;
-	this.ammoCapacity = 30;
-	this.ammoReserve = 30;
+	this.tipUnitY = 0
 	this.projectileVelocity = 300;
 	this.resetX = 0;
 	this.resetY = 0;
@@ -62,16 +70,23 @@ Player = function(game, weaponAsset) {
 	this.sprite = game.add.sprite(
 		game.camera.x + game.camera.width / 2,
 		game.camera.y + game.camera.height / 2,
-		 'player'
+		'player'
 	);
+	this.sprite.anchor.setTo(0.5, 0.5);
+	this.sprite.scale.setTo(2, 2);
+
+	// Player Animations
+	this.animSpeed = 10;
 	this.sprite.animations.add('stand', 	[0], 10, true, true);
 	this.sprite.animations.add('walkdown', 	[0, 1, 2, 3], 10, true, true);
 	this.sprite.animations.add('walkleft', 	[4, 5, 6, 7], 10, true, true);
 	this.sprite.animations.add('walkright', [8, 9, 10, 11], 10, true, true);
 	this.sprite.animations.add('walkup', 	[12, 13, 14, 15], 10, true, true);
 
-	this.sprite.anchor.setTo(0.5, 0.5);
+	// Player Sprite Physics
 	this.game.physics.arcade.enable(this.sprite);
+	this.sprite.body.immovable = true;
+	this.sprite.body.collideWorldBounds = true;
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
 	
@@ -98,6 +113,13 @@ Player.prototype.create = function() {
 
 Player.prototype.update = function() {
 	this.findTip();
+
+	if (player.xp >= 100) {
+		player.level++;
+		player.xp %= 100;
+		player.health = 100;
+	}
+
 	if (!this.isAttacking) {
 		this.pointWeapon();
 	}
@@ -105,14 +127,19 @@ Player.prototype.update = function() {
 		// play animations
 		var velX = this.sprite.body.velocity.x;
 		var velY = this.sprite.body.velocity.y;
-		if (velX > 0)
-			this.sprite.animations.play('walkright', 10, true);
-		else if (velX < 0)
-			this.sprite.animations.play('walkleft', 10, true);
-		else if (velY > 0)
-			this.sprite.animations.play('walkdown', 10, true);
-		else if (velY < 0)
-			this.sprite.animations.play('walkup', 10, true);
+		if (!velX && !velY) {
+			// don't modify animation
+		}
+		// vertical animation
+		else if (Math.abs(velY) > Math.abs(velX)) {
+			anim = velY < 0 ? 'walkup' : 'walkdown';
+			this.sprite.animations.play(anim, this.animSpeed, true);
+		}
+		// horizontal animation
+		else {
+			anim = velX < 0 ? 'walkleft' : 'walkright';
+			this.sprite.animations.play(anim, this.animSpeed, true);
+		}
 
 		this.stop();
 
@@ -168,7 +195,7 @@ Player.prototype.attack = function() {
 
 		// Light Attack
 		case 1:
-			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 			target = Gameplay.getTarget();
 			unitX = (target.x - this.sprite.x) / magnitude;
 			unitY = (target.y - this.sprite.y) / magnitude;
@@ -202,7 +229,7 @@ Player.prototype.attack = function() {
 		// Ranged Attack
 		case 3:
 			if (!this.reloading) {
-				magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+				magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 				target = Gameplay.getTarget();
 				unitX = (target.x - this.sprite.x) / magnitude;
 				unitY = (target.y - this.sprite.y) / magnitude;
@@ -253,7 +280,7 @@ Player.prototype.specialAttack = function() {
 
 		// Light Attack
 		case 1:
-			magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+			magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 			target = Gameplay.getTarget();
 			unitX = (target.x - this.sprite.x) / magnitude;
 			unitY = (target.y - this.sprite.y) / magnitude;
@@ -291,7 +318,7 @@ Player.prototype.specialAttack = function() {
 		// Ranged Attack
 		case 3:
 			if (!this.reloading) {
-				magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
+				magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 				target = Gameplay.getTarget();
 				unitX = (target.x - this.sprite.x) / magnitude;
 				unitY = (target.y - this.sprite.y) / magnitude;
@@ -571,9 +598,9 @@ Player.prototype.findTip = function(theta) {
 }
 
 Player.prototype.targetAngle = function() {
-	magnitude = Math.sqrt(Math.pow(target.x - playerSprite.x, 2) + Math.pow(target.y - playerSprite.y, 2));
-	unitX = (target.x - playerSprite.x) / magnitude;	
-	unitY = (target.y - playerSprite.y) / magnitude;
+	magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
+	unitX = (target.x - player.sprite.x) / magnitude;	
+	unitY = (target.y - player.sprite.y) / magnitude;
 	theta = Math.acos(unitX);
 	theta = theta * 180 / Math.PI;
 	if (Math.asin(unitY) < 0) {
@@ -586,8 +613,8 @@ Player.prototype.normalizeSpeed = function() {
 	magnitude = Math.sqrt(Math.pow(this.sprite.body.velocity.x, 2) + Math.pow(this.sprite.body.velocity.y, 2));
 	unitX = this.sprite.body.velocity.x / magnitude;
 	unitY = this.sprite.body.velocity.y / magnitude;
-	this.sprite.body.velocity.x = this.speed * unitX;
-	this.sprite.body.velocity.y = this.speed * unitY;
+	this.sprite.body.velocity.x = (this.speed * this.speedModifier) * unitX;
+	this.sprite.body.velocity.y = (this.speed * this.speedModifier) * unitY;
 }
 
 function calculateQuadrant(mpx, mpy, slope) {

@@ -1,4 +1,4 @@
-Mob = function(game) {
+Mob = function(game, spriteKey, baseHealth) {
 	this.game = game;
     var multiplier = 1;
     if (difficulty === "easy") {
@@ -8,24 +8,67 @@ Mob = function(game) {
     } else if (difficulty === "hard") {
         multiplier = 2;
     }
-	this.health = 50 * multiplier;
+    this.maxHealth = baseHealth * multiplier;
+	this.health = this.maxHealth;
 	this.isInvincible = false;
 	this.stunned = false;
 	this.invincibleTime = 0;
+
 	this.x = game.rnd.integerInRange(0, game.world._width);
 	this.y = game.rnd.integerInRange(0, game.world._height);
-	this.sprite = game.add.sprite(this.x, this.y, 'player');
+
+	this.sprite = game.add.sprite(this.x, this.y, spriteKey);
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.sprite.scale.setTo(2, 2);
+
+	// hp bar
+	this.healthBarBack = this.sprite.addChild(
+		game.make.sprite(0, -this.sprite.height / 4, 'xpbarback')
+	);
+	this.healthBarBack.width = this.sprite.width / 2;
+	this.healthBarBack.x -= this.healthBarBack.width / 2;
+
+	this.healthBarFront = this.healthBarBack.addChild(
+		game.make.sprite(0, 0, 'xpbarfront')
+	);
+	this.healthBarFront.width = this.healthBarBack.width;
+	this.healthBarFront.scale.setTo(1, 1);
+
+	// mob animations
+	this.animSpeed = 7;
+	this.sprite.animations.add('stand', 	[0], 10, true, true);
+	this.sprite.animations.add('walkdown', 	[0, 1, 2, 3], 10, true, true);
+	this.sprite.animations.add('walkleft', 	[4, 5, 6, 7], 10, true, true);
+	this.sprite.animations.add('walkright', [8, 9, 10, 11], 10, true, true);
+	this.sprite.animations.add('walkup', 	[12, 13, 14, 15], 10, true, true);
+
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.body.stopVelocityOnCollide = true;	
 	this.sprite.body.collideWorldBounds = true;
+
 	this.canAttack = true;
 	this.attackCoolDown = 1150;
 }
 
 Mob.prototype.update = function() {
+	var velX = this.sprite.body.velocity.x;
+	var velY = this.sprite.body.velocity.y;
+
+	if (!velX && !velY) {
+		// don't modify animation
+	}
+	// vertical animation
+	else if (Math.abs(velY) > Math.abs(velX)) {
+		anim = velY < 0 ? 'walkup' : 'walkdown';
+		this.sprite.animations.play(anim, this.animSpeed, true);
+	}
+	// horizontal animation
+	else {
+		anim = velX < 0 ? 'walkleft' : 'walkright';
+		this.sprite.animations.play(anim, this.animSpeed, true);
+	}
+
 	if (!this.stunned) {
 		this.stop();
 		this.followPlayer();
@@ -64,6 +107,7 @@ Mob.prototype.damage = function(dmg, invinTime, stun, knockback) {
 	if (!this.isInvincible) {
 		this.isInvincible = true;
 		this.health -= dmg;
+		this.healthBarFront.scale.setTo(this.health / this.maxHealth, 1);
 		if (this.health > 0) {
 			this.game.time.events.add(invinTime, this.stopInvincible, this);
 			if (stun) {
