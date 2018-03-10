@@ -52,28 +52,24 @@ Mob = function(game, spriteKey, baseHealth) {
 }
 
 Mob.prototype.update = function() {
+	var velX = this.sprite.body.velocity.x;
+	var velY = this.sprite.body.velocity.y;
+
+	if (!velX && !velY) {
+		// don't modify animation
+	}
+	// vertical animation
+	else if (Math.abs(velY) > Math.abs(velX)) {
+		anim = velY < 0 ? 'walkup' : 'walkdown';
+		this.sprite.animations.play(anim, this.animSpeed, true);
+	}
+	// horizontal animation
+	else {
+		anim = velX < 0 ? 'walkleft' : 'walkright';
+		this.sprite.animations.play(anim, this.animSpeed, true);
+	}
+
 	if (!this.stunned) {
-		var velX = this.sprite.body.velocity.x;
-		var velY = this.sprite.body.velocity.y;
-
-		if (!velX && !velY) {
-			// don't modify animation
-		}
-		// vertical animation
-		else if (Math.abs(velY) > Math.abs(velX)) {
-			if (velY < 0)
-				this.sprite.animations.play('walkup', this.animSpeed, true);
-			else
-				this.sprite.animations.play('walkdown', this.animSpeed, true);
-		}
-		// horizontal animation
-		else {
-			if (velX < 0)
-				this.sprite.animations.play('walkleft', this.animSpeed, true);
-			else
-				this.sprite.animations.play('walkright', this.animSpeed, true);
-		}
-
 		this.stop();
 		this.followPlayer();
 	}

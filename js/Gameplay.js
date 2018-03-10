@@ -1,9 +1,11 @@
 var Gameplay = {};
 
 Gameplay.preload = function() {
+	// Entities
 	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
 	game.load.spritesheet('monster1', 'assets/sprites/monster-01.png', 32, 48, 16);
 	game.load.spritesheet('monster2', 'assets/sprites/monster-02.png', 80, 96, 16);
+
 	// HUD
 	game.load.image('hpbarback', 'assets/sprites/HP_Bar.PNG');
 	game.load.image('hpbarfront', 'assets/sprites/HP_Bar2.PNG');
@@ -13,6 +15,7 @@ Gameplay.preload = function() {
 	game.load.image('levelText', 'assets/sprites/Lv_Tx.PNG');
 	game.load.image('specReady', 'assets/sprites/special_ready.png');
 
+	// Special Effects & Weapons
 	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
 	game.load.image('dead', 'assets/sprites/dead.png');
 	game.load.image('target', 'assets/sprites/target.png');
@@ -28,6 +31,8 @@ Gameplay.preload = function() {
 	game.load.image('arrow', 'assets/sprites/arrow.png');
 	game.load.image('bullet', 'assets/sprites/bullet.png');
 	game.load.image('testtiles', 'assets/maps/testtiles.png');
+
+	// Game State
 	game.load.image('quit', 'assets/menu/login.png');
 	game.load.image('quitActive', 'assets/menu/login_select.png');
 	game.load.image('paused', 'assets/pause.png');
@@ -301,11 +306,11 @@ Gameplay.update = function() {
 			player.normalizeSpeed();
 		}
 		this.updateScore();
+		game.world.bringToTop(hudGroup);
 	}
 	else {
 		player.stop();
 	}
-	game.world.bringToTop(hudGroup);
 }
 
 Gameplay.updateScore = function() {
@@ -333,6 +338,7 @@ Gameplay.pauseUnpause = function() {
 		player.stop();
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].stop();
+			mobs[i].sprite.animations.stop();
 		}
 
 		for (var i = 0; i < mobProjectiles.length; i++) {
@@ -346,8 +352,10 @@ Gameplay.pauseUnpause = function() {
 		pauseLayer = game.add.sprite(game.camera.x, game.camera.y, 'paused');
 		pauseLayer.width = game.camera.width;
 		pauseLayer.height = game.camera.height;
+
 		text = game.add.text(game.camera.x + game.camera.width / 2, game.camera.y + game.camera.height / 2, "PAUSED", style); 
 		text.anchor.setTo(0.5, 0.5);
+
 		quitBtn = game.add.button(0, game.camera.y + game.camera.height / 2 + 80, 'quit', Gameplay.quitGame, this);
 		quitBtn.scale.setTo(1.2, 1.2);
 		quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
