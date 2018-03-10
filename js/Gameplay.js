@@ -201,6 +201,20 @@ Gameplay.create = function() {
 	specReady.scale.setTo(1.5, 1.5);
 	specReady.anchor.setTo(1, 1);
 
+	// HUD Group
+	hudGroup = game.add.group();
+	hudGroup.add(scoreText);
+	hudGroup.add(healthBarBack);
+	hudGroup.add(healthBarFront);
+	hudGroup.add(healthText);
+	hudGroup.add(xpBarBack);
+	hudGroup.add(xpBarFront);
+	hudGroup.add(levelTextImage);
+	hudGroup.add(levelText);
+	hudGroup.add(ammoTextCap);
+	hudGroup.add(ammoTextRes);
+	hudGroup.add(specReady);
+
 	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
 	target.scale.setTo(2, 2);
 	target.anchor.setTo(0.5, 0.5);
@@ -291,6 +305,7 @@ Gameplay.update = function() {
 	else {
 		player.stop();
 	}
+	game.world.bringToTop(hudGroup);
 }
 
 Gameplay.updateScore = function() {
