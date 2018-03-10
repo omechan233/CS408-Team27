@@ -256,13 +256,13 @@ Gameplay.update = function() {
 		ammoTextRes.setText(player.ammoReserve);
 		specReady.alpha = player.canSpecial ? 1.0 : 0.2;
         
-        /*if (game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this)) {
+        if (game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this)) {
 //            group.disabled = false;
 //            var c = setInterval(function() {
 //                group.disabled = true;
 //                clearInterval(c);
 //            }, 15000);
-        }*/
+        }
 		
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
