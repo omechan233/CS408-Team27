@@ -37,7 +37,7 @@ server.listen(process.env.PORT || 3000, function() {
 io.sockets.on('connection', onSocketConnection);
 
 function onSocketConnection(client) {
-    console.log("New connection %s", client.id);
+    // console.log("New connection %s", client.id);
 
     client.on('saveData', onSaveData);
     client.on('onLogin', onLogin);

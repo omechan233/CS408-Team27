@@ -1,5 +1,5 @@
 MobBadGuy = function(game) {
-	Mob.call(this, game);
+	Mob.call(this, game, 'player');
 }
 
 MobBadGuy.prototype = Object.create(Mob.prototype);
