@@ -14,26 +14,32 @@ Player = function(game, weaponAsset) {
 	this.xp = 0;
 	this.level = 0;
 	this.speed = 275;
+	this.dmg = 10;
+
+	// Player Status
 	this.isAttacking = false;
 	this.canAttack = true;
-	this.attackCooldown = 100; 
-	this.attackAnimationTime = 250;
 	this.isSpecial = false;
 	this.canSpecial = true;
-	this.specialCooldown = 10 * 1000;
 	this.isInvincible = false;
-	this.specialInvincible = false;
-	this.invincibleLength = 900;
 	this.reloading = false;
-	this.reloadTime = 500;
 	this.stunned = false;
+	this.specialInvincible = false;
+
+	// Player Limits
+	this.attackCooldown = 100; 
+	this.attackAnimationTime = 250;
+	this.specialCooldown = 10 * 1000;
+	this.invincibleLength = 900;
+	this.ammoCapacity = 30;
+	this.ammoReserve = 30;
+	this.reloadTime = 500;
+	
+	// Other
 	this.lockTip = false;
 	this.reset = true;
 	this.tipUnitX = 0;
-	this.tipUnitY = 0;
-	this.dmg = 10;
-	this.ammoCapacity = 30;
-	this.ammoReserve = 30;
+	this.tipUnitY = 0
 	this.projectileVelocity = 300;
 	this.resetX = 0;
 	this.resetY = 0;
@@ -64,16 +70,20 @@ Player = function(game, weaponAsset) {
 	this.sprite = game.add.sprite(
 		game.camera.x + game.camera.width / 2,
 		game.camera.y + game.camera.height / 2,
-		 'player'
+		'player'
 	);
+	this.sprite.anchor.setTo(0.5, 0.5);
+	this.sprite.scale.setTo(2, 2);
+
+	// Player Animations
+	this.animSpeed = 10;
 	this.sprite.animations.add('stand', 	[0], 10, true, true);
 	this.sprite.animations.add('walkdown', 	[0, 1, 2, 3], 10, true, true);
 	this.sprite.animations.add('walkleft', 	[4, 5, 6, 7], 10, true, true);
 	this.sprite.animations.add('walkright', [8, 9, 10, 11], 10, true, true);
 	this.sprite.animations.add('walkup', 	[12, 13, 14, 15], 10, true, true);
 
-	this.sprite.anchor.setTo(0.5, 0.5);
-	this.sprite.scale.setTo(2, 2);
+	// Player Sprite Physics
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.body.collideWorldBounds = true;
@@ -103,11 +113,13 @@ Player.prototype.create = function() {
 
 Player.prototype.update = function() {
 	this.findTip();
+
 	if (player.xp >= 100) {
 		player.level++;
 		player.xp %= 100;
 		player.health = 100;
 	}
+
 	if (!this.isAttacking) {
 		this.pointWeapon();
 	}
@@ -115,14 +127,23 @@ Player.prototype.update = function() {
 		// play animations
 		var velX = this.sprite.body.velocity.x;
 		var velY = this.sprite.body.velocity.y;
-		if (velX > 0)
-			this.sprite.animations.play('walkright', 10, true);
-		else if (velX < 0)
-			this.sprite.animations.play('walkleft', 10, true);
-		else if (velY > 0)
-			this.sprite.animations.play('walkdown', 10, true);
-		else if (velY < 0)
-			this.sprite.animations.play('walkup', 10, true);
+		if (!velX && !velY) {
+			// don't modify animation
+		}
+		// vertical animation
+		else if (Math.abs(velY) > Math.abs(velX)) {
+			if (velY < 0)
+				this.sprite.animations.play('walkup', this.animSpeed, true);
+			else
+				this.sprite.animations.play('walkdown', this.animSpeed, true);
+		}
+		// horizontal animation
+		else {
+			if (velX < 0)
+				this.sprite.animations.play('walkleft', this.animSpeed, true);
+			else
+				this.sprite.animations.play('walkright', this.animSpeed, true);
+		}
 
 		this.stop();
 
