@@ -256,12 +256,12 @@ Gameplay.update = function() {
 		ammoTextRes.setText(player.ammoReserve);
 		specReady.alpha = player.canSpecial ? 1.0 : 0.2;
         
-        if (game.physics.arcade.collide(playerSprite, group, this.collisionHandler, this.processHandler, this)) {
-            group.disabled = false;
-            var c = setInterval(function() {
-                group.disabled = true;
-                clearInterval(c);
-            }, 15000);
+        if (game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this)) {
+//            group.disabled = false;
+//            var c = setInterval(function() {
+//                group.disabled = true;
+//                clearInterval(c);
+//            }, 15000);
         }
 		
 		for (var i = mobs.length - 1; i >= 0; i--) {
@@ -340,7 +340,7 @@ Gameplay.processHandler = function(player, item) {
 
 Gameplay.collisionHandler = function (play, item) {
     
-    text = game.add.text(game.camera.width / 2 + 200, 0, '', {
+    text = game.add.text(game.camera.width / 2 + 200, 100, '', {
             font: "65px Arial",
             fill: "#000000",
             align: "center"
@@ -355,7 +355,7 @@ Gameplay.collisionHandler = function (play, item) {
             player.speedModifier = 2.00;
             text.setText("Speed Boost");
             var c = setInterval(function() {
-//                console.log("Resetting speed");
+                console.log("Resetting speed");
                 player.speedModifier = 1.00;
                 text.setText("");
                 clearInterval(c);
