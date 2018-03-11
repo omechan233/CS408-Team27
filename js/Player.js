@@ -25,6 +25,7 @@ Player = function(game, weaponAsset) {
 	this.reloading = false;
 	this.stunned = false;
 	this.specialInvincible = false;
+	this.weaponFlipped = false;
 
 	// Player Limits
 	this.attackCooldown = 100; 

@@ -49,6 +49,14 @@ Mob = function(game, spriteKey, baseHealth) {
 
 	this.canAttack = true;
 	this.attackCoolDown = 1150;
+
+	this.attackSprite = game.make.sprite(0, 0, 'haunt');
+	this.attackSprite.anchor.setTo(0.5, 0.5);
+
+	this.stunSprite = game.make.sprite(0, 0, 'stun');
+	this.stunSprite.anchor.setTo(0.5, 0.5);
+	this.stunSprite.scale.setTo(1.25, 1.25);
+
 }
 
 Mob.prototype.update = function() {
@@ -93,10 +101,16 @@ Mob.prototype.stop = function() {
 
 Mob.prototype.melee = function(dmg) {
 	if (this.canAttack) {
+		this.sprite.addChild(this.attackSprite);
 		Gameplay.getPlayer().damage(dmg);
 		this.canAttack = false;
 		this.game.time.events.add(this.attackCoolDown, this.letAttack, this);
+		this.game.time.events.add(450, this.removeAttack, this);
 	}
+}
+
+Mob.prototype.removeAttack = function() {
+	this.sprite.removeChild(this.attackSprite);
 }
 
 Mob.prototype.letAttack = function() {
@@ -130,6 +144,7 @@ Mob.prototype.damage = function(dmg, invinTime, stun, knockback) {
 }
 
 Mob.prototype.stun = function(time) {
+	this.sprite.addChild(this.stunSprite);
 	this.stunned = true;
 	this.stop();
 	this.sprite.alpha = .5;
@@ -137,6 +152,7 @@ Mob.prototype.stun = function(time) {
 }
 
 Mob.prototype.stopStun = function() {
+	this.sprite.removeChild(this.stunSprite);
 	this.sprite.alpha = 1;
 	this.stunned = false;
 }

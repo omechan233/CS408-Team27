@@ -30,6 +30,8 @@ Gameplay.preload = function() {
 	game.load.image('crossbow', 'assets/sprites/crossbow.png');
 	game.load.image('arrow', 'assets/sprites/arrow.png');
 	game.load.image('bullet', 'assets/sprites/bullet.png');
+	game.load.image('stun', 'assets/sprites/attack-shock.png');
+	game.load.image('haunt', 'assets/sprites/attack-haunt.png');
 
 	// Game State
 	game.load.image('quit', 'assets/menu/exit.png');
