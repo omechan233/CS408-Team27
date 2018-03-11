@@ -12,6 +12,7 @@ Menu.preload = function() {
 	game.load.image('difficultyActive', 'assets/menu/difficulty_select.png');
 	game.load.image('logout', 'assets/menu/logout.png');
 	game.load.image('logoutActive', 'assets/menu/logout_select.png');
+	game.load.audio('menuMusic', ['assets/bgm/title.mp3', 'assets/bgm/title.ogg']);
 }
 
 var difficulty = "easy";
@@ -58,6 +59,8 @@ Menu.create = function() {
 	logoutBtn.scale.setTo(1.2, 1.2);
 	logoutBtn.x = game.world.centerX - (logoutBtn.width / 2);
 	logoutBtn.y = game.world.centerY - (logoutBtn.height / 2) + 240;
+
+	music = game.sound.play('menuMusic');
 }
 
 Menu.showDifficulty = function() {
@@ -82,23 +85,27 @@ Menu.changeDifficulty = function() {
 }
 
 Menu.startGame = function() {
+	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('Select');
 }
 
 Menu.viewScore = function() {
 	game.stage.backgroundColor = '#00ff00'
+	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('HighScores');
 }
 
 Menu.logOut = function() {
+	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('Login');
 }
 
 Menu.viewProfile = function() {
 	game.stage.backgroundColor = '#0000ff';
+	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('Account');
 }

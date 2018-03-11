@@ -9,7 +9,6 @@ function preload() {
     
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	game.state.add('Title', Title);
 	game.state.add('Login', Login);
 	game.state.add('SignUp', SignUp);
 	game.state.add('Menu', Menu);

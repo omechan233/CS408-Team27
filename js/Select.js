@@ -128,9 +128,9 @@ Select.create = function() {
     
     text = game.add.text(game.world.centerX, game.world.centerY + 175, 'Forest', {
             font: "65px Arial",
-            fill: "#22ff55",
+            fill: "#228b22",
             align: "center",
-	   	stroke: "#ffffff"
+	   	stroke: "#000000"
     });
 	text.strokeThickness = 5;
     
@@ -143,14 +143,14 @@ Select.create = function() {
                 name = "Forest";
 		background.loadTexture('forestBkg');
 		text.fill = "#228b22";
-                text.stroke = "#ffffff";
+                text.stroke = "#000000";
 		break;
 		
 		case 1:
                 	name = "Forest - 2";
 			background.loadTexture('forestBkg');
 			text.fill = "#228b22";
-                	text.stroke = "#ffffff";
+                	text.stroke = "#000000";
                 break;
 		
 		case 2:

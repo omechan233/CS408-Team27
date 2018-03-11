@@ -738,7 +738,8 @@ Gameplay.getLastPausedTime = function() {
 
 Gameplay.quitGame = function() {
 	music.stop();
-	game.state.start('Menu', true, false);
+	game.state.clearCurrentState();
+	game.state.start('Menu');
 }
 
 Gameplay.quitOver = function() {
