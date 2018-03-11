@@ -97,25 +97,6 @@ Gameplay.create = function() {
 			map.setCollisionBetween(1, 10000, true, blocked2);
 			map.setCollisionBetween(1, 10000, true, blocked3);
 
-			back1.resizeWorld();
-			back2.resizeWorld();
-			back3.resizeWorld();
-			back1.renderSettings.enableScrollDelta = true;
-			back2.renderSettings.enableScrollDelta = true;
-			back3.renderSettings.enableScrollDelta = true;
-
-			blocked1.resizeWorld();
-			blocked2.resizeWorld();
-			blocked3.resizeWorld();
-			blocked1.renderSettings.enableScrollDelta = true;
-			blocked2.renderSettings.enableScrollDelta = true;
-			blocked3.renderSettings.enableScrollDelta = true;
-
-			fore1.resizeWorld();
-			fore2.resizeWorld();
-			fore1.renderSettings.enableScrollDelta = true;
-			fore2.renderSettings.enableScrollDelta = true;
-
 			game.physics.arcade.enable(blocked1);
 			game.physics.arcade.enable(blocked2);
 			game.physics.arcade.enable(blocked3);
@@ -208,6 +189,15 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			break;
 	}
+
+	for (i = 0; i < game.world.children.length; i++) {
+		child = game.world.getChildAt(i);
+		if (child instanceof Phaser.TilemapLayer) {
+			child.setScale(1.5, 1.5);
+			child.resizeWorld();
+		}
+	}
+
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);

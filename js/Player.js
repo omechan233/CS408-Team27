@@ -73,7 +73,8 @@ Player = function(game, weaponAsset) {
 		'player'
 	);
 	this.sprite.anchor.setTo(0.5, 0.5);
-	this.sprite.scale.setTo(1.3, 1.3);
+	this.playerScale = 1.6;
+	this.sprite.scale.setTo(this.playerScale, this.playerScale);
 
 	// Player Animations
 	this.animSpeed = 10;
@@ -90,8 +91,10 @@ Player = function(game, weaponAsset) {
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
 	this.sprite.body.setSize(
-		this.sprite.width / 4, this.sprite.height / 4,
-		this.sprite.width / 2 - this.sprite.width / 4, this.sprite.height / 2
+		this.sprite.width / this.playerScale / 2,
+		this.sprite.height / this.playerScale / 2 - this.sprite.height / this.playerScale / 8,
+		this.sprite.width / this.playerScale / 2 - this.sprite.width / this.playerScale / 4,
+		this.sprite.height / this.playerScale / 2 + this.sprite.height / this.playerScale / 8
 	);
 
 	// Weapon Sprite
