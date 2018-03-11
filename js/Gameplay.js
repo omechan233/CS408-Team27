@@ -170,15 +170,18 @@ Gameplay.create = function() {
 			map.createLayer("items").resizeWorld();
 			blocked1 = map.createLayer("blocked");
 			map.createLayer("foreground").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
 			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);	
 			break;
+
 		case "Lava - 2":
 			map = game.add.tilemap('lava2');
 			map.addTilesetImage('044-Cave02', 'Cave2');
 			map.createLayer("test").resizeWorld();
 			blocked1 = map.createLayer("block");
+			map.setCollisionBetween(1, 10000, true, blocked1);
 			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
@@ -371,6 +374,16 @@ Gameplay.create = function() {
 	pauseElapsedTime = 0;
 
 	game.camera.follow(player.sprite);
+
+	// find and bring foreground
+	for (i = 0; i < game.world.children.length; i++) {
+		child = game.world.getChildAt(i);
+		if (child instanceof Phaser.TilemapLayer && child.layer.name.includes("foreground")) {
+			game.world.bringToTop(child);
+		}
+	}
+
+	console.log(game.world.children);
 }
 
 Gameplay.update = function() {
