@@ -96,7 +96,11 @@ function postScore(score) {
     console.log("BEFORE");
     console.log(user);
     var min = 0;
-    for (var i = 0; i < user.highscores.length; i++) {
+    for (var i = 0; i < 5; i++) {
+        if (user.highscores.length < 5) {
+            user.highscores.push(score);
+            break;
+        }
         if (user.highscores[min] > user.highscores[i]) min = i;
     }
     if (user.highscores[min] < score) {

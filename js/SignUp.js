@@ -67,7 +67,7 @@ function start() {
     var user = {
         username: newUser,
         password: newPassword,
-        highscores: ["1", "2", "3", "4", "5"]
+        highscores: []
     }
     saveUserData(user);
     
