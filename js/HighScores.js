@@ -73,7 +73,7 @@ HighScores.showGlobalScores = function(scores) {
 		temp1.anchor.setTo(0.5, 0.5);
 		scoreText.push(temp1);
 		var temp2 = game.add.text(game.world.centerX + 100, i * 50 + 100, scores[i].username, style);
-		temp2.anchor.setTo(0.5, 0.5);
+		temp2.anchor.setTo(0, 0.5);
 		userText.push(temp2);
 	}
 	bottomScoreY = scores.length * 50 + 100;
