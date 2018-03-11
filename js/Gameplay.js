@@ -46,13 +46,16 @@ Gameplay.preload = function() {
 	game.load.tilemap('forest2', 'assets/maps/forest_2.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('desert1', 'assets/maps/desert_1.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('desert2', 'assets/maps/desert_2.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('cave1', 'assets/maps/cave_1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('cave2', 'assets/maps/cave_2.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('lava1', 'assets/maps/lava_1.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('lava2', 'assets/maps/lava_2.json', null, Phaser.Tilemap.TILED_JSON);
 
 	// Tile Assets
 	game.load.image('Woods1', 'assets/maps/002-Woods01.png');
 	game.load.image('GWater1', 'assets/maps/001-G_Water01.png');
-	game.load.image('SaWater1', 'assets/maps/015-Sa_Water01.png')
+	game.load.image('SaWater1', 'assets/maps/015-Sa_Water01.png');
+	game.load.image('CEWater1', 'assets/maps/056-CE_Water01.png');
 	game.load.image('Tree1', 'assets/maps/036-Tree01.png');
 	game.load.image('Tree2', 'assets/maps/037-Tree02.png');
 	game.load.image('Road1', 'assets/maps/039-Road.png');
@@ -155,6 +158,37 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
+			break;
+
+		case "Cave":
+			map = game.add.tilemap('cave1');
+			map.addTilesetImage('043-Cave01', 'Cave1');
+			map.addTilesetImage('056-CE_Water01', 'CEWater1');
+			map.createLayer("background").resizeWorld();
+			map.createLayer("wall").resizeWorld();
+			map.createLayer("items").resizeWorld();
+			blocked1 = map.createLayer("blocked");
+			map.createLayer("foreground").resizeWorld();
+			blocked1.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			this.collisionLayers.push(blocked1);
+			break;
+
+		case "Cave - 2":
+			map = game.add.tilemap('cave2');
+			map.addTilesetImage('043-Cave01', 'Cave1');
+			map.addTilesetImage('056-CE_Water01', 'CEWater1');
+			map.createLayer("background").resizeWorld();
+			map.createLayer("water_1").resizeWorld();
+			map.createLayer("water_2").resizeWorld();
+			map.createLayer("water_3").resizeWorld();
+			map.createLayer("wall").resizeWorld();
+			map.createLayer("items").resizeWorld();
+			blocked1 = map.createLayer("blocked");
+			map.createLayer("foreground").resizeWorld();
+			blocked1.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			this.collisionLayers.push(blocked1);
 			break;
 
 		case "Lava":
