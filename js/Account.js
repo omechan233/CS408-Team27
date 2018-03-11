@@ -3,10 +3,10 @@ var change;
 var newPassword;
 
 Account.preload = function() {
-    game.load.spritesheet('cpInactive',     'assets/menu/login.png');
-    game.load.spritesheet('cpActive',       'assets/menu/login_select.png');
-    game.load.spritesheet('changeInactive', 'assets/menu/start.png');
-    game.load.spritesheet('changeActive',   'assets/menu/start_select.png');
+    game.load.spritesheet('cpInactive',     'assets/menu/pwd_reset.png');
+    game.load.spritesheet('cpActive',       'assets/menu/pwd_reset_select.png');
+    game.load.spritesheet('changeInactive', 'assets/menu/submit.png');
+    game.load.spritesheet('changeActive',   'assets/menu/submit_select.png');
     game.load.image('menu',                 'assets/menu/exit.png');
 	game.load.image('menuActive',           'assets/menu/exit_select.png');
     game.add.plugin(PhaserInput.Plugin);
