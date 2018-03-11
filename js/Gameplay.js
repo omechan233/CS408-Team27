@@ -808,8 +808,7 @@ Gameplay.render = function() {
 	game.debug.geom(player.tip, '#0000ff');
 	game.debug.geom(player.base, '#0000ff');
 	*/
-//	game.debug.body(player.sprit
-/*	game.debug.soundInfo(music, 32, 32);
+	/*	game.debug.soundInfo(music, 32, 32);
 
    	 if (music.isDecoding)
    	 {

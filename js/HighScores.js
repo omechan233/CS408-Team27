@@ -1,6 +1,5 @@
 var HighScores = {};
 
-
 HighScores.preload = function() {
 	game.load.image('menu', 		'assets/menu/exit.png');
 	game.load.image('menuActive', 	'assets/menu/exit_select.png');
@@ -9,18 +8,25 @@ HighScores.preload = function() {
 HighScores.create = function() {
 
 	scoreText = [];
+	userText = [];
 	topScoreY = 0;
 	bottomScoreY = 0;
-//	var topPos;
 
+	isGlobalScore = false;
 
-	menuBtn = game.add.button(10, 10, 'menu', goToMenu, this);
+	scoreTypeText = game.add.text(window.innerWidth / 2, 0, "Local Highscores");
+	scoreTypeText.anchor.setTo(0.5, 0);
+
+	menuBtn = game.add.button(10, 10, 'menu', this.goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
 	menuBtn.onInputOver.add(menuOver, this);
 	menuBtn.onInputOut.add(menuOut, this);
 
-	//scores = generateRandomScores(100);
-	getPlayerScores();
+	switchScoresBtn = game.add.button(10, 50, 'menu', this.switchScores, this);
+	switchScoresBtn.scale.setTo(1.2, 1.2);
+
+	this.getLocalScores();
+
 	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -37,29 +43,69 @@ HighScores.update = function() {
 	}
 }
 
-function showScores(scores) {
-	console.log(scores);
-	scores.sort(this.compareDescending);
+HighScores.showLocalScores = function(scores) {
+	scores.sort((a, b) => {
+		return b - a;
+	});
+	for (var i = 0; i < scoreText.length; i++) {
+		scoreText[i].destroy();
+	}
+	for (var i = 0; i < userText.length; i++) {	
+		userText[i].destroy();
+	}
 	for (var i = 0; i < scores.length; i++) {
-		var temp = game.add.text(game.world.centerX, i * 50 + 100, scores[i], style);
-		temp.anchor.setTo(0.5, 0.5);
-		scoreText.push(temp);
+		var temp1 = game.add.text(game.world.centerX, i * 50 + 100, scores[i], style);
+		temp1.anchor.setTo(0.5, 0.5);
+		scoreText.push(temp1);
 	}
 	bottomScoreY = scores.length * 50 + 100;
 }
 
-function getGlobalScores() {
-
+HighScores.showGlobalScores = function(scores) {
+	for (var i = 0; i < scoreText.length; i++) {
+		scoreText[i].destroy();
+	}
+	for (var i = 0; i < userText.length; i++) {	
+		userText[i].destroy();
+	}
+	for (var i = 0; i < scores.length; i++) {
+		var temp1 = game.add.text(game.world.centerX, i * 50 + 100, scores[i].highscore, style);
+		temp1.anchor.setTo(0.5, 0.5);
+		scoreText.push(temp1);
+		var temp2 = game.add.text(game.world.centerX + 100, i * 50 + 100, scores[i].username, style);
+		temp2.anchor.setTo(0.5, 0.5);
+		userText.push(temp2);
+	}
+	bottomScoreY = scores.length * 50 + 100;
 }
 
-function getPlayerScores() {
+HighScores.getGlobalScores = function() {
+	socket = io.connect();
+	var glbScores;
+	socket.emit('getGlobalScores');
+	socket.on('globalScores', (globalScores) => {
+		this.showGlobalScores(globalScores);
+	});
+}
+
+HighScores.getLocalScores = function() {
 	socket = io.connect();
 	var usrScores;
-	socket.emit('getScores');
-	socket.on('userScores', (highscores) => {
-		console.log(highscores);
-		showScores(highscores);
+	socket.emit('getLocalScores');
+	socket.on('localScores', (highscores) => {
+		this.showLocalScores(highscores);
 	});
+}
+
+HighScores.switchScores = function() {
+	isGlobalScore = !isGlobalScore;
+	if (isGlobalScore) {
+		scoreTypeText.setText("Global Highscores");
+		this.getGlobalScores();
+	} else {
+		scoreTypeText.setText("Local Highscores");
+		this.getLocalScores();
+	}
 }
 
 HighScores.goToMenu = function() {
@@ -104,10 +150,3 @@ HighScores.generateRandomScores = function(numScores) {
 	return newScores;
 }
 
-HighScores.compareAscending = function(a, b) {
-	return a - b;
-}
-
-HighScores.compareDescending = function(a, b) {
-	return b - a;
-}
