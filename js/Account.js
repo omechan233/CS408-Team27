@@ -7,8 +7,8 @@ Account.preload = function() {
     game.load.spritesheet('cpActive',       'assets/menu/login_select.png');
     game.load.spritesheet('changeInactive', 'assets/menu/start.png');
     game.load.spritesheet('changeActive',   'assets/menu/start_select.png');
-    game.load.image('menu',                 'assets/menu/login.png');
-	game.load.image('menuActive',           'assets/menu/login_select.png');
+    game.load.image('menu',                 'assets/menu/exit.png');
+	game.load.image('menuActive',           'assets/menu/exit_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
