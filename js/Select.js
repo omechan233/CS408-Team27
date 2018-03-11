@@ -5,10 +5,10 @@ var map = "Forest";
 Select.preload = function() {
 	game.load.image('forest', 'assets/maps/preview_anicent_forest.png');
 	game.load.image('desert', 'assets/maps/preview_great_desert.png');
-	game.load.image('cave', 'assets/maps/preview_underground_cave.png');
+	game.load.image('lava', 'assets/maps/preview_lava_highland.png');
 	game.load.image('forestBkg', 'assets/maps/preview_background_ancient_forest.jpg');
 	game.load.image('desertBkg', 'assets/maps/preview_background_great_desert.jpg');
-	game.load.image('caveBkg', 'assets/maps/preview_background_underground_cave.jpg');
+	game.load.image('lavaBkg', 'assets/maps/preview_background_lava_highland.jpg');
 	game.load.image('startInactive', 'assets/menu/start.png');
 	game.load.image('menuInactive', 'assets/menu/exit.png');
 	game.load.image('menuActive', 'assets/menu/exit_select.png');
@@ -36,8 +36,8 @@ Select.create = function() {
 	maps.push(game.add.sprite(0, 0, 'forest')); 
     	maps.push(game.add.sprite(0, 0, 'desert'));
 	maps.push(game.add.sprite(0, 0, 'desert'));
-	maps.push(game.add.sprite(0, 0, 'cave')); 
-    
+	maps.push(game.add.sprite(0, 0, 'lava'));    
+	maps.push(game.add.sprite(0, 0, 'lava'));    
 	for (var i = 0; i < maps.length; i++) {
         	maps[i].anchor.setTo(0.5, 0.5);
         	maps[i].x = game.width + 150;
@@ -77,12 +77,12 @@ Select.create = function() {
     
         game.add.tween(maps[prime].scale).to( { x: 0.5 , y: 0.5}, animationSpeed, null, true);
         
-        if (prime < 4) {
+        if (prime < 5) {
             game.add.tween(maps[prime+1]).to( { x: xprime}, animationSpeed, null, true);
             game.add.tween(maps[prime+1].scale).to( { x: 1 , y: 1}, animationSpeed, null, true);
         }
         
-        if (prime < 3) {
+        if (prime < 4) {
             maps[prime+2].x = game.width + 150;
             maps[prime+2].scale.setTo(0.5,0.5);
             game.add.tween(maps[prime+2]).to( { x: xright}, animationSpeed, null, true);
@@ -163,11 +163,18 @@ Select.create = function() {
                 	break;
            
 		case 4:
-                	name = "Cave";
-			background.loadTexture('caveBkg');
-			text.fill = "#111111";
-                	text.stroke = "#ffffff";
+                	name = "Lava";
+			background.loadTexture('lavaBkg');
+			text.fill = "#ff0000";
+                	text.stroke = "#000000";
                 	break;
+		
+		case 5:
+			name = "Lava - 2";
+			background.loadTexture('lavaBkg');
+			text.fill = "#ff0000";
+			text.stroke = "#000000";
+			break
         }
 	map = name;
         text.setText(name);

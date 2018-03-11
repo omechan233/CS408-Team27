@@ -42,10 +42,12 @@ Gameplay.preload = function() {
 	game.load.image('testtiles', 'assets/maps/testtiles.png');
 
 	// Tile Maps
-	game.load.tilemap('forest1', 'assets/maps/forest_1.json', null, Phaser.Tilemap.TILED_JSON);	
+	game.load.tilemap('forest1', 'assets/maps/forest_1.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('forest2', 'assets/maps/forest_2.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('desert1', 'assets/maps/desert_1.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.tilemap('desert2', 'assets/maps/desert_2.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('lava1', 'assets/maps/lava_1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('lava2', 'assets/maps/lava_2.json', null, Phaser.Tilemap.TILED_JSON);
 
 	// Tile Assets
 	game.load.image('Woods1', 'assets/maps/002-Woods01.png');
@@ -55,7 +57,11 @@ Gameplay.preload = function() {
 	game.load.image('Tree2', 'assets/maps/037-Tree02.png');
 	game.load.image('Road1', 'assets/maps/039-Road.png');
 	game.load.image('Desert1', 'assets/maps/006-Desert01.png');
-	
+	game.load.image('Cave1', 'assets/maps/043-Cave01.png');
+	game.load.image('Cave2', 'assets/maps/044-Cave02.png');
+	game.load.image('Lava1', 'assets/maps/062-CF_Lava01.png');
+	game.load.image('Ground1', 'assets/maps/065-CF_Ground02.png');
+	game.load.image('Ground2', 'assets/maps/067-CF_Ground04.png');	
 	this.state.paused = false;
 	this.state.gameover = false;
 }
@@ -149,6 +155,33 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
+			break;
+
+		case "Lava":
+			map = game.add.tilemap('lava1');
+			map.addTilesetImage('062-CF_Lava01', 'Lava1');
+			map.addTilesetImage('065-CF_Ground02', 'Ground2');
+			map.addTilesetImage('044-Cave02', 'Cave2');
+			map.createLayer("background_lava").resizeWorld();
+			map.createLayer("background_wall").resizeWorld();
+			map.createLayer("ground_level1").resizeWorld();
+			map.createLayer("ground_level2").resizeWorld();
+			map.createLayer("ground_level3").resizeWorld();
+			map.createLayer("items").resizeWorld();
+			blocked1 = map.createLayer("blocked");
+			map.createLayer("foreground").resizeWorld();
+			blocked1.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			this.collisionLayers.push(blocked1);	
+			break;
+		case "Lava - 2":
+			map = game.add.tilemap('lava2');
+			map.addTilesetImage('044-Cave02', 'Cave2');
+			map.createLayer("test").resizeWorld();
+			blocked1 = map.createLayer("block");
+			blocked1.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			this.collisionLayers.push(blocked1);
 			break;
 	}
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
