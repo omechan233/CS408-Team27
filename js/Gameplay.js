@@ -58,6 +58,8 @@ Gameplay.preload = function() {
 	game.load.image('CEWater1', 'assets/maps/056-CE_Water01.png');
 	game.load.image('Tree1', 'assets/maps/036-Tree01.png');
 	game.load.image('Tree2', 'assets/maps/037-Tree02.png');
+	game.load.image('Tree3', 'assets/maps/038-Tree03.png');
+	game.load.image('Forest1', 'assets/maps/003-Forest01.png');
 	game.load.image('Road1', 'assets/maps/039-Road.png');
 	game.load.image('Desert1', 'assets/maps/006-Desert01.png');
 	game.load.image('Cave1', 'assets/maps/043-Cave01.png');
@@ -67,6 +69,12 @@ Gameplay.preload = function() {
 	game.load.image('Ground2', 'assets/maps/067-CF_Ground04.png');	
 	this.state.paused = false;
 	this.state.gameover = false;
+
+	// Background Music
+	game.load.audio('forestMusic', ['assets/bgm/forest.mp3', 'assets/bgm/forest.ogg']);
+	game.load.audio('desertMusic', ['assets/bgm/desert.mp3', 'assets/bgm/desert.ogg']);
+	game.load.audio('caveMusic', ['assets/bgm/cave.mp3', 'assets/bgm/cave.ogg']);
+	game.load.audio('lavaMusic', ['assets/bgm/lava.mp3', 'assets/bgm/lava.ogg']);
 }
 
 var group;
@@ -104,13 +112,24 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
+			music = game.sound.play('forestMusic');
 			break;
 	
 		case "Forest - 2":
 			map = game.add.tilemap('forest2');
-			map.addTilesetImage('001-G_Water01', 'GWater1');
+			map.addTilesetImage('038-Tree03', 'Tree3');
+			map.addTilesetImage('003-Forest01', 'Forest1');
 			map.createLayer("background").resizeWorld();
-			map.createLayer("background2").resizeWorld();
+			map.createLayer("tree_lower").resizeWorld();
+			map.createLayer("tree").resizeWorld();
+			map.createLayer("items").resizeWorld();
+			blocked1 = map.createLayer("blocked");
+			map.createLayer("foreground").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
+			blocked1.resizeWorld();
+			game.physics.arcade.enable(blocked1);
+			this.collisionLayers.push(blocked1);
+			music = game.sound.play('forestMusic');
 			break;
 
 		case "Desert": 
@@ -135,11 +154,14 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
+			music = game.sound.play('desertMusic');
 			break;
 	
 		case "Desert - 2":
 			map = game.add.tilemap('desert2');
 			map.addTilesetImage('006-Desert01', 'Desert1');
+			map.addTilesetImage('015-Sa_Water01', 'SaWater1');
+			map.addTilesetImage('044-Cave02', 'Cave2');
 			map.createLayer("background_1").resizeWorld();
 			map.createLayer("background_2").resizeWorld();
 			blocked1 = map.createLayer("blocked_1");
@@ -158,6 +180,7 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
+			music = game.sound.play('desertMusic');
 			break;
 
 		case "Cave":
@@ -169,9 +192,11 @@ Gameplay.create = function() {
 			map.createLayer("items").resizeWorld();
 			blocked1 = map.createLayer("blocked");
 			map.createLayer("foreground").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
 			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
+			music = game.sound.play('caveMusic');
 			break;
 
 		case "Cave - 2":
@@ -185,10 +210,11 @@ Gameplay.create = function() {
 			map.createLayer("wall").resizeWorld();
 			map.createLayer("items").resizeWorld();
 			blocked1 = map.createLayer("blocked");
-			map.createLayer("foreground").resizeWorld();
+			map.setCollisionBetween(1, 10000, true, blocked1);
 			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
+			music = game.sound.play('caveMusic');
 			break;
 
 		case "Lava":
@@ -208,19 +234,30 @@ Gameplay.create = function() {
 			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);	
+			music = game.sound.play('lavaMusic');
 			break;
 
 		case "Lava - 2":
 			map = game.add.tilemap('lava2');
 			map.addTilesetImage('044-Cave02', 'Cave2');
-			map.createLayer("test").resizeWorld();
-			blocked1 = map.createLayer("block");
+			map.addTilesetImage('062-CF_Lava01', 'Lava1');
+			map.addTilesetImage('065-CF_Ground02', 'Ground2');
+			map.createLayer("lava").resizeWorld();
+			map.createLayer("shadow").resizeWorld();
+			map.createLayer("ground_lower").resizeWorld();
+			map.createLayer("ground").resizeWorld();
+			map.createLayer("ground_upper").resizeWorld();
+			map.createLayer("items").resizeWorld();
+			map.createLayer("items_upper").resizeWorld();
+			blocked1 = map.createLayer("blocked");
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
+			music = game.sound.play('lavaMusic');
 			break;
 	}
+
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
@@ -420,7 +457,7 @@ Gameplay.create = function() {
 	console.log(game.world.children);
 }
 
-Gameplay.update = function() {
+Gameplay.update = function() {	
 	for (var i = 0; i < this.collisionLayers.length; i++) {
 		game.physics.arcade.collide(player.sprite, this.collisionLayers[i]);
 	}
@@ -692,6 +729,7 @@ Gameplay.gameOver = function() {
 	quitBtn.x = game.camera.x + game.camera.width / 2 - quitBtn.width / 2;
 	quitBtn.onInputOver.add(Gameplay.quitOver, this);
 	quitBtn.onInputOut.add(Gameplay.quitOut, this);
+	music.stop();	
 }
 
 Gameplay.getLastPausedTime = function() {
@@ -699,6 +737,7 @@ Gameplay.getLastPausedTime = function() {
 }
 
 Gameplay.quitGame = function() {
+	music.stop();
 	game.state.start('Menu', true, false);
 }
 
@@ -738,5 +777,12 @@ Gameplay.render = function() {
 	game.debug.geom(player.tip, '#0000ff');
 	game.debug.geom(player.base, '#0000ff');
 	*/
-//	game.debug.body(player.sprite);	
+//	game.debug.body(player.sprit
+/*	game.debug.soundInfo(music, 32, 32);
+
+   	 if (music.isDecoding)
+   	 {
+   	     game.debug.text("Decoding MP3 ...", 32, 200);
+   	 }
+*/
 }
