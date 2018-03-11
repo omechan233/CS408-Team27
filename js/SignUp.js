@@ -74,10 +74,17 @@ function start() {
         // top 5 highscores
         highscores: [0, 0, 0, 0, 0]
     }
-    saveUserData(user);
-    
-    game.state.clearCurrentState();
-	game.state.start('Menu');
+
+    socket.emit('checkSignup', user);
+
+    socket.on('signupTrue', () => {
+        saveUserData(user);
+        game.state.clearCurrentState();
+        game.state.start('Menu');
+    });
+    socket.on('signupFalse', () => {
+        console.log("username taken");
+    });
 }
 
 function startOver() {

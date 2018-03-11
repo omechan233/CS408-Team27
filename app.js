@@ -43,6 +43,7 @@ function onSocketConnection(client) {
 
     client.on('saveData', onSaveData);
     client.on('onLogin', onLogin);
+    client.on('checkSignup', checkSignup);
     client.on('changePass', changePass);
     client.on('getLocalScores', getLocalScores);
     client.on('getGlobalScores', getGlobalScores);
@@ -85,14 +86,34 @@ function onLogin(user) {
         ).toArray(function(err, docs) {
             console.log(docs);
             console.log(user);
-            if (user.username == docs.username && 
-                passwordHash.verify(user.password, docs.password)) {
-                console.log("successful login");
-                currentClient.emit('loginTrue');
+            for (var i = 0; i < docs.length; i++) {
+                if (passwordHash.verify(user.password, docs[i].password)) {
+                    console.log("successful login");
+                    currentClient.emit('loginTrue');
+                    return;
+                }
+            }
+            console.log("invalid login");
+            currentClient.emit('loginFalse');
+        });
+    });
+}
+
+function checkSignup(user) {
+    currentClient = this;
+    MongoClient.connect(uri, function(err, db) {
+        if (err)
+            throw err;
+
+        db.collection("users").find(
+            {username: user.username}
+        ).toArray(function(err, docs) {
+            // username taken
+            if (docs.length > 0) {
+                currentClient.emit('signupFalse');
             }
             else {
-                console.log("invalid login");
-                currentClient.emit('loginFalse');
+                currentClient.emit('signupTrue');
             }
         });
     });
