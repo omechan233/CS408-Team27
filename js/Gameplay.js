@@ -94,20 +94,22 @@ Gameplay.create = function() {
 			map.addTilesetImage('036-Tree01', 'Tree1');
 			map.addTilesetImage('037-Tree02', 'Tree2');
 			map.addTilesetImage('039-Road', 'Road1');
-			map.createLayer("background_1").resizeWorld();
-			map.createLayer("background_2").resizeWorld();
-			map.createLayer("background_3").resizeWorld();
+
+			back1 = map.createLayer("background_1");
+			back2 = map.createLayer("background_2");
+			back3 = map.createLayer("background_3");
+
 			blocked1 = map.createLayer("blocked_1")
 			blocked2 = map.createLayer("blocked_2");
 			blocked3 = map.createLayer("blocked_3");
-			map.createLayer("foreground_1").resizeWorld();
-			map.createLayer("foreground_2").resizeWorld();
+
+			fore1 = map.createLayer("foreground_1");
+			fore2 = map.createLayer("foreground_2");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			map.setCollisionBetween(1, 10000, true, blocked2);
 			map.setCollisionBetween(1, 10000, true, blocked3);
-			blocked1.resizeWorld();
-			blocked2.resizeWorld();
-			blocked3.resizeWorld();
+
 			game.physics.arcade.enable(blocked1);
 			game.physics.arcade.enable(blocked2);
 			game.physics.arcade.enable(blocked3);
@@ -121,14 +123,18 @@ Gameplay.create = function() {
 			map = game.add.tilemap('forest2');
 			map.addTilesetImage('038-Tree03', 'Tree3');
 			map.addTilesetImage('003-Forest01', 'Forest1');
-			map.createLayer("background").resizeWorld();
-			map.createLayer("tree_lower").resizeWorld();
-			map.createLayer("tree").resizeWorld();
-			map.createLayer("items").resizeWorld();
+
+			map.createLayer("background");
+			map.createLayer("tree_lower");
+			map.createLayer("tree");
+			map.createLayer("items");
+
 			blocked1 = map.createLayer("blocked");
-			map.createLayer("foreground").resizeWorld();
+
+			map.createLayer("foreground");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
-			blocked1.resizeWorld();
+
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
 			music = game.sound.play('forestMusic');
@@ -138,18 +144,20 @@ Gameplay.create = function() {
 			map = game.add.tilemap('desert1');
 			map.addTilesetImage('006-Desert01', 'Desert1');
 			map.addTilesetImage('015-Sa_Water01', 'SaWater1');
-			map.createLayer("background_1").resizeWorld();
-			map.createLayer("background_2").resizeWorld();
+
+			map.createLayer("background_1");
+			map.createLayer("background_2");
+
 			blocked1 = map.createLayer("blocked_1");
 			blocked2 = map.createLayer("blocked_2");
 			blocked3 = map.createLayer("blocked_3");
-			map.createLayer("foreground").resizeWorld();
+
+			map.createLayer("foreground");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			map.setCollisionBetween(1, 10000, true, blocked2);
 			map.setCollisionBetween(1, 10000, true, blocked3);
-			blocked1.resizeWorld();
-			blocked2.resizeWorld();
-			blocked3.resizeWorld();
+
 			game.physics.arcade.enable(blocked1);
 			game.physics.arcade.enable(blocked2);
 			game.physics.arcade.enable(blocked3);
@@ -164,18 +172,20 @@ Gameplay.create = function() {
 			map.addTilesetImage('006-Desert01', 'Desert1');
 			map.addTilesetImage('015-Sa_Water01', 'SaWater1');
 			map.addTilesetImage('044-Cave02', 'Cave2');
-			map.createLayer("background_1").resizeWorld();
-			map.createLayer("background_2").resizeWorld();
+
+			map.createLayer("background_1");
+			map.createLayer("background_2");
+
 			blocked1 = map.createLayer("blocked_1");
 			blocked2 = map.createLayer("blocked_2");
 			blocked3 = map.createLayer("blocked_3");
-			map.createLayer("foreground").resizeWorld();
+
+			map.createLayer("foreground");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			map.setCollisionBetween(1, 10000, true, blocked2);
 			map.setCollisionBetween(1, 10000, true, blocked3);
-			blocked1.resizeWorld();
-			blocked2.resizeWorld();
-			blocked3.resizeWorld();
+
 			game.physics.arcade.enable(blocked1);
 			game.physics.arcade.enable(blocked2);
 			game.physics.arcade.enable(blocked3);
@@ -189,13 +199,16 @@ Gameplay.create = function() {
 			map = game.add.tilemap('cave1');
 			map.addTilesetImage('043-Cave01', 'Cave1');
 			map.addTilesetImage('056-CE_Water01', 'CEWater1');
-			map.createLayer("background").resizeWorld();
-			map.createLayer("wall").resizeWorld();
-			map.createLayer("items").resizeWorld();
+
+			map.createLayer("background");
+			map.createLayer("wall");
+			map.createLayer("items");
+
 			blocked1 = map.createLayer("blocked");
-			map.createLayer("foreground").resizeWorld();
+
+			map.createLayer("foreground");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
-			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
 			music = game.sound.play('caveMusic');
@@ -205,15 +218,18 @@ Gameplay.create = function() {
 			map = game.add.tilemap('cave2');
 			map.addTilesetImage('043-Cave01', 'Cave1');
 			map.addTilesetImage('056-CE_Water01', 'CEWater1');
-			map.createLayer("background").resizeWorld();
-			map.createLayer("water_1").resizeWorld();
-			map.createLayer("water_2").resizeWorld();
-			map.createLayer("water_3").resizeWorld();
-			map.createLayer("wall").resizeWorld();
-			map.createLayer("items").resizeWorld();
+
+			map.createLayer("background");
+			map.createLayer("water_1");
+			map.createLayer("water_2");
+			map.createLayer("water_3");
+			map.createLayer("wall");
+			map.createLayer("items");
+
 			blocked1 = map.createLayer("blocked");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
-			blocked1.resizeWorld();
+
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
 			music = game.sound.play('caveMusic');
@@ -224,16 +240,19 @@ Gameplay.create = function() {
 			map.addTilesetImage('062-CF_Lava01', 'Lava1');
 			map.addTilesetImage('065-CF_Ground02', 'Ground2');
 			map.addTilesetImage('044-Cave02', 'Cave2');
-			map.createLayer("background_lava").resizeWorld();
-			map.createLayer("background_wall").resizeWorld();
-			map.createLayer("ground_level1").resizeWorld();
-			map.createLayer("ground_level2").resizeWorld();
-			map.createLayer("ground_level3").resizeWorld();
-			map.createLayer("items").resizeWorld();
+
+			map.createLayer("background_lava");
+			map.createLayer("background_wall");
+			map.createLayer("ground_level1");
+			map.createLayer("ground_level2");
+			map.createLayer("ground_level3");
+			map.createLayer("items");
+
 			blocked1 = map.createLayer("blocked");
-			map.createLayer("foreground").resizeWorld();
+
+			map.createLayer("foreground");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
-			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);	
 			music = game.sound.play('lavaMusic');
@@ -244,20 +263,30 @@ Gameplay.create = function() {
 			map.addTilesetImage('044-Cave02', 'Cave2');
 			map.addTilesetImage('062-CF_Lava01', 'Lava1');
 			map.addTilesetImage('065-CF_Ground02', 'Ground2');
-			map.createLayer("lava").resizeWorld();
-			map.createLayer("shadow").resizeWorld();
-			map.createLayer("ground_lower").resizeWorld();
-			map.createLayer("ground").resizeWorld();
-			map.createLayer("ground_upper").resizeWorld();
-			map.createLayer("items").resizeWorld();
-			map.createLayer("items_upper").resizeWorld();
+
+			map.createLayer("lava");
+			map.createLayer("shadow");
+			map.createLayer("ground_lower");
+			map.createLayer("ground");
+			map.createLayer("ground_upper");
+			map.createLayer("items");
+			map.createLayer("items_upper");
+
 			blocked1 = map.createLayer("blocked");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
-			blocked1.resizeWorld();
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
 			music = game.sound.play('lavaMusic');
 			break;
+	}
+
+	for (i = 0; i < game.world.children.length; i++) {
+		child = game.world.getChildAt(i);
+		if (child instanceof Phaser.TilemapLayer) {
+			child.setScale(1.5, 1.5);
+			child.resizeWorld();
+		}
 	}
 
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -363,9 +392,8 @@ Gameplay.create = function() {
 		fontWeight: "bold",
 	};
 	scoreText = game.add.text(0, 0, "000000", scoreStyle);
-	scoreText.x = game.camera.width / 2;
+	scoreText.x = 10;
 	scoreText.fixedToCamera = true;
-	scoreText.anchor.setTo(0.5, 0);
 
 	healthBarBack = game.add.image(game.camera.width - 10, 10, 'hpbarback');
 	healthBarBack.fixedToCamera = true;
@@ -787,5 +815,6 @@ Gameplay.render = function() {
    	 {
    	     game.debug.text("Decoding MP3 ...", 32, 200);
    	 }
-*/
+	game.debug.body(player.sprite);	
+	*/
 }
