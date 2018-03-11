@@ -21,18 +21,20 @@ server.listen(process.env.PORT || 3000, function() {
     console.log("Server started on port " + server.address().port);
 });
 
-/* LOCAL DATABASE */
+/* MONGO DATABASE */
+var MongoClient = require('mongodb').MongoClient;
+var uri = "mongodb://ark:graybannan@ds023468.mlab.com:23468/main";
 
-// var mongoose = require('mongoose');
-
-// mongoose.connect('mongodb://localhost/main', function(err) {
+// MongoClient.connect(uri, function(err, db) {
 //     if (err)
 //         throw err;
 
-//     console.log("CONNECTED");
+//     db.collection("users").findOne({}, function(err, result) {
+//     if (err) throw err;
+//         console.log(result);
+//     db.close();
+//   });
 // });
-
-/* WRITE */
 
 io.sockets.on('connection', onSocketConnection);
 
@@ -43,6 +45,7 @@ function onSocketConnection(client) {
     client.on('onLogin', onLogin);
     client.on('changePass', changePass);
     client.on('getScores', getScores);
+    client.on('getGlobalScores', getGlobalScores);
     client.on('postScore', (score) => {
         console.log(score);
         postScore(score);
@@ -62,6 +65,7 @@ function onSaveData(user) {
             return console.log(err);
         }
     });
+    sendUserMongo(user);
 }
 
 function onLogin(user) {
@@ -90,6 +94,41 @@ function getScores() {
     this.emit('userScores', user.highscores);
 }
 
+function getGlobalScores() {
+    getGlobalScoresMongo(globalScoreCallback);
+}
+
+function globalScoreCallback(results) {
+    topScores = [];
+    // get the best 10 highscores from all users
+    for (var i = 0; i < results.length && i < 10; i++) {
+        user = results[i];
+        if (user.highscores.length > 0)
+            topScores.push(results[i].highscores[0]);
+    }
+    io.emit('globalScores', topScores);
+}
+
+function getGlobalScoresMongo(callback) {
+    MongoClient.connect(uri, function(err, db) {
+        if (err)
+            throw err;
+
+        db.collection("users").find({}).toArray(function(err, docs) {
+            callback(docs);
+        });
+    });
+}
+
+function sendUserMongo(user) {
+    MongoClient.connect(uri, function(err, db) {
+        if (err)
+            throw err;
+
+        db.collection("users").insert(user);
+    });
+}
+
 //remove lowest score and replace with new score
 function postScore(score) {
     var user = readUserData();
@@ -110,7 +149,8 @@ function postScore(score) {
             return console.log(err);
         }
     });
-    
+    // send score to cloud
+    sendUserMongo(user);
 }
 
 function readUserData() {

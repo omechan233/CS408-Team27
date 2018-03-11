@@ -1,6 +1,5 @@
 var HighScores = {};
 
-
 HighScores.preload = function() {
 	game.load.image('menu', 		'assets/menu/login.png');
 	game.load.image('menuActive', 	'assets/menu/login_select.png');
@@ -11,16 +10,22 @@ HighScores.create = function() {
 	scoreText = [];
 	topScoreY = 0;
 	bottomScoreY = 0;
-//	var topPos;
 
+	isGlobalScore = false;
 
-	menuBtn = game.add.button(10, 10, 'menu', goToMenu, this);
+	scoreTypeText = game.add.text(window.innerWidth / 2, 0, "Local Highscores");
+	scoreTypeText.anchor.setTo(0.5, 0);
+
+	menuBtn = game.add.button(10, 10, 'menu', this.goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
 	menuBtn.onInputOver.add(menuOver, this);
 	menuBtn.onInputOut.add(menuOut, this);
 
-	//scores = generateRandomScores(100);
-	getPlayerScores();
+	switchScoresBtn = game.add.button(10, 50, 'menu', this.switchScores, this);
+	switchScoresBtn.scale.setTo(1.2, 1.2);
+
+	this.getPlayerScores();
+
 	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -37,9 +42,11 @@ HighScores.update = function() {
 	}
 }
 
-function showScores(scores) {
-	console.log(scores);
+HighScores.showScores = function(scores) {
 	scores.sort(this.compareDescending);
+	for (var i = 0; i < scoreText.length; i++) {
+		scoreText[i].destroy();
+	}
 	for (var i = 0; i < scores.length; i++) {
 		var temp = game.add.text(game.world.centerX, i * 50 + 100, scores[i], style);
 		temp.anchor.setTo(0.5, 0.5);
@@ -48,18 +55,33 @@ function showScores(scores) {
 	bottomScoreY = scores.length * 50 + 100;
 }
 
-function getGlobalScores() {
-
+HighScores.getGlobalScores = function() {
+	socket = io.connect();
+	var glbScores;
+	socket.emit('getGlobalScores');
+	socket.on('globalScores', (globalScores) => {
+		this.showScores(globalScores);
+	});
 }
 
-function getPlayerScores() {
+HighScores.getPlayerScores = function() {
 	socket = io.connect();
 	var usrScores;
 	socket.emit('getScores');
 	socket.on('userScores', (highscores) => {
-		console.log(highscores);
-		showScores(highscores);
+		this.showScores(highscores);
 	});
+}
+
+HighScores.switchScores = function() {
+	isGlobalScore = !isGlobalScore;
+	if (isGlobalScore) {
+		scoreTypeText.setText("Global Highscores");
+		this.getGlobalScores();
+	} else {
+		scoreTypeText.setText("Local Highscores");
+		this.getPlayerScores();
+	}
 }
 
 HighScores.goToMenu = function() {

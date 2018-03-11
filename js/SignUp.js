@@ -64,10 +64,15 @@ function saveUserData(user) {
 function start() {
     var newUser = newUserInput.value;
     var newPassword = newPassInput.value;
+    // no empty fields for signup
+    if (!newUser || !newPassword)
+        return;
+
     var user = {
         username: newUser,
         password: newPassword,
-        highscores: ["1", "2", "3", "4", "5"]
+        // top 5 highscores
+        highscores: [0, 0, 0, 0, 0]
     }
     saveUserData(user);
     
