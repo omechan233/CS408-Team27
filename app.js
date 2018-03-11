@@ -84,8 +84,6 @@ function onLogin(user) {
         db.collection("users").find(
             {username: user.username}
         ).toArray(function(err, docs) {
-            console.log(docs);
-            console.log(user);
             for (var i = 0; i < docs.length; i++) {
                 if (passwordHash.verify(user.password, docs[i].password)) {
                     console.log("successful login");
@@ -136,10 +134,10 @@ function getGlobalScores() {
             // get the best 10 highscores from all users
             for (var i = 0; i < results.length; i++) {
                 user = results[i];
-                if (user.highscores.length > 0) {
+                for (var j = 0; j < user.highscores.length; j++) {
                     item = {
                         username: user.username,
-                        highscore: user.highscores[0]
+                        highscore: user.highscores[j]
                     }
                     topScores.push(item);
                 }
@@ -158,7 +156,13 @@ function sendUserMongo(user) {
         if (err)
             throw err;
 
-        db.collection("users").insert(user);
+        db.collection("users").update(
+            {username: user.username}, 
+            user,
+            {
+                upsert: true
+            }
+        );
     });
 }
 
@@ -185,9 +189,8 @@ function readUserData() {
 
 function changePass(newPassword) {
     var match = readUserData();
-    match.password = passwordHash.generate(newPassword);
-    console.log("successful password change");
-    onSaveData(JSON.stringify(match));
+    match.password = newPassword;
+    onSaveData(match);
 }
 
 
