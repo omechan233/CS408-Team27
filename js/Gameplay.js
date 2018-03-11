@@ -2,46 +2,46 @@ var Gameplay = {};
 
 Gameplay.preload = function() {
 	// Entities
-	game.load.spritesheet('player', 'assets/sprites/test_character.png', 32, 48, 16);
-	game.load.spritesheet('monster1', 'assets/sprites/monster-01.png', 32, 48, 16);
-	game.load.spritesheet('monster2', 'assets/sprites/monster-02.png', 80, 96, 16);
+	game.load.spritesheet('player', 	'assets/sprites/test_character.png', 32, 48, 16);
+	game.load.spritesheet('monster1', 	'assets/sprites/monster-01.png', 32, 48, 16);
+	game.load.spritesheet('monster2', 	'assets/sprites/monster-02.png', 80, 96, 16);
 
 	// HUD
-	game.load.image('hpbarback', 'assets/sprites/HP_Bar.PNG');
-	game.load.image('hpbarfront', 'assets/sprites/HP_Bar2.PNG');
-	game.load.image('hpText', 'assets/sprites/HP_Tx.png');
-	game.load.image('xpbarback', 'assets/sprites/Exp_Back.png');
-	game.load.image('xpbarfront', 'assets/sprites/Exp_Meter.png');
-	game.load.image('levelText', 'assets/sprites/Lv_Tx.PNG');
-	game.load.image('specReady', 'assets/sprites/special_ready.png');
+	game.load.image('hpbarback', 	'assets/sprites/HP_Bar.PNG');
+	game.load.image('hpbarfront', 	'assets/sprites/HP_Bar2.PNG');
+	game.load.image('hpText', 		'assets/sprites/HP_Tx.png');
+	game.load.image('xpbarback', 	'assets/sprites/Exp_Back.png');
+	game.load.image('xpbarfront', 	'assets/sprites/Exp_Meter.png');
+	game.load.image('levelText', 	'assets/sprites/Lv_Tx.PNG');
+	game.load.image('specReady', 	'assets/sprites/special_ready.png');
 
 	// Special Effects & Weapons
-	game.load.image('slashfx', 'assets/sprites/gray_bannan.png');
-	game.load.image('dead', 'assets/sprites/dead.png');
-	game.load.image('target', 'assets/sprites/target.png');
-	game.load.image('crowbar', 'assets/sprites/crowbar.png');
-	game.load.image('pipe', 'assets/sprites/pipe.png');
-	game.load.image('sword', 'assets/sprites/sword.png');	
-	game.load.image('heavySword', 'assets/sprites/sword_heavy.png');
-	game.load.image('lightSword', 'assets/sprites/sword_light.png');
-	game.load.image('lance', 'assets/sprites/lance.png');
-	game.load.image('m16', 'assets/sprites/m16.png');
-	game.load.image('deagle', 'assets/sprites/deagle.png');
+	game.load.image('slashfx', 	'assets/sprites/gray_bannan.png');
+	game.load.image('dead', 	'assets/sprites/dead.png');
+	game.load.image('target', 	'assets/sprites/target.png');
+	game.load.image('crowbar', 	'assets/sprites/crowbar.png');
+	game.load.image('pipe', 	'assets/sprites/pipe.png');
+	game.load.image('sword', 	'assets/sprites/sword.png');	
+	game.load.image('heavySword', 	'assets/sprites/sword_heavy.png');
+	game.load.image('lightSword', 	'assets/sprites/sword_light.png');
+	game.load.image('lance', 	'assets/sprites/lance.png');
+	game.load.image('m16', 		'assets/sprites/m16.png');
+	game.load.image('deagle', 	'assets/sprites/deagle.png');
 	game.load.image('crossbow', 'assets/sprites/crossbow.png');
-	game.load.image('arrow', 'assets/sprites/arrow.png');
-	game.load.image('bullet', 'assets/sprites/bullet.png');
-	game.load.image('stun', 'assets/sprites/attack-shock.png');
-	game.load.image('haunt', 'assets/sprites/attack-haunt.png');
+	game.load.image('arrow', 	'assets/sprites/arrow.png');
+	game.load.image('bullet', 	'assets/sprites/bullet.png');
+	game.load.image('stun', 	'assets/sprites/attack-shock.png');
+	game.load.image('haunt', 	'assets/sprites/attack-haunt.png');
 
 	// Game State
-	game.load.image('quit', 'assets/menu/exit.png');
-	game.load.image('quitActive', 'assets/menu/exit_select.png');
-	game.load.image('paused', 'assets/pause.png');
-	game.load.image('gameOver', 'assets/gameover.jpg');
+	game.load.image('quit', 		'assets/menu/exit.png');
+	game.load.image('quitActive', 	'assets/menu/exit_select.png');
+	game.load.image('paused', 		'assets/pause.png');
+	game.load.image('gameOver', 	'assets/gameover.jpg');
 	
 	// Map Assets
-	game.load.tilemap('test', 'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
-	game.load.image('testtiles', 'assets/maps/testtiles.png');
+	game.load.tilemap('test', 		'assets/maps/Test.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.image('testtiles', 	'assets/maps/testtiles.png');
 
 	// Tile Maps
 	game.load.tilemap('forest1', 'assets/maps/forest_1.json', null, Phaser.Tilemap.TILED_JSON);
@@ -54,21 +54,21 @@ Gameplay.preload = function() {
 	game.load.tilemap('lava2', 'assets/maps/lava_2.json', null, Phaser.Tilemap.TILED_JSON);
 
 	// Tile Assets
-	game.load.image('Woods1', 'assets/maps/002-Woods01.png');
-	game.load.image('GWater1', 'assets/maps/001-G_Water01.png');
+	game.load.image('Woods1', 	'assets/maps/002-Woods01.png');
+	game.load.image('GWater1', 	'assets/maps/001-G_Water01.png');
 	game.load.image('SaWater1', 'assets/maps/015-Sa_Water01.png');
 	game.load.image('CEWater1', 'assets/maps/056-CE_Water01.png');
-	game.load.image('Tree1', 'assets/maps/036-Tree01.png');
-	game.load.image('Tree2', 'assets/maps/037-Tree02.png');
-	game.load.image('Tree3', 'assets/maps/038-Tree03.png');
-	game.load.image('Forest1', 'assets/maps/003-Forest01.png');
-	game.load.image('Road1', 'assets/maps/039-Road.png');
-	game.load.image('Desert1', 'assets/maps/006-Desert01.png');
-	game.load.image('Cave1', 'assets/maps/043-Cave01.png');
-	game.load.image('Cave2', 'assets/maps/044-Cave02.png');
-	game.load.image('Lava1', 'assets/maps/062-CF_Lava01.png');
-	game.load.image('Ground1', 'assets/maps/065-CF_Ground02.png');
-	game.load.image('Ground2', 'assets/maps/067-CF_Ground04.png');	
+	game.load.image('Tree1', 	'assets/maps/036-Tree01.png');
+	game.load.image('Tree2', 	'assets/maps/037-Tree02.png');
+	game.load.image('Tree3', 	'assets/maps/038-Tree03.png');
+	game.load.image('Forest1', 	'assets/maps/003-Forest01.png');
+	game.load.image('Road1', 	'assets/maps/039-Road.png');
+	game.load.image('Desert1', 	'assets/maps/006-Desert01.png');
+	game.load.image('Cave1', 	'assets/maps/043-Cave01.png');
+	game.load.image('Cave2', 	'assets/maps/044-Cave02.png');
+	game.load.image('Lava1', 	'assets/maps/062-CF_Lava01.png');
+	game.load.image('Ground1', 	'assets/maps/065-CF_Ground02.png');
+	game.load.image('Ground2', 	'assets/maps/067-CF_Ground04.png');	
 	this.state.paused = false;
 	this.state.gameover = false;
 
@@ -483,8 +483,6 @@ Gameplay.create = function() {
 			game.world.bringToTop(child);
 		}
 	}
-
-	console.log(game.world.children);
 }
 
 Gameplay.update = function() {	
@@ -504,14 +502,8 @@ Gameplay.update = function() {
 		ammoTextRes.setText(player.ammoReserve);
 		specReady.alpha = player.canSpecial ? 1.0 : 0.2;
         
-        if (game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this)) {
-//            group.disabled = false;
-//            var c = setInterval(function() {
-//                group.disabled = true;
-//                clearInterval(c);
-//            }, 15000);
-        }
-		
+        game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this)) {
+
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
 			if (player.isAttacking) {

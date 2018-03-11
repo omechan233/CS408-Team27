@@ -6,7 +6,6 @@ HighScores.preload = function() {
 }
 
 HighScores.create = function() {
-
 	scoreText = [];
 	userText = [];
 	topScoreY = 0;

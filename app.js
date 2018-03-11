@@ -25,17 +25,6 @@ server.listen(process.env.PORT || 3000, function() {
 var MongoClient = require('mongodb').MongoClient;
 var uri = "mongodb://ark:graybannan@ds023468.mlab.com:23468/main";
 
-// MongoClient.connect(uri, function(err, db) {
-//     if (err)
-//         throw err;
-
-//     db.collection("users").findOne({}, function(err, result) {
-//     if (err) throw err;
-//         console.log(result);
-//     db.close();
-//   });
-// });
-
 io.sockets.on('connection', onSocketConnection);
 
 function onSocketConnection(client) {
@@ -179,7 +168,6 @@ function postScore(score) {
             return console.log(err);
         }
     });
-    // send score to cloud
     sendUserMongo(user);
 }
 

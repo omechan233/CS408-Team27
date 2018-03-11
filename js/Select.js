@@ -3,17 +3,17 @@ var text;
 var map = "Forest";
 
 Select.preload = function() {
-	game.load.image('forest', 'assets/maps/preview_anicent_forest.png');
-	game.load.image('desert', 'assets/maps/preview_great_desert.png');
-	game.load.image('cave', 'assets/maps/preview_underground_cave.png');
-	game.load.image('lava', 'assets/maps/preview_lava_highland.png');
-	game.load.image('forestBkg', 'assets/maps/preview_background_ancient_forest.jpg');
-	game.load.image('desertBkg', 'assets/maps/preview_background_great_desert.jpg');
-	game.load.image('caveBkg', 'assets/maps/preview_background_underground_cave.jpg');
-	game.load.image('lavaBkg', 'assets/maps/preview_background_lava_highland.jpg');
-	game.load.image('startInactive', 'assets/menu/start.png');
-	game.load.image('menuInactive', 'assets/menu/exit.png');
-	game.load.image('menuActive', 'assets/menu/exit_select.png');
+	game.load.image('forest',          'assets/maps/preview_anicent_forest.png');
+	game.load.image('desert',          'assets/maps/preview_great_desert.png');
+	game.load.image('cave',            'assets/maps/preview_underground_cave.png');
+	game.load.image('lava',            'assets/maps/preview_lava_highland.png');
+	game.load.image('forestBkg',       'assets/maps/preview_background_ancient_forest.jpg');
+	game.load.image('desertBkg',       'assets/maps/preview_background_great_desert.jpg');
+	game.load.image('caveBkg',         'assets/maps/preview_background_underground_cave.jpg');
+	game.load.image('lavaBkg',         'assets/maps/preview_background_lava_highland.jpg');
+	game.load.image('startInactive',   'assets/menu/start.png');
+	game.load.image('menuInactive',    'assets/menu/exit.png');
+	game.load.image('menuActive',      'assets/menu/exit_select.png');
 	game.add.plugin(PhaserInput.Plugin);
 }
 
