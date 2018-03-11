@@ -1,11 +1,13 @@
-var game = new Phaser.Game(window.innerWidth - 20, window.innerHeight - 20, 
-    Phaser.AUTO, 
+var game = new Phaser.Game(800, 600, 
+    Phaser.GRAPHICS, 
     document.getElementById('app'), 
     this, false, false);
 
 function preload() {
 	game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
-	game.scale.setUserScale(1, 1);
+	game.scale.setUserScale(1.5, 1.5);
+    game.renderer.renderSession.roundPixels = true;
+    Phaser.Canvas.setImageRenderingCrisp(game.canvas);
     
     game.physics.startSystem(Phaser.Physics.ARCADE);
 

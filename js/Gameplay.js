@@ -81,20 +81,41 @@ Gameplay.create = function() {
 			map.addTilesetImage('036-Tree01', 'Tree1');
 			map.addTilesetImage('037-Tree02', 'Tree2');
 			map.addTilesetImage('039-Road', 'Road1');
-			map.createLayer("background_1").resizeWorld();
-			map.createLayer("background_2").resizeWorld();
-			map.createLayer("background_3").resizeWorld();
+
+			back1 = map.createLayer("background_1");
+			back2 = map.createLayer("background_2");
+			back3 = map.createLayer("background_3");
+
 			blocked1 = map.createLayer("blocked_1")
 			blocked2 = map.createLayer("blocked_2");
 			blocked3 = map.createLayer("blocked_3");
-			map.createLayer("foreground_1").resizeWorld();
-			map.createLayer("foreground_2").resizeWorld();
+
+			fore1 = map.createLayer("foreground_1");
+			fore2 = map.createLayer("foreground_2");
+
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			map.setCollisionBetween(1, 10000, true, blocked2);
 			map.setCollisionBetween(1, 10000, true, blocked3);
+
+			back1.resizeWorld();
+			back2.resizeWorld();
+			back3.resizeWorld();
+			back1.renderSettings.enableScrollDelta = true;
+			back2.renderSettings.enableScrollDelta = true;
+			back3.renderSettings.enableScrollDelta = true;
+
 			blocked1.resizeWorld();
 			blocked2.resizeWorld();
 			blocked3.resizeWorld();
+			blocked1.renderSettings.enableScrollDelta = true;
+			blocked2.renderSettings.enableScrollDelta = true;
+			blocked3.renderSettings.enableScrollDelta = true;
+
+			fore1.resizeWorld();
+			fore2.resizeWorld();
+			fore1.renderSettings.enableScrollDelta = true;
+			fore2.renderSettings.enableScrollDelta = true;
+
 			game.physics.arcade.enable(blocked1);
 			game.physics.arcade.enable(blocked2);
 			game.physics.arcade.enable(blocked3);
@@ -290,9 +311,8 @@ Gameplay.create = function() {
 		fontWeight: "bold",
 	};
 	scoreText = game.add.text(0, 0, "000000", scoreStyle);
-	scoreText.x = game.camera.width / 2;
+	scoreText.x = 10;
 	scoreText.fixedToCamera = true;
-	scoreText.anchor.setTo(0.5, 0);
 
 	healthBarBack = game.add.image(game.camera.width - 10, 10, 'hpbarback');
 	healthBarBack.fixedToCamera = true;
@@ -704,5 +724,5 @@ Gameplay.render = function() {
 	game.debug.geom(player.tip, '#0000ff');
 	game.debug.geom(player.base, '#0000ff');
 	*/
-//	game.debug.body(player.sprite);	
+	game.debug.body(player.sprite);	
 }

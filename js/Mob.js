@@ -19,7 +19,7 @@ Mob = function(game, spriteKey, baseHealth) {
 
 	this.sprite = game.add.sprite(this.x, this.y, spriteKey);
 	this.sprite.anchor.setTo(0.5, 0.5);
-	this.sprite.scale.setTo(2, 2);
+	this.sprite.scale.setTo(1.7, 1.7);
 
 	// hp bar
 	this.healthBarBack = this.sprite.addChild(
