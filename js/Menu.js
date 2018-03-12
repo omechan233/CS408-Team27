@@ -96,7 +96,6 @@ Menu.startGame = function() {
 }
 
 Menu.viewScore = function() {
-	game.stage.backgroundColor = '#00ff00'
 	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('HighScores');
@@ -109,7 +108,6 @@ Menu.logOut = function() {
 }
 
 Menu.viewProfile = function() {
-	game.stage.backgroundColor = '#0000ff';
 	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('Account');
