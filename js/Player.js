@@ -5,7 +5,7 @@
  *
  */
 
-Player = function(game, weaponAsset) {
+Player = function(game, spawnPoint, weaponAsset) {
 
 	this.game = game;
 
@@ -69,8 +69,8 @@ Player = function(game, weaponAsset) {
 
 	// Player Sprite
 	this.sprite = game.add.sprite(
-		game.camera.x + game.camera.width / 2,
-		game.camera.y + game.camera.height / 2,
+		spawnPoint.x,
+		spawnPoint.y,
 		'player'
 	);
 	this.sprite.anchor.setTo(0.5, 0.5);
