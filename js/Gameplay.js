@@ -304,6 +304,13 @@ Gameplay.create = function() {
 		x: playerSpawnPoints[randPointIndex].x * layerScale,
 		y: playerSpawnPoints[randPointIndex].y * layerScale
 	}
+    
+    console.log(powerupSpawnPoints);
+    randTreasureIndex = rnd.integerInRange(0, powerupSpawnPoints.length - 1);
+    treasureSpawnPoint = {
+        x: powerupSpawnPoints[randTreasureIndex].x * layerScale,
+        y: powerupSpawnPoints[randTreasureIndex].y * layerScale
+    }
 
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
@@ -407,6 +414,10 @@ Gameplay.create = function() {
 	scoreText = game.add.text(0, 0, "000000", scoreStyle);
 	scoreText.x = 10;
 	scoreText.fixedToCamera = true;
+    
+    powerupText = game.add.text(10, game.camera.height, "", scoreStyle);
+	powerupText.fixedToCamera = true;
+    powerupText.anchor.setTo(0, 1);
 
 	healthBarBack = game.add.image(game.camera.width - 10, 10, 'hpbarback');
 	healthBarBack.fixedToCamera = true;
@@ -455,7 +466,7 @@ Gameplay.create = function() {
 	specReady.fixedToCamera = true;
 	specReady.scale.setTo(1.5, 1.5);
 	specReady.anchor.setTo(1, 1);
-
+    
 	// HUD Group
 	hudGroup = game.add.group();
 	hudGroup.add(scoreText);
@@ -469,6 +480,7 @@ Gameplay.create = function() {
 	hudGroup.add(ammoTextCap);
 	hudGroup.add(ammoTextRes);
 	hudGroup.add(specReady);
+    hudGroup.add(powerupText);
 
 	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
 	target.scale.setTo(2, 2);
@@ -487,9 +499,7 @@ Gameplay.create = function() {
             treasureAmt = 3;
             break;
     }
-//    game.add.sprite(game.rnd.integerInRange(0, game.world.width), game.rnd.integerInRange(0, game.world.height), 'player');
-//    game.add.sprite(game.camera.x + game.camera.width / 2 + 100 + (i * 20), game.camera.y + game.camera.height / 2 + 100, 'player');
-    var c = group.create(game.camera.x + game.camera.width / 2 + 120, game.camera.y + game.camera.height / 2 + 100, 'powerup', 10);
+    var c = group.create(treasureSpawnPoint.x, treasureSpawnPoint.y, 'powerup', 10);
     
 	score = 0;
 	pauseElapsedTime = 0;
@@ -602,86 +612,82 @@ Gameplay.processHandler = function(player, item) {
 
 Gameplay.collisionHandler = function (play, item) {
     if (treasureCount < treasureAmt) {
-        text = game.add.text(game.camera.width / 2 + 200, 100, '', {
-                font: "65px Arial",
-                fill: "#000000",
-                align: "center"
-        });
-
-        text.anchor.setTo(1, 0);
-        text.fixedToCamera = true;
         var powerUp = game.rnd.integerInRange(0, 5);
         switch(powerUp) {
             // Speed boost
             case 0:
-                player.speedModifier = 2.00;
-                text.setText("Speed Boost");
-                var c = setInterval(function() {
+                player.speedModifier = 1.50;
+                powerupText.setText("Speed Boost");
+                var c = setTimeout(function() {
                     player.speedModifier = 1.00;
-                    text.setText("");
-                    clearInterval(c);
+                    powerupText.setText("");
                 }, 15000);
                 break;
 
             // Extra health
             case 1:
                 player.health += 50;
-                text.setText("Extra Health");
-                var c = setInterval(function() {
-                    text.setText("");
-                    clearInterval(c);
+                powerupText.setText("Extra Health");
+                var c = setTimeout(function() {
+                    powerupText.setText("");
                 }, 5000);
                 break;
 
             // Increased damage
             case 2:
                 player.damageModifier = 1.5;
-                text.setText("Extra Damage");
-                var c = setInterval(function() {
+                powerupText.setText("Extra Damage");
+                var c = setTimeout(function() {
                     player.damageModifier = 1.00;
-                    text.setText("");
-                    clearInterval(c);
+                    powerupText.setText("");
                 }, 15000);
                 break;
 
             // Decreased reload speed
             case 3:
                 player.reloadTime = 250;
-                text.setText("Faster Reload");
-                var c = setInterval(function() {
+                powerupText.setText("Faster Reload");
+                var c = setTimeout(function() {
                     player.reloadTime = 500;
-                    text.setText("");
-                    clearInterval(c);
+                    powerupText.setText("");
                 }, 15000);
                 break;
 
             // Infinite ammo
             case 4:
                 player.reloadTime = 0;
-                text.setText("Infinte Ammo");
-                var c = setInterval(function() {
+                powerupText.setText("Infinite Ammo");
+                var c = setTimeout(function() {
                     player.reloadTime = 500;
-                    text.setText("");
-                    clearInterval(c);
+                    powerupText.setText("");
                 }, 7500);
                 break;
 
             // Invincibility
             case 5:
                 player.isInvincible = true;
-                text.setText("Invincible");
-                var c = setInterval(function() {
+                powerupText.setText("Invincibility");
+                var c = setTimeout(function() {
                     player.isInvincible = false;
-                    text.setText("");
-                    clearInterval(c);
+                    powerupText.setText("");
                 }, 5000);
                 break;
         }
         treasureCount++;
         item.kill();
-        var i = setInterval(function() {
+        var i = setTimeout(function() {
+            powerupSpawnPoints
+            randResetPoint = rnd.integerInRange(0, powerupSpawnPoints.length - 1);
+            resetPoint = {
+                x: powerupSpawnPoints[randResetPoint].x * layerScale,
+                y: powerupSpawnPoints[randResetPoint].y * layerScale
+            }
+//            console.log("Random coordinates" + resetPoint);
+            item.x = resetPoint.x;
+            item.y = resetPoint.y;
             item.reset(item.x, item.y);
-        }, 10000);
+        }, 20000);
+//        clearTimeout(i);
     }
     if (treasureCount == treasureAmt) {
         item.destroy();
