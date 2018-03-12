@@ -13,6 +13,10 @@ Account.preload = function() {
 }
 
 Account.create = function() {
+    background = game.add.sprite(0, 0, 'background', this);
+    background.width = game.camera.width;
+	background.height = game.camera.height;
+    
     input = game.add.button(game.world.centerX - 75, game.world.centerY + 225, 'cpInactive', changePassword, this);
     input.onInputOver.add(cpOver, this);
     input.onInputOut.add(cpOut, this);

@@ -1,7 +1,8 @@
 var HighScores = {};
 
 HighScores.preload = function() {
-	game.load.image('menu', 		'assets/menu/exit.png');
+	game.load.image('background', 		'assets/background.png');
+    game.load.image('menu', 		'assets/menu/exit.png');
 	game.load.image('menuActive', 	'assets/menu/exit_select.png');
 	game.load.image('local',		'assets/menu/local.png');
 	game.load.image('localActive',	'assets/menu/local_select.png');
@@ -10,6 +11,10 @@ HighScores.preload = function() {
 }
 
 HighScores.create = function() {
+    background = game.add.sprite(0, 0, 'background', this);
+    background.width = game.camera.width;
+	background.height = game.camera.height;
+    
 	scoreText = [];
 	userText = [];
 	topScoreY = 0;
@@ -37,7 +42,7 @@ HighScores.create = function() {
 
 	this.getLocalScores();
 
-	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
+	style = { font: "Lucida Console", fontSize: "32px", fill: "#FFFFFF", wordWrap: false, fontWeight: "bold" };
 }
 
 HighScores.update = function() {

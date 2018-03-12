@@ -2,6 +2,7 @@ var Menu = {};
 
 Menu.preload = function() {
 	game.load.image('background', 		'assets/background.png');
+    game.load.spritesheet('title', 'assets/title_text.png');
 	game.load.image('start', 			'assets/menu/start.png');
 	game.load.image('startActive', 		'assets/menu/start_select.png');
 	game.load.image('account', 			'assets/menu/account.png');
@@ -23,6 +24,10 @@ Menu.create = function() {
 	background.height = game.camera.height;
 	game.world.width = game.camera.width;
 	game.world.height = game.camera.height;
+    
+    titleSprite = game.add.sprite(game.world.centerX, game.world.centerY - 100, 'title');
+    
+    titleSprite.anchor.setTo(0.5 , 0.5);
 
 	game.stage.backgroundColor = '#2a93c7';
 	startBtn = game.add.button(0, 0, 'start', this.startGame, this);
@@ -91,7 +96,6 @@ Menu.startGame = function() {
 }
 
 Menu.viewScore = function() {
-	game.stage.backgroundColor = '#00ff00'
 	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('HighScores');
@@ -104,7 +108,6 @@ Menu.logOut = function() {
 }
 
 Menu.viewProfile = function() {
-	game.stage.backgroundColor = '#0000ff';
 	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('Account');
