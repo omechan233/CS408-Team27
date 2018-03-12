@@ -3,6 +3,10 @@ var HighScores = {};
 HighScores.preload = function() {
 	game.load.image('menu', 		'assets/menu/exit.png');
 	game.load.image('menuActive', 	'assets/menu/exit_select.png');
+	game.load.image('local',		'assets/menu/local.png');
+	game.load.image('localActive',	'assets/menu/local_select.png');
+	game.load.image('global',		'assets/menu/global.png');
+	game.load.image('globalActive',	'assets/menu/global_select.png');
 }
 
 HighScores.create = function() {
@@ -18,28 +22,26 @@ HighScores.create = function() {
 
 	menuBtn = game.add.button(10, 10, 'menu', this.goToMenu, this);
 	menuBtn.scale.setTo(1.2, 1.2);
-	menuBtn.onInputOver.add(menuOver, this);
-	menuBtn.onInputOut.add(menuOut, this);
+	menuBtn.onInputOver.add(() => {menuBtn.loadTexture('menuActive')}, this);
+	menuBtn.onInputOut.add(() => {menuBtn.loadTexture('menu')}, this);
 
-	switchScoresBtn = game.add.button(10, 50, 'menu', this.switchScores, this);
-	switchScoresBtn.scale.setTo(1.2, 1.2);
+	localScoresBtn = game.add.button(10, 70, 'local', this.getLocalScores, this);
+	localScoresBtn.scale.setTo(1.2, 1.2);
+	localScoresBtn.onInputOver.add(() => {localScoresBtn.loadTexture('localActive')}, this);
+	localScoresBtn.onInputOut.add(() => {localScoresBtn.loadTexture('local')}, this);
+
+	globalScoresBtn = game.add.button(10, 130, 'global', this.getGlobalScores, this);
+	globalScoresBtn.scale.setTo(1.2, 1.2);
+	globalScoresBtn.onInputOver.add(() => {globalScoresBtn.loadTexture('globalActive')}, this);
+	globalScoresBtn.onInputOut.add(() => {globalScoresBtn.loadTexture('global')}, this);
 
 	this.getLocalScores();
 
 	style = { font: "Lucida Console", fontSize: "32px", fill: "#000000", wordWrap: false, fontWeight: "bold" };
-	upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-	downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-	topPos = 100;
-	topScoreY = topPos;
 }
 
 HighScores.update = function() {
-	if (upKey.isDown) {
-		this.scrollUp();
-	}
-	else if (downKey.isDown) {
-		this.scrollDown();
-	}
+
 }
 
 HighScores.showLocalScores = function(scores) {
@@ -79,6 +81,7 @@ HighScores.showGlobalScores = function(scores) {
 }
 
 HighScores.getGlobalScores = function() {
+	scoreTypeText.setText("Global Highscores");
 	socket = io.connect();
 	var glbScores;
 	socket.emit('getGlobalScores');
@@ -88,6 +91,7 @@ HighScores.getGlobalScores = function() {
 }
 
 HighScores.getLocalScores = function() {
+	scoreTypeText.setText("Local Highscores");
 	socket = io.connect();
 	var usrScores;
 	socket.emit('getLocalScores');
@@ -96,30 +100,12 @@ HighScores.getLocalScores = function() {
 	});
 }
 
-HighScores.switchScores = function() {
-	isGlobalScore = !isGlobalScore;
-	if (isGlobalScore) {
-		scoreTypeText.setText("Global Highscores");
-		this.getGlobalScores();
-	} else {
-		scoreTypeText.setText("Local Highscores");
-		this.getLocalScores();
-	}
-}
-
 HighScores.goToMenu = function() {
 	game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 
-HighScores.menuOver = function() {
-	menuBtn.loadTexture('menuActive');
-}
-
-HighScores.menuOut = function() {
-	menuBtn.loadTexture('menu');
-}
-
+/* Unused functions below */
 HighScores.scrollDown = function() {
 	if (bottomScoreY + scoreText[scoreText.length - 1].height > game.camera.height - 10) {
 		bottomScoreY -= 8;
