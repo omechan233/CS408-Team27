@@ -284,19 +284,31 @@ Gameplay.create = function() {
 			break;
 	}
 
+	// process layers
+	layerScale = 1.5;
 	for (i = 0; i < game.world.children.length; i++) {
 		child = game.world.getChildAt(i);
 		if (child instanceof Phaser.TilemapLayer) {
-			child.setScale(1.5, 1.5);
+			child.setScale(layerScale, layerScale);
 			child.resizeWorld();
 		}
+	}
+
+	// process object groups
+	playerSpawnPoints = map.objects.player;
+	powerupSpawnPoints = map.objects.powerup;
+
+	// randomly select player spawn point
+	randPointIndex = rnd.integerInRange(0, playerSpawnPoints.length - 1);
+	playerSpawnPoint = {
+		x: playerSpawnPoints[randPointIndex].x * layerScale,
+		y: playerSpawnPoints[randPointIndex].y * layerScale
 	}
 
 	upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 	downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-	tempKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	weaponKey = game.input.keyboard.addKey(Phaser.Keyboard.Q);
 	style = { font: "Lucida Console", fontSize: "64px", fill: "#ffffff", wordWrap: false, align: "center", fontWeight: "bold" };
 
@@ -347,7 +359,16 @@ Gameplay.create = function() {
 		}	
 	});
 
-	// M or N to spawn a mob
+	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+	pauseKey.onDown.add(() => {
+		if (!this.state.gameover) {
+			this.pauseUnpause();
+		}
+	});
+
+	player = new Player(this, playerSpawnPoint, 'sword');
+
+	/* DEV TOOLS */
 	spawnGhost = game.input.keyboard.addKey(Phaser.Keyboard.M);
 	spawnGhost.onDown.add(() => {
 		mobs.push(new MobGhost(this));	
@@ -356,31 +377,20 @@ Gameplay.create = function() {
 	spawnBigGuy.onDown.add(() => {
 		mobs.push(new MobBigGuy(this));
 	})
-
-	tempKey.onDown.add(() => {
-		mobProjectiles.push(new Projectile(this, 500, 500, -100, -100, 0, 10, 'login'));	
-	});
-
-	pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-	pauseKey.onDown.add(() => {
-		if (!this.state.gameover) {
-			this.pauseUnpause();
-		}
-	});
 	killKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
-	superSpawnKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
-
 	killKey.onDown.add(() => {
 		player.health = 0;	
 	});
-
+	superSpawnKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
 	superSpawnKey.onDown.add(() => {
 		for (var i = 0; i < 100; i++) {
 			mobs.push(new MobGhost(this));	
 		}
 	});
-
-	player = new Player(this, 'sword');
+	showPlayerPos = game.input.keyboard.addKey(Phaser.Keyboard.P);
+	showPlayerPos.onDown.add(() => {
+		console.log(player.sprite.x, player.sprite.y);
+	});
 
 	game.input.mouse.capture = true;
 	
