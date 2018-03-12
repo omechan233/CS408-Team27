@@ -39,3 +39,25 @@ npm install
 ## Assets / Tools
 
 ##### [Tiled](http://www.mapeditor.org)
+
+## Controls
+
+    WASD / Arrow Keys: movement
+    Mouse: aim
+    Mouse1: basic attack
+    Mouse2: special attack
+    Q: switch weapons
+    ESC: pause/unpause
+
+### Dev Tools
+
+    0-9: spawn specific mob (10 types)
+    Spacebar: spawn random mob
+    Backspace: spawn 100 random mobs
+    P: display player position in console
+    X: kill player
+
+## Notes
+
+- mongodb must be below version 3.0 due to mLab database
+- restarting a game session may result in pause bug

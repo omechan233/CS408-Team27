@@ -438,7 +438,7 @@ Gameplay.create = function() {
 	superSpawnKey = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
 	superSpawnKey.onDown.add(() => {
 		for (var i = 0; i < 100; i++) {
-			mobs.push(new MobGhost(this));	
+			mobManager.spawnRandomMob();
 		}
 	});
 	showPlayerPos = game.input.keyboard.addKey(Phaser.Keyboard.P);
