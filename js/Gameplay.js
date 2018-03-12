@@ -127,7 +127,7 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
-			music = game.sound.play('forestMusic');
+			music = game.sound.play('forestMusic', 1, true);
 			break;
 	
 		case "Forest - 2":
@@ -148,7 +148,7 @@ Gameplay.create = function() {
 
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
-			music = game.sound.play('forestMusic');
+			music = game.sound.play('forestMusic', 1, true);
 			break;
 
 		case "Desert": 
@@ -175,7 +175,7 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
-			music = game.sound.play('desertMusic');
+			music = game.sound.play('desertMusic', 1, true);
 			break;
 	
 		case "Desert - 2":
@@ -203,7 +203,7 @@ Gameplay.create = function() {
 			this.collisionLayers.push(blocked1);
 			this.collisionLayers.push(blocked2);
 			this.collisionLayers.push(blocked3);
-			music = game.sound.play('desertMusic');
+			music = game.sound.play('desertMusic', 1, true);
 			break;
 
 		case "Cave":
@@ -222,7 +222,7 @@ Gameplay.create = function() {
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
-			music = game.sound.play('caveMusic');
+			music = game.sound.play('caveMusic', 1, true);
 			break;
 
 		case "Cave - 2":
@@ -243,7 +243,7 @@ Gameplay.create = function() {
 
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
-			music = game.sound.play('caveMusic');
+			music = game.sound.play('caveMusic', 1, true);
 			break;
 
 		case "Lava":
@@ -266,7 +266,7 @@ Gameplay.create = function() {
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);	
-			music = game.sound.play('lavaMusic');
+			music = game.sound.play('lavaMusic', 1, true);
 			break;
 
 		case "Lava - 2":
@@ -288,7 +288,7 @@ Gameplay.create = function() {
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			game.physics.arcade.enable(blocked1);
 			this.collisionLayers.push(blocked1);
-			music = game.sound.play('lavaMusic');
+			music = game.sound.play('lavaMusic', 1, true);
 			break;
 	}
 
