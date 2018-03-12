@@ -377,51 +377,51 @@ Gameplay.create = function() {
 	player = new Player(this, playerSpawnPoint, 'sword');
 
 	/* DEV TOOLS */
-	mobManager = new MobManager();
+	mobManager = new MobManager(this);
 
 	spawnRandMob = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	spawnRandMob.onDown.add(() => {
-		mobs.push(mobManager.spawnRandomMob());
+		mobManager.spawnRandomMob();
 	});
 	spawnMob1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
 	spawnMob1.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(1));
+		mobManager.spawnMob(1);
 	});
 	spawnMob2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
 	spawnMob2.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(2));
+		mobManager.spawnMob(2);
 	});
 	spawnMob3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
 	spawnMob3.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(3));
+		mobManager.spawnMob(3);
 	});
 	spawnMob4 = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
 	spawnMob4.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(4));
+		mobManager.spawnMob(4);
 	});
 	spawnMob5 = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
 	spawnMob5.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(5));
+		mobManager.spawnMob(5);
 	});
 	spawnMob6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
 	spawnMob6.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(6));
+		mobManager.spawnMob(6);
 	});
 	spawnMob7 = game.input.keyboard.addKey(Phaser.Keyboard.SEVEN);
 	spawnMob7.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(7));
+		mobManager.spawnMob(7);
 	});
 	spawnMob8 = game.input.keyboard.addKey(Phaser.Keyboard.EIGHT);
 	spawnMob8.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(8));
+		mobManager.spawnMob(8);
 	});
 	spawnMob9 = game.input.keyboard.addKey(Phaser.Keyboard.NINE);
 	spawnMob9.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(9));
+		mobManager.spawnMob(9);
 	});
 	spawnMob10 = game.input.keyboard.addKey(Phaser.Keyboard.ZERO);
 	spawnMob10.onDown.add(() => {
-		mobs.push(mobManager.spawnMob(10));
+		mobManager.spawnMob(10);
 	});
 
 	killKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
@@ -749,6 +749,10 @@ Gameplay.getPlayer = function() {
 
 Gameplay.getMobs = function() {
 	return mobs;
+}
+
+Gameplay.getDifficulty = function() {
+	return difficulty;
 }
 
 Gameplay.pauseUnpause = function() {
