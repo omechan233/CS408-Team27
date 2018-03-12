@@ -602,9 +602,9 @@ Gameplay.update = function() {
 			}
 
 			if (!mobs[i].isAlive()) {
+				player.xp += 10 + 20 * (mobs[i].maxHealth / 200);
 				mobs[i].destroy();
 				mobs.splice(i, 1);
-				player.xp += 10;
 				score++;
 			}
 		}

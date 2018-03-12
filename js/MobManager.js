@@ -24,7 +24,7 @@ MobManager.prototype.spawnMob = function(mobType) {
 }
 
 MobManager.prototype.spawnRandomMob = function() {
-    this.game.getMobs().push(new Mob(game, 'monster' + rnd.integerInRange(1, 10), rnd.integerInRange(50, 150)));
+    this.game.getMobs().push(new Mob(game, 'monster' + rnd.integerInRange(1, 10), rnd.integerInRange(50, 200)));
 }
 
 MobManager.prototype.spawnRandomMobTimer = function() {
