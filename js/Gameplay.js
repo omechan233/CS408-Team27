@@ -806,8 +806,10 @@ Gameplay.gameOver = function() {
 	this.state.paused = true;
 	this.state.gameover = true;
 	player.stop();
+	player.sprite.destroy();
 	for (var i = 0; i < mobs.length; i++) {
 		mobs[i].stop();
+		mobs[i].sprite.destroy();
 	}
 	socket.emit('postScore', score);
 
