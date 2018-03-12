@@ -56,7 +56,6 @@ Mob = function(game, spriteKey, baseHealth) {
 	this.stunSprite = game.make.sprite(0, 0, 'stun');
 	this.stunSprite.anchor.setTo(0.5, 0.5);
 	this.stunSprite.scale.setTo(1.25, 1.25);
-
 }
 
 Mob.prototype.update = function() {
