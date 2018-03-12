@@ -3,10 +3,11 @@ var loginUserInput;
 var loginPassInput;
 
 Login.preload = function() {
-    game.load.spritesheet('login', 'assets/login.png');
-    game.load.spritesheet('signup', 'assets/signup.png');
-    game.load.spritesheet('loginActive', 'assets/login_select.png');
-    game.load.spritesheet('signupActive', 'assets/signup_select.png');
+    game.load.spritesheet('login',  'assets/menu/login.png');
+    game.load.spritesheet('signup', 'assets/menu/signup.png');
+    game.load.spritesheet('title', 'assets/title_text.png');
+    game.load.spritesheet('loginActive',    'assets/menu/login_select.png');
+    game.load.spritesheet('signupActive',   'assets/menu/signup_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
@@ -14,6 +15,10 @@ Login.create = function() {
     socket = io.connect();
     // Create Background
     game.stage.backgroundColor = '#292c30';
+    
+    titleSprite = game.add.sprite(game.world.centerX, game.world.centerY - 100, 'title');
+    
+    titleSprite.anchor.setTo(0.5 , 0.5);
     
     // Add in sprites from spritesheet
 //    game.add.sprite(game.world.centerX - 350, game.world.centerY + 50, 'login');
@@ -79,9 +84,9 @@ function logIn() {
 }
 
 function signUp() {
+    game.state.clearCurrentState();
     game.state.start('SignUp');
 }
-
 
 function loginOut() {
     loginButton.loadTexture('login');
@@ -90,7 +95,6 @@ function loginOut() {
 function loginOver() {
     loginButton.loadTexture('loginActive');
 }
-
 
 function signupOut() {
     signupButton.loadTexture('signup');

@@ -4,8 +4,8 @@ var newUserInput;
 var newPassInput;
 
 SignUp.preload = function() {
-    game.load.spritesheet('startInactive', 'assets/start.png');
-    game.load.spritesheet('startActive', 'assets/start_select.png');
+    game.load.spritesheet('startInactive',  'assets/menu/start.png');
+    game.load.spritesheet('startActive',    'assets/menu/start_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
@@ -64,14 +64,27 @@ function saveUserData(user) {
 function start() {
     var newUser = newUserInput.value;
     var newPassword = newPassInput.value;
+    // no empty fields for signup
+    if (!newUser || !newPassword)
+        return;
+
     var user = {
         username: newUser,
         password: newPassword,
-        highscore: 0
+        // top 5 highscores
+        highscores: [0, 0, 0, 0, 0]
     }
-    saveUserData(user);
-    
-	game.state.start('Menu');
+
+    socket.emit('checkSignup', user);
+
+    socket.on('signupTrue', () => {
+        saveUserData(user);
+        game.state.clearCurrentState();
+        game.state.start('Menu');
+    });
+    socket.on('signupFalse', () => {
+        console.log("username taken");
+    });
 }
 
 function startOver() {

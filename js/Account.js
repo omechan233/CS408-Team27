@@ -3,16 +3,20 @@ var change;
 var newPassword;
 
 Account.preload = function() {
-    game.load.spritesheet('cpInactive', 'assets/login.png');
-    game.load.spritesheet('cpActive', 'assets/login_select.png');
-    game.load.spritesheet('changeInactive', 'assets/start.png');
-    game.load.spritesheet('changeActive', 'assets/start_select.png');
-    game.load.image('menu', 'assets/login.png');
-	game.load.image('menuActive', 'assets/login_select.png');
+    game.load.spritesheet('cpInactive',     'assets/menu/pwd_reset.png');
+    game.load.spritesheet('cpActive',       'assets/menu/pwd_reset_select.png');
+    game.load.spritesheet('changeInactive', 'assets/menu/submit.png');
+    game.load.spritesheet('changeActive',   'assets/menu/submit_select.png');
+    game.load.image('menu',                 'assets/menu/exit.png');
+	game.load.image('menuActive',           'assets/menu/exit_select.png');
     game.add.plugin(PhaserInput.Plugin);
 }
 
 Account.create = function() {
+    background = game.add.sprite(0, 0, 'background', this);
+    background.width = game.camera.width;
+	background.height = game.camera.height;
+    
     input = game.add.button(game.world.centerX - 75, game.world.centerY + 225, 'cpInactive', changePassword, this);
     input.onInputOver.add(cpOver, this);
     input.onInputOut.add(cpOut, this);
@@ -64,6 +68,7 @@ function cpOut() {
 }
 
 function goToMenu() {
+    game.state.clearCurrentState();
 	game.state.start('Menu');
 }
 
