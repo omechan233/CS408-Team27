@@ -32,6 +32,8 @@ Gameplay.preload = function() {
 	game.load.image('bullet', 	'assets/sprites/bullet.png');
 	game.load.image('stun', 	'assets/sprites/attack-shock.png');
 	game.load.image('haunt', 	'assets/sprites/attack-haunt.png');
+	game.load.image('testtiles', 	'assets/maps/testtiles.png');
+    game.load.image('powerup', 		'assets/sprites/powerUp.png');
 
 	// Game State
 	game.load.image('quit', 		'assets/menu/exit.png');
@@ -80,6 +82,7 @@ Gameplay.preload = function() {
 }
 
 var group;
+var treasureAmt;
 
 Gameplay.create = function() {
 	game.canvas.oncontextmenu = function (e) {
@@ -463,13 +466,20 @@ Gameplay.create = function() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     group = game.add.physicsGroup();
-    var i = 0;
-    for (i; i < 5; i++) {
-//        game.add.sprite(game.rnd.integerInRange(0, game.world.width), game.rnd.integerInRange(0, game.world.height), 'player');
-//        game.add.sprite(game.camera.x + game.camera.width / 2 + 100 + (i * 20), game.camera.y + game.camera.height / 2 + 100, 'player');
-        
-        var c = group.create(game.camera.x + game.camera.width / 2 + 100 + (i * 20), game.camera.y + game.camera.height / 2 + 100, 'heavySword', 10);
+    switch (difficulty) {
+        case "easy":
+            treasureAmt = 15;
+            break;
+        case "medium":
+            treasureAmt = 10;
+            break;
+        case "hard":
+            treasureAmt = 3;
+            break;
     }
+//    game.add.sprite(game.rnd.integerInRange(0, game.world.width), game.rnd.integerInRange(0, game.world.height), 'player');
+//    game.add.sprite(game.camera.x + game.camera.width / 2 + 100 + (i * 20), game.camera.y + game.camera.height / 2 + 100, 'player');
+    var c = group.create(game.camera.x + game.camera.width / 2 + 120, game.camera.y + game.camera.height / 2 + 100, 'powerup', 10);
     
 	score = 0;
 	pauseElapsedTime = 0;
@@ -485,10 +495,12 @@ Gameplay.create = function() {
 	}
 }
 
+var treasureCount = 0;
 Gameplay.update = function() {	
 	for (var i = 0; i < this.collisionLayers.length; i++) {
 		game.physics.arcade.collide(player.sprite, this.collisionLayers[i]);
 	}
+    
 	this.movePointer();
 	if (!this.state.paused) {
 		if (!player.isAlive()) {
@@ -502,7 +514,7 @@ Gameplay.update = function() {
 		ammoTextRes.setText(player.ammoReserve);
 		specReady.alpha = player.canSpecial ? 1.0 : 0.2;
         
-        game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this)) {
+        game.physics.arcade.collide(player.sprite, group, this.collisionHandler, this.processHandler, this);
 
 		for (var i = mobs.length - 1; i >= 0; i--) {
 			mobs[i].update();
@@ -579,87 +591,91 @@ Gameplay.processHandler = function(player, item) {
 }
 
 Gameplay.collisionHandler = function (play, item) {
-    
-    text = game.add.text(game.camera.width / 2 + 200, 100, '', {
-            font: "65px Arial",
-            fill: "#000000",
-            align: "center"
-    });
-    
-    text.anchor.setTo(1, 0);
-    text.fixedToCamera = true;
-    var powerUp = game.rnd.integerInRange(0, 5);
-    switch(powerUp) {
-        // Speed boost
-        case 0:
-            player.speedModifier = 2.00;
-            text.setText("Speed Boost");
-            var c = setInterval(function() {
-                console.log("Resetting speed");
-                player.speedModifier = 1.00;
-                text.setText("");
-                clearInterval(c);
-            }, 15000);
-            break;
-            
-        // Extra health
-        case 1:
-            player.health += 50;
-            text.setText("Extra Health");
-            var c = setInterval(function() {
-                text.setText("");
-                clearInterval(c);
-            }, 5000);
-            break;
-            
-        // Increased damage
-        case 2:
-            player.damageModifier = 1.5;
-            text.setText("Extra Damage");
-            var c = setInterval(function() {
-                player.damageModifier = 1.00;
-                text.setText("");
-                clearInterval(c);
-            }, 15000);
-            break;
-        
-        // Decreased reload speed
-        case 3:
-            player.reloadTime = 250;
-            text.setText("Faster Reload");
-            var c = setInterval(function() {
-                player.reloadTime = 500;
-                text.setText("");
-                clearInterval(c);
-            }, 15000);
-            break;
-        
-        // Infinite ammo
-        case 4:
-            player.reloadTime = 0;
-            text.setText("Infinte Ammo");
-            var c = setInterval(function() {
-                player.reloadTime = 500;
-                text.setText("");
-                clearInterval(c);
-            }, 7500);
-            break;
-            
-        // Invincibility
-        case 5:
-            player.isInvincible = true;
-            text.setText("Invincible");
-            var c = setInterval(function() {
-                player.isInvincible = false;
-                text.setText("");
-                clearInterval(c);
-            }, 5000);
-            break;
+    if (treasureCount < treasureAmt) {
+        text = game.add.text(game.camera.width / 2 + 200, 100, '', {
+                font: "65px Arial",
+                fill: "#000000",
+                align: "center"
+        });
+
+        text.anchor.setTo(1, 0);
+        text.fixedToCamera = true;
+        var powerUp = game.rnd.integerInRange(0, 5);
+        switch(powerUp) {
+            // Speed boost
+            case 0:
+                player.speedModifier = 2.00;
+                text.setText("Speed Boost");
+                var c = setInterval(function() {
+                    player.speedModifier = 1.00;
+                    text.setText("");
+                    clearInterval(c);
+                }, 15000);
+                break;
+
+            // Extra health
+            case 1:
+                player.health += 50;
+                text.setText("Extra Health");
+                var c = setInterval(function() {
+                    text.setText("");
+                    clearInterval(c);
+                }, 5000);
+                break;
+
+            // Increased damage
+            case 2:
+                player.damageModifier = 1.5;
+                text.setText("Extra Damage");
+                var c = setInterval(function() {
+                    player.damageModifier = 1.00;
+                    text.setText("");
+                    clearInterval(c);
+                }, 15000);
+                break;
+
+            // Decreased reload speed
+            case 3:
+                player.reloadTime = 250;
+                text.setText("Faster Reload");
+                var c = setInterval(function() {
+                    player.reloadTime = 500;
+                    text.setText("");
+                    clearInterval(c);
+                }, 15000);
+                break;
+
+            // Infinite ammo
+            case 4:
+                player.reloadTime = 0;
+                text.setText("Infinte Ammo");
+                var c = setInterval(function() {
+                    player.reloadTime = 500;
+                    text.setText("");
+                    clearInterval(c);
+                }, 7500);
+                break;
+
+            // Invincibility
+            case 5:
+                player.isInvincible = true;
+                text.setText("Invincible");
+                var c = setInterval(function() {
+                    player.isInvincible = false;
+                    text.setText("");
+                    clearInterval(c);
+                }, 5000);
+                break;
+        }
+        treasureCount++;
+        item.kill();
+        var i = setInterval(function() {
+            item.reset(item.x, item.y);
+        }, 10000);
     }
-    item.kill();
-    var i = setInterval(function() {
-        item.reset(item.x, item.y);
-    }, 10000);
+    if (treasureCount == treasureAmt) {
+        item.destroy();
+    }
 }
 
 Gameplay.updateScore = function() {
