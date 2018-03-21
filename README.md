@@ -7,15 +7,15 @@ Obsidian Ark is a top-down, horde based, quick play, survival based game.
 Built for Purdue University | CS408 - Software Testing - Spring 2018
 
 ## Team Members
-[Yi Dou](https://github.com/omechan233)
+<a href="https://github.com/omechan233" target="_blank">Yi Dou</a>
 
-[Danny Zou](https://github.com/zou50)
+<a href="https://github.com/zou50" target="_blank">Danny Zou</a>
 
-[Devon Lee](https://github.com/devonlee111)
+<a href="https://github.com/devonlee111" target="_blank">Devon Lee</a>
 
-[James Hawk](https://github.com/JamesPHawk)
+<a href="https://github.com/JamesPHawk" target="_blank">James Hawk</a>
 
-[Jordan Stoddard](https://github.com/jstoddard94)
+<a href="https://github.com/jstoddard94" target="_blank">Jordan Stoddard</a>
 
 ## Technologies / Dependencies
 
@@ -26,19 +26,64 @@ HTML5 | CSS3 | JS
 * express 4.16.2+
 * file-system 2.2.2+
 * mongodb 2.2.33+
+* mongodb-core 3.0.5+
 * mongoose 5.0.3+
 * password-hash 1.2.2+
 * phaser 2.6.2+
 * require 2.4.20+
 * socket.io 2.0.4+
 
+##
+
+### Installation
+
+#### Requires <a href="https://nodejs.org/en/" target="_blank">Node.js</a>
+
+#### Bash
+
 ```
-npm install
+curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
 ```
+
+```
+sudo apt-get install -y nodejs
+```
+
+#### OSX Homebrew
+```
+brew install node
+```
+
+
+##
+
+Check for successful installation
+
+```
+node -v
+```
+
+```
+npm -v
+```
+
+Run the install script
+
+```
+./install.sh
+```
+
+Run the app
+
+```
+node app
+```
+
+If successful, app will be running on <a href="http://localhost:3000/" target="_blank">localhost:3000</a>
 
 ## Assets / Tools
 
-##### [Tiled](http://www.mapeditor.org)
+##### <a href="http://www.mapeditor.org/" target="_blank">Tiled</a>
 
 ## Controls
 
