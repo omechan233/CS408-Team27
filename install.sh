@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 npm install --save
 npm install mongodb --save
