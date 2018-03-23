@@ -179,6 +179,8 @@ Player.prototype.left = function() {
 }
 
 Player.prototype.stop = function() {
+	if (!this.sprite.body)
+		return;
 	if (!this.sprite.body.velocity.x && !this.sprite.body.velocity.y)
 		this.sprite.animations.stop(null, true);
 	this.sprite.body.velocity.x = 0;
@@ -415,6 +417,9 @@ Player.prototype.getDamage = function() {
 }
 
 Player.prototype.stopAttack = function() {
+	if (!this)
+		return;
+	
 	if (this.isAttacking) {
 		this.isAttacking = false;	
 		this.game.time.events.add(this.attackCooldown, this.letAttack, this);
@@ -493,10 +498,7 @@ Player.prototype.stopStunned = function() {
 }
 
 Player.prototype.isAlive = function() {
-	if (this.health > 0) {
-		return true;
-	}
-	return false;
+	return this.health > 0;
 }
 
 Player.prototype.changeWeaponType = function(weaponAsset) {

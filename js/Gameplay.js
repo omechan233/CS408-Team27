@@ -563,7 +563,7 @@ Gameplay.create = function() {
 }
 
 var treasureCount = 0;
-Gameplay.update = function() {	
+Gameplay.update = function() {
 	for (var i = 0; i < this.collisionLayers.length; i++) {
 		game.physics.arcade.collide(player.sprite, this.collisionLayers[i]);
 	}
@@ -572,6 +572,7 @@ Gameplay.update = function() {
 	if (!this.state.paused) {
 		if (!player.isAlive()) {
 			this.gameOver();
+			return;
 		}
 		player.update();
         
@@ -812,6 +813,8 @@ Gameplay.gameOver = function() {
 	this.state.paused = true;
 	this.state.gameover = true;
 	player.stop();
+	for (var i = 0; i < player.sprite.children.length; i++)
+		player.sprite.children[i].destroy();
 	player.sprite.destroy();
 	for (var i = 0; i < mobs.length; i++) {
 		mobs[i].stop();
