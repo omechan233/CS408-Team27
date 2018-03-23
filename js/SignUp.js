@@ -64,9 +64,6 @@ function saveUserData(user) {
 function start() {
     var newUser = newUserInput.value;
     var newPassword = newPassInput.value;
-    // no empty fields for signup
-    if (!newUser || !newPassword)
-        return;
 
     var user = {
         username: newUser,

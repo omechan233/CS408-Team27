@@ -95,13 +95,7 @@ function checkSignup(user) {
         db.collection("users").find(
             {username: user.username}
         ).toArray(function(err, docs) {
-            // username taken
-            if (docs.length > 0) {
-                currentClient.emit('signupFalse');
-            }
-            else {
-                currentClient.emit('signupTrue');
-            }
+            currentClient.emit('signupTrue');
         });
     });
 }
