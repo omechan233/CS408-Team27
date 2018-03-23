@@ -18,7 +18,7 @@ Select.preload = function() {
 }
 
 Select.create = function() {
-	map = "Forest";
+	map = "Desert";
 	background = game.add.sprite(0, 0, 'forestBkg', this);
 	background.width = game.camera.width;
 	background.height = game.camera.height; 

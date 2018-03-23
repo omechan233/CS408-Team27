@@ -41,7 +41,7 @@ Gameplay.preload = function() {
 	game.load.image('stun', 	'assets/sprites/attack-shock.png');
 	game.load.image('haunt', 	'assets/sprites/attack-haunt.png');
 	game.load.image('testtiles', 	'assets/maps/testtiles.png');
-    game.load.image('powerup', 		'assets/sprites/powerUp.png');
+	game.load.image('powerup', 		'assets/sprites/powerUp.png');
 
 	// Game State
 	game.load.image('quit', 		'assets/menu/exit.png');
@@ -462,9 +462,9 @@ Gameplay.create = function() {
 	scoreText.x = 10;
 	scoreText.fixedToCamera = true;
     
-    powerupText = game.add.text(10, game.camera.height, "", scoreStyle);
+    	powerupText = game.add.text(10, game.camera.height, "", scoreStyle);
 	powerupText.fixedToCamera = true;
-    powerupText.anchor.setTo(0, 1);
+    	powerupText.anchor.setTo(0, 1);
 
 	healthBarBack = game.add.image(game.camera.width - 10, 10, 'hpbarback');
 	healthBarBack.fixedToCamera = true;
@@ -527,11 +527,7 @@ Gameplay.create = function() {
 	hudGroup.add(ammoTextCap);
 	hudGroup.add(ammoTextRes);
 	hudGroup.add(specReady);
-    hudGroup.add(powerupText);
-
-	target = game.add.sprite(game.input.mousePointer.x, game.input.mousePointer.y, 'target');
-	target.scale.setTo(2, 2);
-	target.anchor.setTo(0.5, 0.5);
+    	hudGroup.add(powerupText);
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     group = game.add.physicsGroup();
@@ -552,6 +548,11 @@ Gameplay.create = function() {
 	pauseElapsedTime = 0;
 
 	game.camera.follow(player.sprite);
+	
+	target = game.add.sprite(game.input.mousePointer.x + game.camera.x, game.input.mousePointer.y + game.camera.y, 'target');
+	target.scale.setTo(2, 2);
+	target.anchor.setTo(0.5, 0.5);
+
 
 	// find and bring foreground
 	for (i = 0; i < game.world.children.length; i++) {
@@ -861,8 +862,11 @@ Gameplay.quitOut = function() {
 }
 
 Gameplay.movePointer = function() {
-	target.x = game.input.mousePointer.x + game.camera.x;
-	target.y = game.input.mousePointer.y + game.camera.y;
+	cameraOffsetX = 0;
+	cameraOffsetY = 0;
+	cameraOffsetX = game.camera.x;
+	target.x = game.input.mousePointer.x + cameraOffsetX;
+	target.y = game.input.mousePointer.y + cameraOffsetY;
 }
 
 Gameplay.lockPointer = function() {
