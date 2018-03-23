@@ -73,19 +73,11 @@ Menu.showDifficulty = function() {
 }
 
 Menu.changeDifficulty = function() {
-	switch(difficulty) {
-		case "easy":
-			difficulty = "medium";
-			break;
-
-		case "medium":
-			difficulty = "hard";
-			break;
-
-		case "hard":
-			difficulty = "easy";
-			break;
-	}
+    if (difficulty == "easy") {
+        difficulty = "medium";
+    } else if (difficulty == "medium") {
+        difficulty = "hard";
+    }
 	this.showDifficulty();
 }
 
@@ -133,9 +125,7 @@ Menu.accountOver = function() {
 	accountBtn.loadTexture('accountActive');
 }
 
-Menu.accountOut = function() {
-	accountBtn.loadTexture('account');
-}
+Menu.accountOut = function() {}
 
 Menu.difficultyOver = function() {
 	difficultyBtn.loadTexture('difficultyActive');

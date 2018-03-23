@@ -67,10 +67,7 @@ function cpOut() {
     input.loadTexture('cpInactive');
 }
 
-function goToMenu() {
-    game.state.clearCurrentState();
-	game.state.start('Menu');
-}
+function goToMenu() {}
 
 function menuOver() {
 	menuBtn.loadTexture('menuActive');
