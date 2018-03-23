@@ -419,9 +419,14 @@ Player.prototype.getDamage = function() {
 Player.prototype.stopAttack = function() {
 	if (!this)
 		return;
-	
-	if (this.isAttacking) {
-		this.isAttacking = false;	
+
+	this.isAttacking = false;
+	if (!this.isAttacking) {
+		this.isAttacking = true;
+		return;
+	}
+	else if (this.isAttacking) {
+		this.isAttacking = false;
 		this.game.time.events.add(this.attackCooldown, this.letAttack, this);
 		this.game.time.events.add(150, this.stopInvincible, this);	
 		
