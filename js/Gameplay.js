@@ -141,6 +141,7 @@ Gameplay.create = function() {
 			map.createLayer("items");
 
 			blocked1 = map.createLayer("blocked");
+			blocked1.alpha = 0;
 
 			map.createLayer("foreground");
 
@@ -284,6 +285,7 @@ Gameplay.create = function() {
 			map.createLayer("items_upper");
 
 			blocked1 = map.createLayer("blocked");
+			blocked1.alpha = 0;
 
 			map.setCollisionBetween(1, 10000, true, blocked1);
 			game.physics.arcade.enable(blocked1);
