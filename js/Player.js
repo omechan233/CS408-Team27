@@ -35,13 +35,13 @@ Player = function(game, spawnPoint, weaponAsset) {
 	this.ammoCapacity = 30;
 	this.ammoReserve = 30;
 	this.reloadTime = 500;
-	
+
 	// Other
 	this.lockTip = false;
 	this.reset = true;
 	this.tipUnitX = 0;
 	this.tipUnitY = 0
-	this.projectileVelocity = 300;
+		this.projectileVelocity = 300;
 	this.resetX = 0;
 	this.resetY = 0;
 
@@ -57,11 +57,11 @@ Player = function(game, spawnPoint, weaponAsset) {
 
 	// The projectile texture
 	this.projectileType = '';
-	
+
 	// Player Modifiers
 	this.invincibleModifier = 1.0;
 	this.attackSpeedModifer = 1.0;
- 	this.speedModifier = 1.0;
+	this.speedModifier = 1.0;
 	this.damageModifier = 1.0;
 	this.specialAttackModifier = 1.0;
 	this.specialLengthModifier = 1.0;
@@ -69,10 +69,10 @@ Player = function(game, spawnPoint, weaponAsset) {
 
 	// Player Sprite
 	this.sprite = game.add.sprite(
-		spawnPoint.x,
-		spawnPoint.y,
-		'player'
-	);
+			spawnPoint.x,
+			spawnPoint.y,
+			'player'
+			);
 	this.sprite.anchor.setTo(0.5, 0.5);
 	this.playerScale = 1.6;
 	this.sprite.scale.setTo(this.playerScale, this.playerScale);
@@ -88,15 +88,15 @@ Player = function(game, spawnPoint, weaponAsset) {
 	// Player Sprite Physics
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
-	this.sprite.body.collideWorldBounds = true;
+	this.sprite.body.collideWorldBounds = false;
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
 	this.sprite.body.setSize(
-		this.sprite.width / this.playerScale / 2,
-		this.sprite.height / this.playerScale / 2 - this.sprite.height / this.playerScale / 8,
-		this.sprite.width / this.playerScale / 2 - this.sprite.width / this.playerScale / 4,
-		this.sprite.height / this.playerScale / 2 + this.sprite.height / this.playerScale / 8
-	);
+			this.sprite.width / this.playerScale / 2,
+			this.sprite.height / this.playerScale / 2 - this.sprite.height / this.playerScale / 8,
+			this.sprite.width / this.playerScale / 2 - this.sprite.width / this.playerScale / 4,
+			this.sprite.height / this.playerScale / 2 + this.sprite.height / this.playerScale / 8
+			);
 
 	// Weapon Sprite
 	this.weapon = this.sprite.addChild(game.make.sprite(0, 0, weaponAsset));
@@ -203,7 +203,7 @@ Player.prototype.attack = function() {
 			this.weapon.body.angularVelocity = thetaPerSec;
 			break;
 
-		// Light Attack
+			// Light Attack
 		case 1:
 			magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 			target = Gameplay.getTarget();
@@ -226,7 +226,7 @@ Player.prototype.attack = function() {
 			this.game.camera.follow(null);
 			break;
 
-		// Heavy Attack
+			// Heavy Attack
 		case 2:
 			this.isInvincible = true;
 			attackRangeTheta = 160;
@@ -236,7 +236,7 @@ Player.prototype.attack = function() {
 			this.weapon.body.angularVelocity = thetaPerSec;
 			break;
 
-		// Ranged Attack
+			// Ranged Attack
 		case 3:
 			if (!this.reloading) {
 				magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
@@ -258,7 +258,7 @@ Player.prototype.attack = function() {
 				}
 			}
 			break; 
-		}
+	}
 
 	this.canAttack = false;
 	this.game.time.events.add(this.attackAnimationCooldown, this.stopAttack, this);
@@ -286,9 +286,9 @@ Player.prototype.specialAttack = function() {
 			this.weapon.angle -= (this.attackAnimationCooldown * (thetaPerMillis)) / 2;
 			this.weapon.body.angularVelocity = thetaPerSec;
 			this.specialAttackModifier = 2.5;
-		break;
+			break;
 
-		// Light Attack
+			// Light Attack
 		case 1:
 			magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
 			target = Gameplay.getTarget();
@@ -313,7 +313,7 @@ Player.prototype.specialAttack = function() {
 			this.specialAttackModifier = 2.0;
 			break;
 
-		// Heavy Attack
+			// Heavy Attack
 		case 2:
 			this.specialLengthModifier = 8;
 			this.isInvincible = true;
@@ -325,7 +325,7 @@ Player.prototype.specialAttack = function() {
 			this.weapon.body.angularVelocity = thetaPerSec;
 			break;
 
-		// Ranged Attack
+			// Ranged Attack
 		case 3:
 			if (!this.reloading) {
 				magnitude = Math.sqrt(Math.pow(target.x - player.sprite.x, 2) + Math.pow(target.y - player.sprite.y, 2));
@@ -368,7 +368,7 @@ Player.prototype.specialAttack = function() {
 				}
 			}
 			break; 
-		}
+	}
 
 	this.canAttack = false;
 	this.game.time.events.add(this.attackAnimationCooldown * this.specialLengthModifier, this.stopAttack, this);
@@ -429,7 +429,7 @@ Player.prototype.stopAttack = function() {
 		this.isAttacking = false;
 		this.game.time.events.add(this.attackCooldown, this.letAttack, this);
 		this.game.time.events.add(150, this.stopInvincible, this);	
-		
+
 		if (this.weaponType == 0) {
 			this.weapon.body.angularVelocity = 0;
 		}
@@ -543,7 +543,7 @@ Player.prototype.changeWeaponType = function(weaponAsset) {
 			this.weaponType = 3;
 			this.projectileVelocity = 550;
 			break;
-		
+
 		case 'deagle':	
 			this.attackAnimationCooldown = 0;
 			this.attackCooldown = 500;
@@ -625,7 +625,7 @@ Player.prototype.targetAngle = function() {
 }
 
 Player.prototype.normalizeSpeed = function() {
-	magnitude = Math.sqrt(Math.pow(this.sprite.body.velocity.x, 2) + Math.pow(this.sprite.body.velocity.y, 2));
+	magnitude = -Math.sqrt(Math.pow(this.sprite.body.velocity.x, 2) + Math.pow(this.sprite.body.velocity.y, 2));
 	unitX = this.sprite.body.velocity.x / magnitude;
 	unitY = this.sprite.body.velocity.y / magnitude;
 	this.sprite.body.velocity.x = (this.speed * this.speedModifier) * unitX;

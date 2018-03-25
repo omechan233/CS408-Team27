@@ -11,7 +11,7 @@ Projectile = function(game, startX, startY, xVel, yVel, theta, damage, type) {
 	this.game.physics.arcade.enable(this.sprite);
 	this.sprite.body.immovable = true;
 	this.sprite.anchor.setTo(0.5, 0.5);
-	this.sprite.angle += theta;
+	this.sprite.angle -= theta;
 	this.xVel = xVel;
 	this.yVel = yVel;	
 	this.sprite.checkWorldBounds = true;
@@ -23,8 +23,8 @@ Projectile.prototype.update = function() {
 }
 
 Projectile.prototype.start = function() {
-	this.sprite.body.velocity.x = this.xVel;
-	this.sprite.body.velocity.y = this.yVel;
+	this.sprite.body.velocity.x = this.yVel;
+	this.sprite.body.velocity.y = this.xVel;
 }
 
 Projectile.prototype.stop = function() {
