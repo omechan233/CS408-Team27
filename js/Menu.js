@@ -82,7 +82,6 @@ Menu.changeDifficulty = function() {
 }
 
 Menu.startGame = function() {
-	music.stop();
 	game.state.clearCurrentState();
 	game.state.start('Select');
 }
