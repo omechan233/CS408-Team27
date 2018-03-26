@@ -123,7 +123,6 @@ Player.prototype.update = function() {
 	this.findTip();
 
 	if (player.xp >= 100) {
-		player.level++;
 		player.xp %= 100;
 		player.health = 100;
 	}
