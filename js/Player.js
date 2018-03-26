@@ -251,10 +251,6 @@ Player.prototype.attack = function() {
 				game.world.bringToTop(this.weapon);
 				this.projectiles.push(temp);
 				this.ammoReserve -= 1;
-				if (this.ammoReserve <= 0) {
-					this.reloading = true;
-					this.game.time.events.add(this.reloadTime * this.specialReloadModifier, this.reload, this);
-				}
 			}
 			break; 
 	}
