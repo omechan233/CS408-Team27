@@ -27,7 +27,7 @@ Login.create = function() {
     
     // Build buttons on top of sprites
     loginButton = game.add.button(game.world.centerX - 75, game.world.centerY + 150, 'login', logIn, this);
-    loginButton.onInputOver.add(loginOver, this);
+    
     loginButton.onInputOut.add(loginOut, this);
     
     var message = game.add.text(game.world.centerX - 50, game.world.centerY + 200, 'New User? Sign Up.', {
@@ -36,7 +36,7 @@ Login.create = function() {
         fontSize: 12
     });
     signupButton = game.add.button(game.world.centerX - 75, game.world.centerY + 225, 'signup', signUp, this);
-    signupButton.onInputOver.add(signupOver, this);
+    
     signupButton.onInputOut.add(signupOut, this);
     
     loginUserInput = game.add.inputField(game.world.centerX - 75, game.world.centerY, {
@@ -61,7 +61,7 @@ Login.create = function() {
         borderColor: '#000',
         borderRadius: 6,
         placeHolder: 'Password',
-        type: PhaserInput.InputType.password
+        type: PhaserInput.InputType.text
     });
 }
 
