@@ -48,7 +48,7 @@ function changePassword() {
 }
 
 function submit() {
-    socket.emit('changePass', newPassword.value);
+    console.log("Password submitted!");
 }
 
 function changeOver() {
