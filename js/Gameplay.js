@@ -660,80 +660,83 @@ Gameplay.processHandler = function(player, item) {
 }
 
 Gameplay.collisionHandler = function (play, item) {
-    if (treasureCount < treasureAmt) {
-        var powerUp = game.rnd.integerInRange(0, 5);
-        switch(powerUp) {
-            // Speed boost
-            case 0:
-                player.speedModifier = 1.50;
-                var c = setTimeout(function() {
-                    player.speedModifier = 1.00;
-                    powerupText.setText("");
-                }, 15000);
-                break;
+    var luck = game.rnd.integerInRange(1, 3);
+    if (luck == 2) {
+        if (treasureCount < treasureAmt) {
+            var powerUp = game.rnd.integerInRange(0, 5);
+            switch(powerUp) {
+                // Speed boost
+                case 0:
+                    player.speedModifier = 1.50;
+                    var c = setTimeout(function() {
+                        player.speedModifier = 1.00;
+                        powerupText.setText("");
+                    }, 15000);
+                    break;
 
-            // Extra health
-            case 1:
-                player.health += 50;
-                powerupText.setText("Extra Health");
-                var c = setTimeout(function() {
-                    powerupText.setText("");
-                }, 5000);
-                break;
+                // Extra health
+                case 1:
+                    player.health += 50;
+                    powerupText.setText("Extra Health");
+                    var c = setTimeout(function() {
+                        powerupText.setText("");
+                    }, 5000);
+                    break;
 
-            // Increased damage
-            case 2:
-                player.damageModifier = 1.5;
-                powerupText.setText("Extra Damage");
-                var c = setTimeout(function() {
-                    player.damageModifier = 1.00;
-                    powerupText.setText("");
-                }, 15000);
-                break;
+                // Increased damage
+                case 2:
+                    player.damageModifier = 1.5;
+                    powerupText.setText("Extra Damage");
+                    var c = setTimeout(function() {
+                        player.damageModifier = 1.00;
+                        powerupText.setText("");
+                    }, 15000);
+                    break;
 
-            // Decreased reload speed
-            case 3:
-                player.reloadTime = 250;
-                powerupText.setText("Faster Reload");
-                var c = setTimeout(function() {
-                    player.reloadTime = 500;
-                    powerupText.setText("");
-                }, 15000);
-                break;
+                // Decreased reload speed
+                case 3:
+                    player.reloadTime = 250;
+                    powerupText.setText("Faster Reload");
+                    var c = setTimeout(function() {
+                        player.reloadTime = 500;
+                        powerupText.setText("");
+                    }, 15000);
+                    break;
 
-            // Infinite ammo
-            case 4:
-                player.reloadTime = 0;
-                var c = setTimeout(function() {
-                    player.reloadTime = 500;
-                    powerupText.setText("");
-                }, 7500);
-                break;
+                // Infinite ammo
+                case 4:
+                    player.reloadTime = 0;
+                    var c = setTimeout(function() {
+                        player.reloadTime = 500;
+                        powerupText.setText("");
+                    }, 7500);
+                    break;
 
-            // Invincibility
-            case 5:
-                player.isInvincible = true;
-                powerupText.setText("Invincibility");
-                var c = setTimeout(function() {
-                    powerupText.setText("");
-                }, 5000);
-                break;
-        }
-        treasureCount++;
-        item.kill();
-        var i = setTimeout(function() {
-            powerupSpawnPoints
-            randResetPoint = rnd.integerInRange(0, powerupSpawnPoints.length - 1);
-            resetPoint = {
-                x: powerupSpawnPoints[randResetPoint].x * layerScale,
-                y: powerupSpawnPoints[randResetPoint].y * layerScale
+                // Invincibility
+                case 5:
+                    player.isInvincible = true;
+                    powerupText.setText("Invincibility");
+                    var c = setTimeout(function() {
+                        powerupText.setText("");
+                    }, 5000);
+                    break;
             }
-//            console.log("Random coordinates" + resetPoint);
-            item.x = resetPoint.x;
-            item.y = resetPoint.y;
-            item.reset(item.x, item.y);
-        }, 20000);
-//        clearTimeout(i);
+            treasureCount++;
+            item.kill();
+            var i = setTimeout(function() {
+                powerupSpawnPoints
+                randResetPoint = rnd.integerInRange(0, powerupSpawnPoints.length - 1);
+                resetPoint = {
+                    x: powerupSpawnPoints[randResetPoint].x * layerScale,
+                    y: powerupSpawnPoints[randResetPoint].y * layerScale
+                }
+    //            console.log("Random coordinates" + resetPoint);
+                item.x = resetPoint.x;
+                item.y = resetPoint.y;
+                item.reset(item.x, item.y);
+            }, 20000);
+    //        clearTimeout(i);
+        }
     }
     if (treasureCount == treasureAmt) {
         item.destroy();
