@@ -117,13 +117,11 @@ function getGlobalScores() {
             // get the best 10 highscores from all users
             for (var i = 0; i < results.length; i++) {
                 user = results[i];
-                for (var j = 0; j < user.highscores.length; j++) {
-                    item = {
-                        username: user.username,
-                        highscore: user.highscores[j]
-                    }
-                    topScores.push(item);
+                item = {
+                    username: user.username,
+                    highscore: user.highscores[j]
                 }
+                topScores.push(item);
             }
             topScores.sort((a, b) => {
                 return b.highscore - a.highscore;
