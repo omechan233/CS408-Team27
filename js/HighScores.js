@@ -30,12 +30,12 @@ HighScores.create = function() {
 	menuBtn.onInputOver.add(() => {menuBtn.loadTexture('menuActive')}, this);
 	menuBtn.onInputOut.add(() => {menuBtn.loadTexture('menu')}, this);
 
-	localScoresBtn = game.add.button(10, 70, 'local', this.getLocalScores, this);
+	localScoresBtn = game.add.button(10, 70, 'local', this.getGlobalScores, this);
 	localScoresBtn.scale.setTo(1.2, 1.2);
 	localScoresBtn.onInputOver.add(() => {localScoresBtn.loadTexture('localActive')}, this);
 	localScoresBtn.onInputOut.add(() => {localScoresBtn.loadTexture('local')}, this);
 
-	globalScoresBtn = game.add.button(10, 130, 'global', this.getGlobalScores, this);
+	globalScoresBtn = game.add.button(10, 130, 'global', this.getLocalScores, this);
 	globalScoresBtn.scale.setTo(1.2, 1.2);
 	globalScoresBtn.onInputOver.add(() => {globalScoresBtn.loadTexture('globalActive')}, this);
 	globalScoresBtn.onInputOut.add(() => {globalScoresBtn.loadTexture('global')}, this);
