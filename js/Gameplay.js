@@ -717,7 +717,6 @@ Gameplay.collisionHandler = function (play, item) {
                 player.isInvincible = true;
                 powerupText.setText("Invincibility");
                 var c = setTimeout(function() {
-                    player.isInvincible = false;
                     powerupText.setText("");
                 }, 5000);
                 break;
