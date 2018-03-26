@@ -666,7 +666,6 @@ Gameplay.collisionHandler = function (play, item) {
             // Speed boost
             case 0:
                 player.speedModifier = 1.50;
-                powerupText.setText("Speed Boost");
                 var c = setTimeout(function() {
                     player.speedModifier = 1.00;
                     powerupText.setText("");
@@ -705,7 +704,6 @@ Gameplay.collisionHandler = function (play, item) {
             // Infinite ammo
             case 4:
                 player.reloadTime = 0;
-                powerupText.setText("Infinite Ammo");
                 var c = setTimeout(function() {
                     player.reloadTime = 500;
                     powerupText.setText("");
