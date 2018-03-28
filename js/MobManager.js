@@ -28,7 +28,7 @@ MobManager.prototype.spawnRandomMob = function() {
 }
 
 MobManager.prototype.spawnRandomMobTimer = function() {
-    if (this.game.getMobs().length >= this.maxMobs)
+    if (this.game.getMobs().length >= this.maxMobs || this.game.isPaused())
         return;
 
     this.spawnRandomMob();

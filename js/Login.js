@@ -20,11 +20,6 @@ Login.create = function() {
     
     titleSprite.anchor.setTo(0.5 , 0.5);
     
-    // Add in sprites from spritesheet
-//    game.add.sprite(game.world.centerX - 350, game.world.centerY + 50, 'login');
-
-//    game.add.sprite(game.world.centerX + 200, game.world.centerY + 50, 'signup');
-    
     // Build buttons on top of sprites
     loginButton = game.add.button(game.world.centerX - 75, game.world.centerY + 150, 'login', logIn, this);
     loginButton.onInputOver.add(loginOver, this);

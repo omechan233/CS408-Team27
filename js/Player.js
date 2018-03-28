@@ -25,7 +25,8 @@ Player = function(game, spawnPoint, weaponAsset) {
 	this.reloading = false;
 	this.stunned = false;
 	this.specialInvincible = false;
-	this.weaponFlipped = false;
+	this.oldWeaponVelocity = 0;
+	this.flipped = 1;
 
 	// Player Limits
 	this.attackCooldown = 100; 
@@ -121,6 +122,12 @@ Player.prototype.create = function() {
 
 Player.prototype.update = function() {
 	this.findTip();
+	this.flipped = this.weapon.angle <= 0 ? -1 : 1;
+
+	if (this.weapon.key == "deagle")
+		this.weapon.scale.setTo(.35 * this.flipped, .35);
+	if (this.weapon.key == "m16")
+		this.weapon.scale.setTo(.75 * this.flipped, .75);
 
 	if (player.xp >= 100) {
 		player.level++;
@@ -181,6 +188,7 @@ Player.prototype.left = function() {
 Player.prototype.stop = function() {
 	if (!this.sprite.body)
 		return;
+
 	if (!this.sprite.body.velocity.x && !this.sprite.body.velocity.y)
 		this.sprite.animations.stop(null, true);
 	this.sprite.body.velocity.x = 0;
@@ -188,7 +196,7 @@ Player.prototype.stop = function() {
 }
 
 Player.prototype.attack = function() {
-	if (this.isAttacking || !this.canAttack)
+	if (this.isAttacking || !this.canAttack || this.game.isPaused())
 		return;
 
 	this.isAttacking = true;
@@ -576,7 +584,7 @@ Player.prototype.setAttackDamage = function(damage) {
 Player.prototype.switchWeapon = function(newWeaponAsset) {
 	if (this.isAttacking) {
 		this.stopAttack();
-	}	
+	}
 	this.weapon.scale.setTo(1.5, 1.5);
 	this.projectileType = '';
 	if (newWeaponAsset == 'deagle') {
@@ -627,19 +635,3 @@ Player.prototype.normalizeSpeed = function() {
 	this.sprite.body.velocity.y = (this.speed * this.speedModifier) * unitY;
 }
 
-function calculateQuadrant(mpx, mpy, slope) {
-
-	// calculate correct mouse location (y is flipped)
-	b = window.innerHeight;
-	mpy = b - mpy;
-
-	// north or west quadrant
-	if (mpy > slope * mpx) {
-		return mpy > (-slope * mpx + b) ? "north" : "west";
-	}
-	// south or east quadrant
-	else {
-		return mpy > (-slope * mpx + b) ? "east" : "south";
-	}
-
-}

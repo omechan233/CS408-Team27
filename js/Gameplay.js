@@ -336,6 +336,8 @@ Gameplay.create = function() {
 	weapon = 'sword';
 
 	weaponKey.onDown.add(() => {
+		if (this.state.paused)
+			return;
 		switch(weapon) {
 			case 'sword':
 				player.switchWeapon('heavySword');
@@ -562,6 +564,8 @@ Gameplay.create = function() {
 			game.world.bringToTop(child);
 		}
 	}
+	game.time.events.pause();
+	game.time.events.resume();
 }
 
 var treasureCount = 0;
@@ -770,6 +774,8 @@ Gameplay.pauseUnpause = function() {
 		game.time.events.pause();
 		pauseStartTime = new Date().getTime();
 
+		player.oldWeaponVelocity = player.weapon.body.angularVelocity;
+		player.weapon.body.angularVelocity = 0;
 		player.stop();
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].stop();
@@ -803,6 +809,8 @@ Gameplay.pauseUnpause = function() {
 		pauseLayer.destroy();
 		text.destroy();
 		quitBtn.destroy();
+		player.weapon.body.angularVelocity = player.oldWeaponVelocity;
+		player.oldWeaponVelocity = 0;
 		pauseElapsedTime = new Date().getTime() - pauseStartTime;
 		for (var i = 0; i < mobs.length; i++) {
 			mobs[i].setPausedTime(pauseElapsedTime);
@@ -846,6 +854,10 @@ Gameplay.gameOver = function() {
 
 Gameplay.getLastPausedTime = function() {
 	return pauseElapsedTime;
+}
+
+Gameplay.isPaused = function() {
+	return this.state.paused;
 }
 
 Gameplay.quitGame = function() {
