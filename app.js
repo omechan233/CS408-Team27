@@ -48,6 +48,7 @@ function hashPassword(user) {
 
 function onSaveData(user) {
     hashPassword(user);
+    console.log(user);
     var userData = JSON.stringify(user);
     fs.writeFile("user.txt", userData, function(err) {
         if (err) {

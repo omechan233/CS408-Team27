@@ -4,9 +4,9 @@ Mob = function(game, spriteKey, baseHealth) {
     if (difficulty === "easy") {
         multiplier = 1;
     } else if (difficulty === "medium") {
-        multiplier = 1.5;
-    } else if (difficulty === "hard") {
         multiplier = 2;
+    } else if (difficulty === "hard") {
+        multiplier = 4;
     }
     this.maxHealth = baseHealth * multiplier;
 	this.health = this.maxHealth;
