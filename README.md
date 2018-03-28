@@ -106,3 +106,7 @@ If successful, app will be running on <a href="http://localhost:3000/" target="_
 
 - mongodb must be below version 3.0 due to mLab database
 - restarting a game session may result in pause bug
+
+## Assets
+- Some custom tile assets and some from RMXP
+- Bgm from イスVII, 那由多の軌跡, 空の軌跡
