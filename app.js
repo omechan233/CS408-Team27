@@ -120,7 +120,7 @@ function getGlobalScores() {
                 user = results[i];
                 item = {
                     username: user.username,
-                    highscore: user.highscores[j]
+                    highscore: user.highscores[i]
                 }
                 topScores.push(item);
             }
